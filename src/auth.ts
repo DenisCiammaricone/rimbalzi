@@ -1,7 +1,6 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { signInSchema } from "./app/lib/zod"
-import bcrypt from "bcryptjs"
 import { getUserFromDb } from "./actions/user"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -20,7 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             const { email, password } = await signInSchema.parseAsync(credentials)
      
             // logic to salt and hash password
-            const pwHash = bcrypt.hashSync(password)
+            //const pwHash = bcrypt.hashSync(password)
      
             // logic to verify if the user exists
             user = await getUserFromDb(email, password) // TODO: Remove password and use pwHash
@@ -30,12 +29,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               // Optionally, this is also the place you could do a user registration
               throw new Error("Invalid credentials.")
             }
-     
+
             // return user object with their profile data
             return {
-                id: user.id.toString(),
+                id: user.id,
                 name: user.name,
-                email: user.email,
+                email: user.email
             }
           },
     }),
@@ -46,6 +45,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async redirect({ url, baseUrl }) {
       return baseUrl
+    },
+    async jwt({ token, user, account, trigger, session }) {
+      if (account && user) {
+          token.id = user.id
+          token.name = user.name
+          token.email = user.email
+      }
+      return token
+  },
+    async session({ session, token }) {
+        return {
+            ...session,
+            user: {
+                ...session.user,
+                id: token.id as string,
+                name: token.name as string,
+                email: token.email as string,
+            }
+        }
     }
   }
 
