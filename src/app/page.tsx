@@ -1,13 +1,9 @@
-import { auth } from "@/auth";
 import Image from "next/image";
 import Navbar from "./components/navbar";
 import textBlock from "./components/textBlock";
 
 export default async function Home() {
 
-  // const session = await auth()
-  // let a = <div>Not authenticated</div>
-  // if (session) { a = <div>Authenticated as: {session.user?.name}</div>}
   return (
     <div id="home">
       {Navbar()}
