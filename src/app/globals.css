@@ -9,6 +9,7 @@
   --primary: #3C91E6;
   --secondary: #9FD356;
   --tertiary: #FA824C;
+  --error: red;
 
   /* 50% opacity*/
   --primary-50: #3C91E680;
@@ -50,24 +51,30 @@ body {
   color: var(--secondary);
 }
 
-#loginBox {
+#login-register-formBox {
   background-color: var(--secondary-50);
   border-radius: 0.5rem;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
 
-#loginBox h1 {
+#login-register-formBox h1 {
   font-size: 2rem;
   font-weight: bold;
 }
 
-#loginBox button {
+#login-register-formBox button {
   background-color: var(--tertiary);
   padding: 0.5rem;
   border-radius: 1rem;
 }
 
-#loginBox input {
+#login-register-formBox input {
+  color: var(--background);
+  padding: 0.5rem;
+  border-radius: 0.6rem;
+}
+
+#login-register-formBox select {
   color: var(--background);
   padding: 0.5rem;
   border-radius: 0.6rem;
@@ -75,4 +82,8 @@ body {
 
 .link {
   color: var(--tertiary);
+}
+
+.error_text{
+  color: var(--error);
 }

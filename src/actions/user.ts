@@ -23,6 +23,15 @@ export async function getUserFromDb(email: string, password: string) {
   return { id: res[0].id.toString(), email: res[0].email, name: res[0].name }
 }
 
+export async function registerUser(email: string | null, password: string | null, name: string | null, surname: string | null, schoolId: string | null) {
+  if(!email || !password || !name || !surname || !schoolId) {
+    throw new Error("Missing parameters");
+  }
+  const hashedPassword = bcrypt.hashSync(password, 0);
+  const res = await db.insert(users).values({email: email, password: hashedPassword, name: name, surname: surname, schoolId: Number(schoolId)});
+  return res;
+}
+
 // WARNING: Questa funzione non dovrebbe mai essere utilizzata
 export async function getUserPermissions(id: number) {
   const perms = await db.select({id: permissions.id, name: permissions.name})

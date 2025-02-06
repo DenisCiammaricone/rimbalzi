@@ -2,7 +2,7 @@ import { signIn } from '@/auth';
 
 export default function LoginPage() {
     return (
-            <div id="loginBox" className='flex flex-col gap-5 2xl:w-1/6 xl:w-1/4 lg:w-1/4 md:w-1/3 sm:w-full mx-auto p-5 mt-20 '>
+            <div id="login-register-formBox" className='flex flex-col gap-5 2xl:w-1/6 xl:w-1/4 lg:w-1/4 md:w-1/3 sm:w-full mx-auto p-5 mt-20 '>
                 <h1 className="mx-auto">Login</h1>
                 <form className="flex flex-col gap-2 mx-auto" action={async (formData) => {
                     "use server"

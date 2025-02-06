@@ -1,5 +1,6 @@
 import { boolean, int, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 import { groups } from "./groups";
+import { schools } from "./schools";
 
 export const users = mysqlTable('users', {
     id: int('id').primaryKey().autoincrement(),
@@ -10,4 +11,5 @@ export const users = mysqlTable('users', {
     createdAt: timestamp('created_at').notNull().defaultNow(),
     activeted: boolean('activeted').notNull().default(false),
     groupId: int('group_id').notNull().default(1).references(() => groups.id),
+    schoolId: int('school_id').references(() => schools.id),
 });
