@@ -1,13 +1,13 @@
-import NextAuth from "next-auth"
+import NextAuth, { AuthError, CredentialsSignin } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { signInSchema } from "./app/lib/zod"
+import { ZodError } from "zod"
 import { getUserFromDb } from "./actions/user"
- 
+import React from "react"
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
-        name: 'Credentials',
-
         credentials: {
           email: { label: "Email", type: "email" },
           password: {  label: "Password", type: "password" }
@@ -15,28 +15,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         authorize: async (credentials) => {
             let user = null
-
-            const { email, password } = await signInSchema.parseAsync(credentials)
-     
+            const { email, password } = await signInSchema.parseAsync(credentials);
+            
             // logic to salt and hash password
-            //const pwHash = bcrypt.hashSync(password)
-     
+            // const pwHash = bcrypt.hashSync(password);
+  
             // logic to verify if the user exists
-            user = await getUserFromDb(email, password) // TODO: Remove password and use pwHash
-     
+            user = await getUserFromDb(email, password); // TODO: Remove password and use pwHash
+  
             if (!user) {
-              // No user found, so this is their first attempt to login
-              // Optionally, this is also the place you could do a user registration
-              throw new Error("Invalid credentials.")
+              throw new CredentialsSignin()
             }
-
+  
             // return user object with their profile data
             return {
-                id: user.id,
-                name: user.name,
-                email: user.email
-            }
-          },
+              id: user.id,
+              name: user.name,
+              email: user.email
+            };
+          
+        }
     }),
   ],
   pages: {
@@ -55,7 +53,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.email = user.email
       }
       return token
-  },
+    },
     async session({ session, token }) {
         return {
             ...session,

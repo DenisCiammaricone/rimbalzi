@@ -25,6 +25,8 @@ export default function RegisterPage() {
         <option key={school.id} value={school.id}>{school.name}</option>
     ));
     
+
+
     let response: any;
     return (
             <div id="login-register-formBox" className='flex flex-col gap-5 2xl:w-1/6 xl:w-1/4 lg:w-1/4 md:w-1/3 sm:w-full mx-auto p-5 mt-20 '>
@@ -70,7 +72,7 @@ export default function RegisterPage() {
                     <button className="mx-auto" type="submit">Registrati</button>
                 </form>
                 <div className="mx-auto">
-                    <ErrorText error={registerError}></ErrorText>
+                    <ErrorText error={registerError.toString()}></ErrorText>
                 </div>
                 <hr></hr>
                 <div className='mx-auto'>Hai già un account? <a className="link" href='/login'><i>Accedi!</i></a></div>

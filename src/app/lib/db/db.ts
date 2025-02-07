@@ -1,9 +1,9 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
-let connection: mysql.Connection | null = null;
+export let connection: mysql.Connection | null = null;
 
-async function getConnection(){
+export const getConnection = async () => {
     if(!connection) {
         connection = await mysql.createConnection({
             host: process.env.DB_HOST,

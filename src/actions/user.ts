@@ -16,8 +16,9 @@ function password_verify(passwordLocal: string, passwordDB: string): boolean {
 
 export async function getUserFromDb(email: string, password: string) {
   const res = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  
   if(res.length === 0 || !password_verify(password, res[0].password)) {
-    return { id: "", email: "", name: "", permissions: [] };
+    return null;
   }
 
   return { id: res[0].id.toString(), email: res[0].email, name: res[0].name }

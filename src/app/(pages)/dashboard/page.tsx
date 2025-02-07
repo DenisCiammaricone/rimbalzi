@@ -9,31 +9,34 @@ import { classesPage } from './classe/show_classes';
 
 
 export default function dashboard() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [content, setContent] = useState(<></>);
     
-    // TODO: Icona di caricamento che reindirizza a 401 se impiega più di 5 secondi
-    if(!session) return (
-       
-        <div className='flex min-h-screen justify-center items-center text-3xl font-bold'>
-            <svg viewBox="25 25 50 50">
-                <circle r="20" cy="50" cx="50"></circle>
-            </svg>
-        </div> 
-    );
-        
-    const handleClassiClick = () => {     
-        setContent(classesPage(session.user.id, setContent));
-    };
+    if(status === "loading") {
+        return (
+            <div className='flex min-h-screen justify-center items-center text-3xl font-bold'>
+                <svg viewBox="25 25 50 50">
+                    <circle r="20" cy="50" cx="50"></circle>
+                </svg>
+            </div> 
+        );
+    } else if (status === "authenticated") {
+        const handleClassiClick = () => {     
+            setContent(classesPage(session.user.id, setContent));
+        };
 
-    return (
-        <div className='flex flex-col mx-auto w-3/4'>
-            <div className='flex'>
-                <div className='flex flex-col w-1/4' id="sideBar">
-                    <div><a onClick={handleClassiClick}> Classi </a></div>
+        return (
+            <div className='flex flex-col mx-auto w-3/4'>
+                <div className='flex'>
+                    <div className='flex flex-col w-1/4' id="sideBar">
+                        <div><a onClick={handleClassiClick}> Classi </a></div>
+                    </div>
+                    <div className=' w-3/4' id="contentView">{content}</div>
                 </div>
-                <div className=' w-3/4' id="contentView">{content}</div>
             </div>
-        </div>)
+        )
+    } else if (status === "unauthenticated") {
+        redirect("/login");
+    }
     
 }
