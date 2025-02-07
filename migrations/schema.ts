@@ -1,5 +1,16 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, unique, int, varchar, foreignKey, timestamp } from "drizzle-orm/mysql-core"
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, foreignKey, int, varchar, timestamp, unique } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
+
+export const classes = mysqlTable("classes", {
+	id: int().autoincrement().notNull(),
+	code: varchar({ length: 4 }).notNull(),
+	maleNumber: int("male_number").notNull(),
+	femaleNumber: int("female_number").notNull(),
+	detail: varchar({ length: 256 }).default('NULL'),
+	createdAt: timestamp("created_at", { mode: 'string' }).default('current_timestamp()').notNull(),
+	teacherId: int("teacher_id").notNull().references(() => users.id),
+	schoolId: int("school_id").notNull().references(() => schools.id),
+});
 
 export const groups = mysqlTable("groups", {
 	id: int().autoincrement().notNull(),
@@ -29,10 +40,10 @@ export const schools = mysqlTable("schools", {
 	address: varchar({ length: 64 }).notNull(),
 	codiceIstituto: varchar("codice_istituto", { length: 8 }).notNull(),
 	codiceScuola: varchar("codice_scuola", { length: 8 }).notNull(),
-	details: varchar({ length: 256 }).notNull(),
+	details: varchar({ length: 256 }).default('NULL'),
 },
 (table) => [
-	unique("schools_codice_istituto_unique").on(table.codiceIstituto),
+	unique("schools_codice_scuola_unique").on(table.codiceScuola),
 ]);
 
 export const users = mysqlTable("users", {

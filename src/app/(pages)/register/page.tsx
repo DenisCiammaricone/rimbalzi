@@ -1,6 +1,5 @@
 'use client'
 import ErrorText from "@/app/components/errorText";
-import { register } from "module";
 import { useEffect, useState } from "react";
 
 export default function RegisterPage() {
@@ -45,10 +44,10 @@ export default function RegisterPage() {
                             schoolId: formData.get('schoolId')
                         })
                     });
-                    // const errorData = await response.json();
-                    // if (response.status === 400) {
-                    //     setRegisterError(errorData.message);
-                    // }
+                    const errorData = await response.json();
+                    if (response.status === 400) {
+                        setRegisterError(errorData.message);
+                    }
                 }}>
 
                     <div>
