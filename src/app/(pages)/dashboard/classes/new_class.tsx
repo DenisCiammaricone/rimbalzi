@@ -1,6 +1,5 @@
 import ErrorText from "@/app/components/errorText";
 
-// TODO:  transform this into GET request
 export function newClass (teacherId: string)  {
     return (
         <div className="w-1/2 mx-auto">
@@ -11,7 +10,8 @@ export function newClass (teacherId: string)  {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        class_name: formData.get('class_name'),
+                        class_grade: formData.get('class_name'),
+                        class_section: formData.get('class_section'),
                         female_number: Number(formData.get('female_number')),
                         male_number: Number(formData.get('male_number')),
                         details: formData.get('details'),
@@ -22,8 +22,22 @@ export function newClass (teacherId: string)  {
                     const errorData = await response.json();
                 }
             }}>
-                <label htmlFor="class_name">Class Name</label>
-                <input type="text" id="class_name" name="class_name" required/>
+                <label htmlFor="class_grade">Anno</label>
+                <select id="class_grade" name="class_grade" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <label htmlFor="class_section">Sezione</label>
+                <select id="class_section" name="class_section" required>
+                    {Array.from({ length: 26 }, (_, i) => (
+                        <option key={i} value={String.fromCharCode(65 + i)}>
+                            {String.fromCharCode(65 + i)}
+                        </option>
+                    ))}
+                </select>
                 <label htmlFor="female_number">N° ragazze</label>
                 <input type="number" id="female_number" name="female_number" required/>
                 <label htmlFor="male_number">N° ragazzi</label>

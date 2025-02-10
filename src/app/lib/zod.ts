@@ -26,8 +26,11 @@ export const registerSchema = object({
 })
 
 export const newClassSchema = object({
-  class_name: string({ required_error: "Class name is required" })
-    .min(1, "Class name is required"),
+  class_grade: string({ required_error: "Class grade is required" })
+    .min(1, "Class grade is required")
+    .max(1, "Class grade is required"),
+  class_section: string({ required_error: "Section is required" })
+    .min(1, "Section is required"),
   female_number: number({ required_error: ""})
     .min(0, "People are not negative")
     .max(30, "Too many people"), 

@@ -12,6 +12,7 @@
     "@headlessui/react": "^2.2.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
+    "console": "^0.7.2",
     "drizzle-orm": "^0.38.3",
     "headlessui": "^0.0.0",
     "jsonwebtoken": "^9.0.2",

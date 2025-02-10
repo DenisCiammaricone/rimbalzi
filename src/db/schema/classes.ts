@@ -1,11 +1,12 @@
-import { int, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { char, int, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 import { users } from "./users";
 import { schools } from "./schools";
 
 
 export const classes = mysqlTable('classes', {
     id: int('id').primaryKey().autoincrement(),
-    code: varchar('code', {length: 4}).notNull(),
+    grade: int('grade').notNull(),
+    section: char('section').notNull(),
     maleNumber: int('male_number').notNull(),
     femaleNumber: int('female_number').notNull(),
     details: varchar('detail', {length: 256}),

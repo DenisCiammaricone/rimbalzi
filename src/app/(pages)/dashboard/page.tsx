@@ -1,11 +1,10 @@
 'use client'
-import { isUserInGroupById } from '@/actions/user';
-import { auth } from '@/auth';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation'
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
-import { classesPage } from './classe/show_classes';
+import { classesPage } from './classes/show_classes';
+import { sessionsPage } from './sessions/show_sessions';
 
 
 export default function dashboard() {
@@ -21,8 +20,11 @@ export default function dashboard() {
             </div> 
         );
     } else if (status === "authenticated") {
-        const handleClassiClick = () => {     
-            setContent(classesPage(session.user.id, setContent));
+        const handleClassiClick = async () => {     
+            setContent(await classesPage(session.user.id, setContent));
+        };
+        const handleSessioniClick = async () => {     
+            setContent(await sessionsPage(session.user.id, setContent));
         };
 
         return (
@@ -30,6 +32,7 @@ export default function dashboard() {
                 <div className='flex'>
                     <div className='flex flex-col w-1/4' id="sideBar">
                         <div><a onClick={handleClassiClick}> Classi </a></div>
+                        <div><a onClick={handleSessioniClick}> Sessioni </a></div>
                     </div>
                     <div className=' w-3/4' id="contentView">{content}</div>
                 </div>
