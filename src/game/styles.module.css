@@ -1,0 +1,6 @@
+.gameBoard {
+    display: grid;
+    grid-gap: 10px;
+    width: 300px;
+    margin: 0 auto;
+}

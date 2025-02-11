@@ -1,18 +1,18 @@
 import { newClass } from "./new_class";
 import React from "react";
 
-export async function classesPage (uid:string = "0", setContent:any, )  {
-    const response = await fetch('/api/class?uid='+uid, {
+export async function classesPage(uid: string = "0", setContent: any,) {
+    const response = await fetch('/api/class?uid=' + uid, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         }
     })
     const data = await response.json();
-    
+
     return (
         <div>
-            <button onClick={() => setContent(newClass(uid))}>Create Class</button>
+            <button onClick={() => setContent(newClass(uid))}>Registra Aula</button>
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>
@@ -37,7 +37,7 @@ export async function classesPage (uid:string = "0", setContent:any, )  {
                                 {classItem.grade} {classItem.section}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {classItem.maleNumber + classItem.femaleNumber} ({classItem.maleNumber} {classItem.maleNumber>1 ? "maschi" : "maschio"}, {classItem.femaleNumber} {classItem.femaleNumber>1 ? "femmine" : "femmina"})
+                                {classItem.maleNumber + classItem.femaleNumber} ({classItem.maleNumber} {classItem.maleNumber > 1 ? "maschi" : "maschio"}, {classItem.femaleNumber} {classItem.femaleNumber > 1 ? "femmine" : "femmina"})
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {classItem.details}
