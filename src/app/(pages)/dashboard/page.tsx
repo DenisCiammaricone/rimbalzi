@@ -5,11 +5,13 @@ import React from 'react';
 import { useState } from 'react';
 import { classesPage } from './classes/show_classes';
 import { sessionsPage } from './sessions/show_sessions';
+import { error } from 'console';
 
 
 export default function dashboard() {
     const { data: session, status } = useSession();
     const [content, setContent] = useState(<></>);
+    
     
     if(status === "loading") {
         return (
@@ -23,10 +25,10 @@ export default function dashboard() {
         const handleClassiClick = async () => {     
             setContent(await classesPage(session.user.id, setContent));
         };
-        const handleSessioniClick = async () => {     
+        const handleSessioniClick = async () => {    
             setContent(await sessionsPage(session.user.id, setContent));
+            
         };
-
         return (
             <div className='flex flex-col mx-auto w-3/4'>
                 <div className='flex'>

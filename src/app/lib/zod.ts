@@ -1,4 +1,5 @@
-import { number, object, string } from "zod"
+import { number, object, string, z } from "zod"
+import { session_phases } from "./enums"
  
 export const signInSchema = object({
   email: string({ required_error: "Email is required" })
@@ -40,4 +41,14 @@ export const newClassSchema = object({
   details: string(),
   teacher_id: string({ required_error: "Teacher is required" })
     .min(1, "Teacher is required")
+})
+
+export const newSessionSchema = object({
+  class_grade: string({ required_error: "Class grade is required" })
+    .min(1, "Class grade is required")
+    .max(1, "Class grade is required"),
+  class_section: string({ required_error: "Section is required" })
+    .min(1, "Section is required"),
+  session_phase: z.enum([...(session_phases as [string, ...string[]])]),
+    
 })

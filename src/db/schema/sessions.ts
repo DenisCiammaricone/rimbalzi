@@ -2,11 +2,10 @@ import { int, mysqlEnum, mysqlTable, timestamp, varchar } from "drizzle-orm/mysq
 import { users } from "./users";
 import { classes } from "./classes";
 
-
 export const sessions = mysqlTable('sessions', {
     id: int('id').primaryKey().autoincrement(),
-    state: mysqlEnum(['waiting', 'started', 'finished']).notNull().default('waiting'),
-    phase: mysqlEnum(['training_1.1', 'training_1.2', 'test1', 'training_2.1', 'training_2.2', 'test2']).notNull(),
+    state:  varchar('state', {length: 16}).notNull().default('waiting'), //TODO: Remember to change this to session_states enum in enums.ts
+    phase: varchar('phase', {length: 16}).notNull(),//TODO: Remember to change this to session_phases enum in enums.ts
     code: varchar('code', { length: 16 }).notNull().unique(),
     details: varchar('details', { length: 256 }),
     createdAt: timestamp('created_at').notNull().defaultNow(),

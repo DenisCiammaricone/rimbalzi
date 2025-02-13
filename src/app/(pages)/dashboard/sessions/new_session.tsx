@@ -1,47 +1,58 @@
-export function newSession(teacherId: string = "0") {
+import ErrorText from "@/app/components/errorText";
+import { session_phases } from "@/app/lib/enums";
+import { useState } from "react";
+
+export async function newSession(teacherId: string = "0") {
+    //TODO: I just need grade and section, not the entire class
+    const response = await fetch('/api/class?uid=' + teacherId, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    const classesData = await response.json()
+    
     return (
         <div className="w-1/2 mx-auto">
             <form className="flex flex-col gap-2 mx-auto" action={async (formData) => {
-                const response = await fetch('/api/class', {
+                const response = await fetch('/api/session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        class_grade: formData.get('class_name'),
-                        class_section: formData.get('class_section'),
-                        female_number: Number(formData.get('female_number')),
-                        male_number: Number(formData.get('male_number')),
+                        class_grade: formData.get('class_grade_section')?.slice(0, 1),
+                        class_section: formData.get('class_grade_section')?.slice(1),
+                        session_phase: formData.get('session_phase'),
                         details: formData.get('details'),
                         teacher_id: teacherId
                     }),
                 })
+                const data = await response.json();
                 if (response.status === 400) {
-                    const errorData = await response.json();
+                    
                 }
+                
             }}>
-                <label htmlFor="class_grade">Anno</label>
-                <select id="class_grade" name="class_grade" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                <label htmlFor="class_grade">Classe</label>
+                <select id="classGradeSection" name="class_grade_section" required>
+                    {classesData.classes.map((classItem: any) => {
+                        return <option key={classItem.id} value={classItem.grade + classItem.section}>{classItem.grade} {classItem.section}</option>
+                    })}
                 </select>
-                <label htmlFor="class_section">Sezione</label>
-                <select id="class_section" name="class_section" required>
-                    {Array.from({ length: 26 }, (_, i) => (
-                        <option key={i} value={String.fromCharCode(65 + i)}>
-                            {String.fromCharCode(65 + i)}
-                        </option>
-                    ))}
+                <label htmlFor="session_phase">Fase Sessione </label>
+                {
+                // TODO: Verificare in che fase l'aula selezionata si trova
+                }
+                <select id="session_phase" name="session_phase" required>
+                    {session_phases.map((phase, i) => {return <option key={i} value={phase}>{phase}</option>})}
                 </select>
-                <label htmlFor="female_number">N° ragazze</label>
-                <input type="number" id="female_number" name="female_number" required />
-                <label htmlFor="male_number">N° ragazzi</label>
-                <input type="number" id="male_number" name="male_number" required />
-                <label htmlFor="detail">Dettagli</label>
-                <textarea rows={5} id="details" name="details" required />
+                <label htmlFor="detail">Dettagli sessione</label>
+                <textarea rows={5} id="details" name="details" />
+                {
+                    /* <ErrorText error={errorMessage}></ErrorText> */
+                    //TODO: Add error handling
+                } 
                 <button type="submit">Crea</button>
             </form>
         </div>
