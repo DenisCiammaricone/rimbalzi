@@ -1,4 +1,4 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, foreignKey, int, varchar, timestamp, unique } from "drizzle-orm/mysql-core"
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, foreignKey, int, varchar, timestamp, unique, boolean } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
 
 export const classes = mysqlTable("classes", {
@@ -16,9 +16,9 @@ export const groups = mysqlTable("groups", {
 	id: int().autoincrement().notNull(),
 	name: varchar({ length: 16 }).notNull(),
 },
-(table) => [
-	unique("groups_name_unique").on(table.name),
-]);
+	(table) => [
+		unique("groups_name_unique").on(table.name),
+	]);
 
 export const groupPermissions = mysqlTable("group_permissions", {
 	id: int().autoincrement().notNull(),
@@ -30,9 +30,9 @@ export const permissions = mysqlTable("permissions", {
 	id: int().autoincrement().notNull(),
 	name: varchar({ length: 16 }).notNull(),
 },
-(table) => [
-	unique("permissions_name_unique").on(table.name),
-]);
+	(table) => [
+		unique("permissions_name_unique").on(table.name),
+	]);
 
 export const schools = mysqlTable("schools", {
 	id: int().autoincrement().notNull(),
@@ -42,9 +42,9 @@ export const schools = mysqlTable("schools", {
 	codiceScuola: varchar("codice_scuola", { length: 8 }).notNull(),
 	details: varchar({ length: 256 }).default('NULL'),
 },
-(table) => [
-	unique("schools_codice_scuola_unique").on(table.codiceScuola),
-]);
+	(table) => [
+		unique("schools_codice_scuola_unique").on(table.codiceScuola),
+	]);
 
 export const users = mysqlTable("users", {
 	id: int().autoincrement().notNull(),
@@ -53,10 +53,10 @@ export const users = mysqlTable("users", {
 	email: varchar({ length: 256 }).notNull(),
 	password: varchar({ length: 256 }).notNull(),
 	createdAt: timestamp("created_at", { mode: 'string' }).default('current_timestamp()').notNull(),
-	activeted: tinyint().default(0).notNull(),
+	activeted: boolean().default(false).notNull(),
 	groupId: int("group_id").default(1).notNull().references(() => groups.id),
-	schoolId: int("school_id").default('NULL').references(() => schools.id),
+	schoolId: int("school_id").default(-1).references(() => schools.id),
 },
-(table) => [
-	unique("users_email_unique").on(table.email),
-]);
+	(table) => [
+		unique("users_email_unique").on(table.email),
+	]);
