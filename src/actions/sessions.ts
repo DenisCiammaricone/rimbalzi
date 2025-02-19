@@ -4,6 +4,7 @@ import { getClassesByGradeSectionAndSchool } from "./classes";
 import { getTeacherSchoolId } from "./user";
 import { session_phases } from "@/app/lib/enums";
 import { eq, and } from "drizzle-orm";
+import { classes } from "@/db/schema/classes";
 
 export async function createNewSession(class_grade: string, class_section: string, session_phase: string, teacher_id: string, details: string = ""){ 
     const school_id = await getTeacherSchoolId(teacher_id);
@@ -27,6 +28,19 @@ export async function createNewSession(class_grade: string, class_section: strin
         throw "Class already has a session in this phase"
     }
     const res = await db.insert(sessions).values({phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId)});
+    return res;
+}
+
+export async function getSessionsByTeacherId(teacher_id: string) {
+    const tid = Number(teacher_id);
+
+    //Should never occur since we check the teacher_id in the zod schema
+    if(isNaN(tid)) {
+        throw ('Invalid teacher id');
+    }
+
+    const res = await db.select({id: sessions.id, code: sessions.code, phase: sessions.phase, details: sessions.details, class_grade: classes.grade, class_section: classes.section}).from(sessions).leftJoin(classes, eq(classes.id, sessions.classId)).where(eq(sessions.userId, tid));
+
     return res;
 }
 

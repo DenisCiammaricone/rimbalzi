@@ -1,6 +1,7 @@
 import { createNewSession } from '@/actions/sessions';
 import { newSessionSchema } from '@/app/lib/zod';
 import { NextResponse } from 'next/server';
+import { getSessionsByTeacherId } from '@/actions/sessions';
 
 export async function POST(req: Request) {
     try {
@@ -29,4 +30,13 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
+    const { searchParams } = new URL(req.url);
+    const teacherId = searchParams.get('uid');
+
+    if (!teacherId) {
+        return NextResponse.json({ error: 'Missing teacher_id parameter' }, { status: 400 });
+    }
+
+    const classes = await getSessionsByTeacherId(teacherId);
+    return NextResponse.json({ classes: classes}, { status: 200 });
 }
