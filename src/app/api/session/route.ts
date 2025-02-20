@@ -1,19 +1,35 @@
-import { createNewSession } from '@/actions/sessions';
+import { createNewSession, createSessionKeys } from '@/actions/sessions';
 import { newSessionSchema } from '@/app/lib/zod';
 import { NextResponse } from 'next/server';
 import { getSessionsByTeacherId } from '@/actions/sessions';
+import { getClassesByGradeSectionAndSchool } from '@/actions/classes';
+import { getTeacherSchoolId } from '@/actions/user';
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
 
         const { class_grade, class_section, session_phase  } = await newSessionSchema.parseAsync(body);
-        
         try {
-            const result = await createNewSession(class_grade, class_section, session_phase, body.teacher_id, body.details)
-            if(result) {
-                return NextResponse.json({ message: 'Ok'}, { status: 200 });
+            let result = await createNewSession(class_grade, class_section, session_phase, body.teacher_id, body.details)
+            
+            try {
+                
+                const schoolId = await getTeacherSchoolId(body.teacher_id);
+                if(!schoolId) {
+                    throw "School ID is undefined";
+                } 
+                const classId = await getClassesByGradeSectionAndSchool(class_grade, class_section, schoolId.toString());
+        
+                const sessionKeysResult = await createSessionKeys(result.toString(), classId);
+                 if(sessionKeysResult) {
+                     return NextResponse.json({ message: 'Ok'}, { status: 200 });
+                 }
             }
+            catch (error: Error | unknown) {
+                return NextResponse.json({ 'error': 'Cannot generate session keys', 'message': error}, { status: 500 });
+            }
+
         }
         catch (error: Error | unknown) {
             return NextResponse.json({ 'error': 'Invalid request', 'message': error}, { status: 400 });

@@ -14,8 +14,8 @@ function password_verify(passwordLocal: string, passwordDB: string): boolean {
     return false;
 }
 
-export async function getTeacherSchoolId(teacher_id: string) {
-    return await db.select({ schoolId: users.schoolId }).from(users).where(eq(users.id, Number(teacher_id))).then(res => res[0]?.schoolId);
+export async function getTeacherSchoolId(teacher_id: number) {
+  return await db.select({ schoolId: users.schoolId }).from(users).where(eq(users.id, teacher_id)).then(res => res[0]?.schoolId);
 }
 
 export async function getUserFromDb(email: string, password: string) {

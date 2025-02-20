@@ -10,7 +10,7 @@ export function newClass (teacherId: string)  {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        class_grade: formData.get('class_name'),
+                        class_grade: formData.get('class_grade'),
                         class_section: formData.get('class_section'),
                         female_number: Number(formData.get('female_number')),
                         male_number: Number(formData.get('male_number')),

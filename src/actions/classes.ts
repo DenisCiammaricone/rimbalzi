@@ -22,7 +22,6 @@ export async function createNewClass(grade: string, section: string, female_numb
 export async function getClassesByGradeSectionAndSchool(class_grade: string, class_section: string, school_id: string){
     const res = await db.select().from(classes).where(and(eq(classes.grade, Number(class_grade)), eq(classes.section, class_section), eq(classes.schoolId, Number(school_id))));
     return res[0].id.toString();
-
 }
 
 export async function getClassesByTeacherId(teacher_id: string){
@@ -35,4 +34,9 @@ export async function getClassesByTeacherId(teacher_id: string){
 
     const res = await db.select().from(classes).where(eq(classes.teacherId, tid));
     return res;
+}
+
+export async function getClassById(classId: string){
+    const res = await db.select().from(classes).where(eq(classes.id, Number(classId)));
+    return res[0];
 }

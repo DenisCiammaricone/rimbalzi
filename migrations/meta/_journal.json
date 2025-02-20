@@ -36,6 +36,13 @@
       "when": 1739258968226,
       "tag": "0004_free_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1739995465693,
+      "tag": "0005_abnormal_loners",
+      "breakpoints": true
     }
   ]
 }
