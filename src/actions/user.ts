@@ -4,7 +4,6 @@ import { eq,and } from "drizzle-orm";
 import bcrypt from 'bcryptjs';
 import { permissions } from "@/db/schema/permissions";
 import { group_permissions } from "@/db/schema/group_permissions";
-import { User } from "next-auth";
 import { groups } from "@/db/schema/groups";
 
 function password_verify(passwordLocal: string, passwordDB: string): boolean {
@@ -33,8 +32,14 @@ export async function registerUser(email: string | null, password: string | null
     throw new Error("Missing parameters");
   }
   const hashedPassword = bcrypt.hashSync(password, 0);
-  const res = await db.insert(users).values({email: email, password: hashedPassword, name: name, surname: surname, schoolId: Number(schoolId)});
-  return res;
+  try {
+    const res = await db.insert(users).values({email: email, password: hashedPassword, name: name, surname: surname, schoolId: Number(schoolId)});
+    return res;
+  } catch (error: any) {
+    if(error.code === 'ER_DUP_ENTRY'){
+      throw new Error("Account già esistente");
+    }
+  }
 }
 
 // WARNING: Questa funzione non dovrebbe mai essere utilizzata

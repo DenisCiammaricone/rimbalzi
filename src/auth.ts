@@ -15,15 +15,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         authorize: async (credentials) => {
             let user = null
-            const { email, password } = await signInSchema.parseAsync(credentials);
-            
-            // logic to salt and hash password
-            // const pwHash = bcrypt.hashSync(password);
+
+            const { email, password } = await signInSchema.parseAsync(credentials).catch((error: ZodError) => {
+                throw new CredentialsSignin()
+            })
   
             // logic to verify if the user exists
-            user = await getUserFromDb(email, password); // TODO: Remove password and use pwHash
+            user = await getUserFromDb(email, password);
   
             if (!user) {
+              //throw new CredentialsSignin({ message: "Tests" })
               throw new CredentialsSignin()
             }
   

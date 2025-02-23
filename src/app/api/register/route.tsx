@@ -16,8 +16,11 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
 
         
-    } catch (error: Error | unknown) {
+    } catch (error) {
         const e = JSON.parse(JSON.stringify(error));
-        return NextResponse.json({ 'error': 'Invalid request: ', 'message': e}, { status: 400 });
+        if(e.name === 'ZodError') {
+            return NextResponse.json({ 'error': 'Invalid request', 'data': e.issues[0].message }, { status: 400 });
+        }
+        return NextResponse.json({ 'error': 'Invalid request', 'data': (error as Error).message}, { status: 400 });
     }
 }
