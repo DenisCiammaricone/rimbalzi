@@ -1,6 +1,6 @@
 import { number, object, string, z } from "zod"
 import { session_phases } from "./enums"
- 
+
 export const signInSchema = object({
   email: string({ required_error: "Email is required" })
     .min(1, "Email is required")
@@ -32,15 +32,25 @@ export const newClassSchema = object({
     .max(1, "Class grade is required"),
   class_section: string({ required_error: "Section is required" })
     .min(1, "Section is required"),
-  female_number: number({ required_error: ""})
+  female_number: number({ required_error: "" })
     .min(0, "People are not negative")
-    .max(30, "Too many people"), 
-  male_number: number({ required_error: ""})
+    .max(30, "Too many people"),
+  male_number: number({ required_error: "" })
     .min(0, "People are not negative")
-    .max(30, "Too many people"), 
+    .max(30, "Too many people"),
   details: string(),
   teacher_id: string({ required_error: "Teacher is required" })
     .min(1, "Teacher is required")
+})
+
+export const updateClassSchema = object({
+  female_number: number({ required_error: "" })
+    .min(0, "People are not negative")
+    .max(30, "Too many people"),
+  male_number: number({ required_error: "" })
+    .min(0, "People are not negative")
+    .max(30, "Too many people"),
+  details: string(),
 })
 
 export const newSessionSchema = object({
@@ -50,5 +60,5 @@ export const newSessionSchema = object({
   class_section: string({ required_error: "Section is required" })
     .min(1, "Section is required"),
   session_phase: z.enum([...(session_phases as [string, ...string[]])]),
-    
+
 })
