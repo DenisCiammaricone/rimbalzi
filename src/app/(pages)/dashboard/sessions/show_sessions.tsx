@@ -1,4 +1,4 @@
-import { newSession } from "./new_session";
+import { NewSession } from "./new_session";
 
 export async function sessionsPage(uid: string = "0", setContent: any) {
     const response = await fetch('/api/session?uid=' + uid, {
@@ -11,7 +11,7 @@ export async function sessionsPage(uid: string = "0", setContent: any) {
 
     return (
         <div>
-            <button onClick={() => setContent(newSession(uid))}>Prenota Sessione</button>
+            <button onClick={() => setContent(<><NewSession teacherId={uid}></NewSession></>)}>Prenota Sessione</button>
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>

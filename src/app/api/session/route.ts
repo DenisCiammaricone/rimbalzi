@@ -27,12 +27,12 @@ export async function POST(req: Request) {
                  }
             }
             catch (error: Error | unknown) {
-                return NextResponse.json({ 'error': 'Cannot generate session keys', 'message': error}, { status: 500 });
+                return NextResponse.json({ 'error': 'Cannot generate session keys', 'data': error}, { status: 500 });
             }
 
         }
         catch (error: Error | unknown) {
-            return NextResponse.json({ 'error': 'Invalid request', 'message': error}, { status: 400 });
+            return NextResponse.json({ 'error': 'Invalid request', 'data': error}, { status: 400 });
         }
 
         
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         
     } catch (error: Error | unknown) {
         const e = JSON.parse(JSON.stringify(error));
-        return NextResponse.json({ 'error': 'Invalid request', 'message': e}, { status: 400 });
+        return NextResponse.json({ 'error': 'Invalid request', 'data': e}, { status: 400 });
     }
 }
 

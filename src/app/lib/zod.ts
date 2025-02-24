@@ -49,6 +49,5 @@ export const newSessionSchema = object({
     .max(1, "Class grade is required"),
   class_section: string({ required_error: "Section is required" })
     .min(1, "Section is required"),
-  session_phase: z.enum([...(session_phases as [string, ...string[]])]),
-    
+  session_phase: z.enum([...(session_phases as [string, ...string[]])], {message: "Invalid session phase"}),
 })

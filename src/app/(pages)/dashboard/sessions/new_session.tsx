@@ -1,17 +1,29 @@
 import ErrorText from "@/app/components/errorText";
 import { session_phases } from "@/app/lib/enums";
+import { redirect } from "next/navigation";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import { ZodError } from "zod";
 
-export async function newSession(teacherId: string = "0") {
-    //TODO: I just need grade and section, not the entire class
-    const response = await fetch('/api/class?uid=' + teacherId, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    const classesData = await response.json()
-    
+export function NewSession({teacherId}: {teacherId: string}) {
+    const [errorData, setErrorData] = useState('')
+    const [classesData, setClassesData] = useState<{ classes: Class[] } | null>(null)
+
+    // //TODO: I just need grade and section, not the entire class
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch('/api/class?uid=' + teacherId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            if(response){
+                setClassesData(await response.json())
+            }
+        }
+        fetchData();
+    }, [])
     return (
         <div className="w-1/2 mx-auto">
             <form className="flex flex-col gap-2 mx-auto" action={async (formData) => {
@@ -28,17 +40,28 @@ export async function newSession(teacherId: string = "0") {
                         teacher_id: teacherId
                     }),
                 })
-                const data = await response.json();
-                if (response.status === 400) {
-                    
+                if(response.status === 400) {
+                    const data = await response.json();
+                    console.log(data)
+                    if(data.data.name === "ZodError") {
+                        setErrorData(data.data.issues[0].message);
+                    } else if (data.data instanceof String) {
+                        setErrorData(data.data);
+                    } else {
+                        setErrorData("Errore sconosciuto. Contatta un amministratore")
+                    }
                 }
+                if(response.status === 200) {
+                        redirect('/dashboard')
+                }
+                
                 
             }}>
                 <label htmlFor="class_grade">Classe</label>
                 <select id="classGradeSection" name="class_grade_section" required>
-                    {classesData.classes.map((classItem: any) => {
+                    {classesData ? (classesData.classes.map((classItem: any) => {
                         return <option key={classItem.id} value={classItem.grade + classItem.section}>{classItem.grade} {classItem.section}</option>
-                    })}
+                    })) : null}
                 </select>
                 <label htmlFor="session_phase">Fase Sessione </label>
                 {
@@ -49,10 +72,8 @@ export async function newSession(teacherId: string = "0") {
                 </select>
                 <label htmlFor="detail">Dettagli sessione</label>
                 <textarea rows={5} id="details" name="details" />
-                {
-                    /* <ErrorText error={errorMessage}></ErrorText> */
-                    //TODO: Add error handling
-                } 
+                <ErrorText error={errorData}></ErrorText>
+                   
                 <button type="submit">Crea</button>
             </form>
         </div>
