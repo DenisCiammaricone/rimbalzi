@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1738850022865,
-      "tag": "0000_orange_penance",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1738850233920,
-      "tag": "0001_big_hairball",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1738869184080,
-      "tag": "0002_solid_rhodey",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1739207112555,
-      "tag": "0003_tranquil_rafael_vega",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1739258968226,
-      "tag": "0004_free_deathstrike",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1739995465693,
-      "tag": "0005_abnormal_loners",
+      "when": 1740394545248,
+      "tag": "0000_parched_wong",
       "breakpoints": true
     }
   ]

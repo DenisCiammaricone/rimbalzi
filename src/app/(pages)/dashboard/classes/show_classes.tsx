@@ -1,7 +1,7 @@
-import { newClass } from "./new_class";
+import { NewClass } from "./new_class";
 import React from "react";
 
-export async function classesPage(uid: string = "0", setContent: any,) {
+export async function classesPage (uid: string = "0",  setContent: any) {
     const response = await fetch('/api/class?uid=' + uid, {
         method: 'GET',
         headers: {
@@ -12,7 +12,7 @@ export async function classesPage(uid: string = "0", setContent: any,) {
 
     return (
         <div>
-            <button onClick={() => setContent(newClass(uid))}>Registra Aula</button>
+            <button onClick={() => setContent(<><NewClass teacherId={uid}></NewClass></>)}>Registra Aula</button> 
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>

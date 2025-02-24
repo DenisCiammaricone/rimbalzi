@@ -1,6 +1,7 @@
 import { createNewClass, getClassesByTeacherId } from '@/actions/classes';
 import { newClassSchema } from '@/app/lib/zod';
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 
 export async function POST(req: Request) {
     try {
@@ -18,7 +19,10 @@ export async function POST(req: Request) {
         
     } catch (error: Error | unknown) {
         const e = JSON.parse(JSON.stringify(error));
-        return NextResponse.json({ 'error': 'Invalid request', 'message': e}, { status: 400 });
+        if(error instanceof ZodError) {
+            return NextResponse.json({ 'error': 'Invalid request', 'message': e.issues[0].message}, { status: 400 });
+        }
+        return NextResponse.json({ 'error': 'Invalid request', 'message': (error as Error).message}, { status: 400 });
     }
 }
 

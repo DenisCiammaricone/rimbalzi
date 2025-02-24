@@ -15,8 +15,16 @@ export async function createNewClass(grade: string, section: string, female_numb
     if (schoolId === null) {
         throw ('School ID not found for the given teacher ID');
     }
-    const res = await db.insert(classes).values({grade: Number(grade), section: section, femaleNumber: female_number, maleNumber: male_number, details: details, teacherId: tid, schoolId: schoolId});
-    return res;
+
+    try {
+        const res = await db.insert(classes).values({grade: Number(grade), section: section, femaleNumber: female_number, maleNumber: male_number, details: details, teacherId: tid, schoolId: schoolId});
+        return res;
+    }catch (error: any){
+        if(error.code === 'ER_DUP_ENTRY'){
+            throw new Error('La classe già esiste nella base dati');
+        }
+    }
+    
 }
 
 export async function getClassesByGradeSectionAndSchool(class_grade: string, class_section: string, school_id: string){

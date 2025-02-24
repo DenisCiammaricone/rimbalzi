@@ -1,6 +1,11 @@
 import ErrorText from "@/app/components/errorText";
+import dashboard from "../page";
+import { useState } from "react";
+import { redirect } from "next/navigation";
 
-export function newClass (teacherId: string)  {
+export function NewClass ({teacherId}: {teacherId: string})  {
+    const [errorData, setErrorData] = useState('')
+    
     return (
         <div className="w-1/2 mx-auto">
             <form className="flex flex-col gap-2 mx-auto" action={async (formData) => {
@@ -19,7 +24,12 @@ export function newClass (teacherId: string)  {
                     }),
                 })
                 if(response.status === 400) {
-                    const errorData = await response.json();
+                    const data = await response.json();
+                    if(data.message) {
+                        setErrorData(data.message);
+                    }
+                } if(response.status === 200) {
+                    redirect('/dashboard')
                 }
             }}>
                 <label htmlFor="class_grade">Anno</label>
@@ -43,14 +53,14 @@ export function newClass (teacherId: string)  {
                 <label htmlFor="male_number">N° ragazzi</label>
                 <input type="number" id="male_number" name="male_number" required/>
                 <label htmlFor="detail">Dettagli</label>
-                <textarea rows={5} id="details" name="details" required/>
+                <textarea rows={5} id="details" name="details"/>
+                <div className="mx-auto">
+                    {errorData && <ErrorText error={errorData}></ErrorText> }
+                </div>  
                 <button type="submit">Crea</button>
             </form>
             
-            {/* 
-            <div className="mx-auto">
-                <ErrorText error={createClassError}></ErrorText>
-            </div> */}
+            
         </div>
     );
 }

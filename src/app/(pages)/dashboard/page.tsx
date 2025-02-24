@@ -8,11 +8,13 @@ import { sessionsPage } from './sessions/show_sessions';
 import { error } from 'console';
 import logOut from '../logout/page';
 
-
+// TODO: Trovare un modo più elegante per gestire il content
 export default function dashboard() {
     const { data: session, status } = useSession();
     const [content, setContent] = useState(<></>);
-    
+    const [currentPage, setCurrentPage] = useState("");
+    const [error, setError] = useState("");
+
     
     if(status === "loading") {
         return (
@@ -23,7 +25,7 @@ export default function dashboard() {
             </div> 
         );
     } else if (status === "authenticated") {
-        const handleClassiClick = async () => {     
+        const handleClassiClick = async () => {
             setContent(await classesPage(session.user.id, setContent));
         };
 
