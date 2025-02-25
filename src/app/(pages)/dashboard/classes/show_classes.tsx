@@ -1,7 +1,8 @@
+import { EditClass } from "./EditClass";
 import { NewClass } from "./new_class";
 import React from "react";
 
-export async function classesPage (uid: string = "0",  setContent: any) {
+export async function classesPage(uid: string = "0", setContent: any) {
     const response = await fetch('/api/class?uid=' + uid, {
         method: 'GET',
         headers: {
@@ -12,7 +13,7 @@ export async function classesPage (uid: string = "0",  setContent: any) {
 
     return (
         <div>
-            <button onClick={() => setContent(<><NewClass teacherId={uid}></NewClass></>)}>Registra Aula</button> 
+            <button onClick={() => setContent(<><NewClass teacherId={uid}></NewClass></>)}>Registra Aula</button>
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>
@@ -43,7 +44,7 @@ export async function classesPage (uid: string = "0",  setContent: any) {
                                 {classItem.details}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" className="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                <a onClick={() => setContent(<><EditClass classId={classItem.id} classData={classItem}></EditClass></>)} className="text-indigo-600 hover:text-indigo-900">Edit</a>
                             </td>
                         </tr>
                     ))}
