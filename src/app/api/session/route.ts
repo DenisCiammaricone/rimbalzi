@@ -1,5 +1,5 @@
-import { createNewSession, createSessionKeys } from '@/actions/sessions';
-import { newSessionSchema } from '@/app/lib/zod';
+import { createNewSession, createSessionKeys, updateSession } from '@/actions/sessions';
+import { newSessionSchema, updateSessionSchema } from '@/app/lib/zod';
 import { NextResponse } from 'next/server';
 import { getSessionsByTeacherId } from '@/actions/sessions';
 import { getClassesByGradeSectionAndSchool } from '@/actions/classes';
@@ -53,6 +53,24 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: 'Missing teacher_id parameter' }, { status: 400 });
     }
 
-    const classes = await getSessionsByTeacherId(teacherId);
-    return NextResponse.json({ classes: classes}, { status: 200 });
+    const sessions = await getSessionsByTeacherId(teacherId);
+    return NextResponse.json({ sessions: sessions}, { status: 200 });
+}
+
+export async function PUT(req: Request) {
+    try {
+        const body = await req.json();
+        const { teacher_id, class_id, session_code, session_phase, details } = await updateSessionSchema.parseAsync(body);
+        let result = await updateSession(teacher_id, class_id, session_code, session_phase, details);
+        if(result) {
+            return NextResponse.json({ message: 'Ok'}, { status: 200 });
+        }
+
+    } catch (error: Error | unknown) {
+        const e = JSON.parse(JSON.stringify(error));
+        if(error instanceof Error) {
+            return NextResponse.json({ 'error': 'Invalid request', 'data': error.message}, { status: 400 });
+        }
+        return NextResponse.json({ 'error': 'Invalid request', 'data': e}, { status: 400 });
+    }
 }

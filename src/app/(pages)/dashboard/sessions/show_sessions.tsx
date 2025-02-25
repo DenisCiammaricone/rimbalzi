@@ -1,3 +1,4 @@
+import { EditSession } from "./EditSession";
 import { NewSession } from "./new_session";
 
 export async function sessionsPage(uid: string = "0", setContent: any) {
@@ -33,7 +34,7 @@ export async function sessionsPage(uid: string = "0", setContent: any) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.classes.map((sessionItem: any) => (
+                    {data.sessions.map((sessionItem: Session) => (
                         <tr key={sessionItem.id}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {sessionItem.code}
@@ -48,7 +49,7 @@ export async function sessionsPage(uid: string = "0", setContent: any) {
                                 {sessionItem.phase}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" className="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => setContent(<><EditSession teacherId={uid} sessionId={sessionItem.id} sessionData={sessionItem}></EditSession></>)}>Edit</a>
                             </td>
                         </tr>
                     ))}

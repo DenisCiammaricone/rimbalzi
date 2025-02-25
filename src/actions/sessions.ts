@@ -32,6 +32,23 @@ export async function createNewSession(class_grade: string, class_section: strin
     return res[0].id;
 }
 
+export async function updateSession(teacher_id:string, class_id: string, session_code: string, session_phase: string, details: string) {
+    if(!session_phases.includes(session_phase)) {
+        throw new Error("Invalid session phase");
+    }
+
+    if( await classSessionPhaseAlreadyExists(teacher_id, class_id, session_phase) ) {
+        throw new Error("Class already has a session in this phase")
+    }
+
+    try {
+        const res = await db.update(sessions).set({phase: session_phase, details: details}).where(eq(sessions.code, session_code)).execute();
+        return res;
+    } catch (error:any) {
+        throw new Error(error);
+    }
+}
+
 /***
  * This function generates n session keys for a given session id
  * n is the number of male students + the number of female students
@@ -60,7 +77,7 @@ export async function getSessionsByTeacherId(teacher_id: string) {
         throw ('Invalid teacher id');
     }
 
-    const res = await db.select({id: sessions.id, code: sessions.code, phase: sessions.phase, details: sessions.details, class_grade: classes.grade, class_section: classes.section}).from(sessions).leftJoin(classes, eq(classes.id, sessions.classId)).where(eq(sessions.userId, tid));
+    const res = await db.select({id: sessions.id, code: sessions.code, phase: sessions.phase, details: sessions.details, class_grade: classes.grade, class_section: classes.section, class_id: classes.id}).from(sessions).leftJoin(classes, eq(classes.id, sessions.classId)).where(eq(sessions.userId, tid));
 
     return res;
 }
