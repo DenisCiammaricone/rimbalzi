@@ -26,6 +26,16 @@ export async function createNewClass(grade: string, section: string, female_numb
     }
 }
 
+export async function deleteClass(classId: string) {
+    try {
+        const res = await db.delete(classes).where(eq(classes.id, Number(classId)));
+        console.log(res)
+        return res;
+    } catch (error: any) {
+        throw error;
+    }
+}
+
 export async function updateClass(class_id: string, maleNumber: number, femaleNumber: number, details: string) {
     try {
         const res = await db.update(classes)

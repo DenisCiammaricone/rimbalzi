@@ -1,5 +1,6 @@
-import { createNewClass, getClassesByTeacherId, updateClass } from '@/actions/classes';
+import { createNewClass, deleteClass, getClassesByTeacherId, updateClass } from '@/actions/classes';
 import { newClassSchema, updateClassSchema } from '@/app/lib/zod';
+import { createCipheriv } from 'crypto';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
@@ -47,5 +48,18 @@ export async function PUT(req: Request) {
         return NextResponse.json({ message: 'Ok' }, { status: 200 });
     } catch (error: any) {
         return NextResponse.json({ message: error }, { status: 400 });
+    }
+}
+
+export async function DELETE(req: Request) {
+    try {
+        const body = await req.json();
+        const res = await deleteClass(body.class_id);
+        if(res) {
+            return NextResponse.json({ data: 'Ok' }, { status: 200 });
+        } 
+        return NextResponse.json({ data: 'Internal server error' }, { status: 500 });
+    } catch (error: any) {
+        return NextResponse.json({ data: error }, { status: 400 });
     }
 }

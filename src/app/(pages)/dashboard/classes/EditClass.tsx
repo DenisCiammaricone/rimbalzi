@@ -42,7 +42,30 @@ export function EditClass({ classId, classData }: { classId: string, classData: 
                 <ErrorText error={errorData}></ErrorText>
                 <div className="flex space-x-4">
                     <button type="submit">Salva</button>
-                    <button>Elimina</button>
+                    <button type="button" onClick={async () =>  {
+                        const res = await fetch('/api/class', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                class_id: classId
+                            })
+                        })
+                        if (res.status === 200) {
+                            console.log("kappa")
+                            redirect('/')
+                        }
+                        if(res.status === 400) {
+                            const data = await res.json();
+                            // Codici per vincoli di integrità referenziale
+                            if(data.data.errno === 1451 || data.data.errno === 1216) {
+                                setErrorData("Questa classe non può essere eliminata perchè è associata a delle sessioni. Cancella prima le sessioni associate o contatta un amministratore");
+                            } else if(data.data){
+                                setErrorData(data.data);
+                            }
+                        }
+                    }}>Elimina</button>
                 </div>
             </form >
         </div >
