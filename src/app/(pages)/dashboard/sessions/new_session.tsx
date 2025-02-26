@@ -52,7 +52,7 @@ export function NewSession({teacherId}: {teacherId: string}) {
                     }
                 }
                 if(response.status === 200) {
-                        redirect('/dashboard')
+                        redirect('/dashboard?type=success&message=Sessione creata con successo')
                 }
                 
                 

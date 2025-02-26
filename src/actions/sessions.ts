@@ -49,6 +49,15 @@ export async function updateSession(teacher_id:string, class_id: string, session
     }
 }
 
+export async function deleteSession(session_code: string) {
+    try {
+        const res = await db.delete(sessions).where(eq(sessions.code, session_code));
+        return res;
+    } catch (error:any) {
+        throw error;
+    }
+}
+
 /***
  * This function generates n session keys for a given session id
  * n is the number of male students + the number of female students

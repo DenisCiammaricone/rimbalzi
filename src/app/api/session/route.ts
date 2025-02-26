@@ -1,4 +1,4 @@
-import { createNewSession, createSessionKeys, updateSession } from '@/actions/sessions';
+import { createNewSession, createSessionKeys, deleteSession, updateSession } from '@/actions/sessions';
 import { newSessionSchema, updateSessionSchema } from '@/app/lib/zod';
 import { NextResponse } from 'next/server';
 import { getSessionsByTeacherId } from '@/actions/sessions';
@@ -72,5 +72,18 @@ export async function PUT(req: Request) {
             return NextResponse.json({ 'error': 'Invalid request', 'data': error.message}, { status: 400 });
         }
         return NextResponse.json({ 'error': 'Invalid request', 'data': e}, { status: 400 });
+    }
+}
+
+export async function DELETE(req: Request) {
+    try {
+        const body = await req.json();
+        const res = await deleteSession(body.session_code);
+        if(res) {
+            return NextResponse.json({ data: 'Ok' }, { status: 200 });
+        } 
+        return NextResponse.json({ data: 'Internal server error' }, { status: 500 });
+    } catch (error: Error | unknown) {
+        return NextResponse.json({ data: error }, { status: 400 });
     }
 }

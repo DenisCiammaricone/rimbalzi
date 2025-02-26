@@ -25,11 +25,11 @@ export default function LoginPage() {
                         password: formData.get('password')
                     };
                     const res = await signIn("credentials", data)
-                    
                     if (res?.error) {
                         if(res.error === "CredentialsSignin") {
                             setLoginError("Credenziali non valide")
                         } else {
+                            // Configuration Error
                             setLoginError("Errore nel login... Contatta un amministratore" )
                         }
                     } else {

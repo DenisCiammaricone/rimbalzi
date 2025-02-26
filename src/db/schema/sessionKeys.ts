@@ -6,7 +6,7 @@ export const sessionKeys = mysqlTable('sessionKeys', {
     id: int('id').primaryKey().autoincrement(),
     key: varchar('key', {length: 8}).notNull().$default(() => generateUniqueString(8)),
     sex: char('sex').notNull(),
-    sessionId: int('session_id').notNull().references(() => sessions.id),
+    sessionId: int('session_id').notNull().references(() => sessions.id, {onDelete: 'cascade'}),
 }, (table) => [
     uniqueIndex('sessionKeys_key_sessionId_unique').on(table.key, table.sessionId),
 ])

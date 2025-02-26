@@ -58,11 +58,11 @@ export function EditSession({ teacherId, sessionId, sessionData }: { teacherId:s
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                class_id: sessionId
+                                session_code: sessionData.code
                             })
                         })
                         if (res.status === 200) {
-                            redirect('/')
+                            redirect('/dashboard')
                         }
                         if(res.status === 400) {
                             const data = await res.json();
