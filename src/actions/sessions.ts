@@ -36,8 +36,8 @@ export async function updateSession(teacher_id:string, class_id: string, session
     if(!session_phases.includes(session_phase)) {
         throw new Error("Invalid session phase");
     }
-
-    if( await classSessionPhaseAlreadyExists(teacher_id, class_id, session_phase) ) {
+    const q = await db.select({code: sessions.code}).from(sessions).where(and(eq(sessions.userId, Number(teacher_id)), eq(sessions.classId, Number(class_id)),eq(sessions.phase, session_phase))).limit(1)
+    if(q && q[0].code != session_code && await classSessionPhaseAlreadyExists(teacher_id, class_id, session_phase) ) {
         throw new Error("Class already has a session in this phase")
     }
 
