@@ -17,7 +17,8 @@ export function EditClass({ classId, classData }: { classId: string, classData: 
                         class_id: classId,
                         male_number: Number(formData.get('male_number')),
                         female_number: Number(formData.get('female_number')),
-                        details: formData.get('details')
+                        details: formData.get('details'),
+                        teacher_id: classData.teacherId
                     })
                 })
                 if (response.status === 400) {
@@ -48,7 +49,8 @@ export function EditClass({ classId, classData }: { classId: string, classData: 
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                class_id: classId
+                                class_id: classId,
+                                teacher_id: classData.teacherId
                             })
                         })
                         if (res.status === 200) {

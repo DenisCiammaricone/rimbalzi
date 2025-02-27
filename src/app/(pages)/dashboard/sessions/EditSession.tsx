@@ -57,7 +57,8 @@ export function EditSession({ teacherId, sessionId, sessionData }: { teacherId:s
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                session_code: sessionData.code
+                                session_code: sessionData.code,
+                                teacher_id: teacherId,
                             })
                         })
                         if (res.status === 200) {

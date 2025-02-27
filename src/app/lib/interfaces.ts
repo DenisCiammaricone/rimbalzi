@@ -5,6 +5,7 @@ interface Class {
     maleNumber: number;
     femaleNumber: number;
     details: string;
+    teacherId: string;
 }
 
 interface Session {

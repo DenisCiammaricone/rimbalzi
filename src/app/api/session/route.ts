@@ -4,12 +4,13 @@ import { NextResponse } from 'next/server';
 import { getSessionsByTeacherId } from '@/actions/sessions';
 import { getClassesByGradeSectionAndSchool } from '@/actions/classes';
 import { getTeacherSchoolId } from '@/actions/users';
+import { checkForUnauthorizedTeacher } from '@/app/lib/utils';
 
 //TODO: Fix all the nested try catch blocks
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-
+        checkForUnauthorizedTeacher(body.teacher_id);
         const { class_grade, class_section, session_phase  } = await newSessionSchema.parseAsync(body);
         try {
             let result = await createNewSession(class_grade, class_section, session_phase, body.teacher_id, body.details)
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const teacherId = searchParams.get('uid');
-
+    checkForUnauthorizedTeacher(teacherId);
     if (!teacherId) {
         return NextResponse.json({ error: 'Missing teacher_id parameter' }, { status: 400 });
     }
@@ -62,6 +63,7 @@ export async function PUT(req: Request) {
     try {
         const body = await req.json();
         const { teacher_id, class_id, session_code, session_phase, details } = await updateSessionSchema.parseAsync(body);
+        checkForUnauthorizedTeacher(teacher_id);
         let result = await updateSession(teacher_id, class_id, session_code, session_phase, details);
         if(result) {
             return NextResponse.json({ message: 'Ok'}, { status: 200 });
@@ -80,6 +82,7 @@ export async function DELETE(req: Request) {
     try {
         const body = await req.json();
         const res = await deleteSession(body.session_code);
+        checkForUnauthorizedTeacher(body.teacher_id);
         if(res) {
             return NextResponse.json({ data: 'Ok' }, { status: 200 });
         } 

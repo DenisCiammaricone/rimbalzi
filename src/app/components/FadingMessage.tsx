@@ -3,15 +3,16 @@ import { createRef } from "react";
 export default function FadingMessage( {type, message}: {type: string, message: string} ) {
     const messageBoxRef = createRef<HTMLDivElement>();
     let color;
-    if(type === 'success') { 
-        color='green'
+    
+    if(type === 'success') {
+        color = 'green';
     } else if (type === 'error') {
-        color='red'
+        color = 'red';
     }
 
     return (
         <div id="messageBox" ref={messageBoxRef}>
-            <div className={'absolute left-2 top-2 p-2 w-1/6 rounded opacity-75 flex justify-between bg-'+ color +'-200 text-'+ color +'-800 '}>
+            <div className={'absolute left-2 top-2 p-2 w-1/6 rounded opacity-75 flex justify-between bg-'+color+'-200 text-'+color+'-800 '}>
             
                 <div>{message}</div>
                 <div onClick={() => { if (messageBoxRef.current) messageBoxRef.current.animate(

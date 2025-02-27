@@ -1,0 +1,9 @@
+import { auth } from "@/auth";
+
+export async function checkForUnauthorizedTeacher(teacher_id: string | null) {
+    const session = await auth()
+    // If not logged in or the user is not the teacher then return unauthorized
+    if (!session || session.user.id !== teacher_id) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+    }
+}
