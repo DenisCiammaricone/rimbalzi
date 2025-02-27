@@ -1,22 +1,17 @@
 'use client'
 import { useSession } from 'next-auth/react';
-import { redirect, useRouter, useSearchParams } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation'
 import React from 'react';
 import { useState } from 'react';
-import { classesPage } from './classes/show_classes';
-import { sessionsPage } from './sessions/show_sessions';
-import { error } from 'console';
-import logOut from '../logout/page';
-import { set } from 'zod';
+import { SessionsPage } from './sessions/SessionsPage';
 import FadingMessage from '@/app/components/FadingMessage';
+import { ClassesPage } from './classes/ClassesPage';
 
 // TODO: Trovare un modo più elegante per gestire il content
 export default function dashboard() {
     const searchParams = useSearchParams();
     const { data: session, status } = useSession();
     const [content, setContent] = useState(<></>);
-    const [currentPage, setCurrentPage] = useState("");
-    const [error, setError] = useState("");
 
     // Per messaggi di errore e successo
     const type = searchParams.get("type");
@@ -32,15 +27,12 @@ export default function dashboard() {
             </div> 
         );
     } else if (status === "authenticated") {
-
-        
-
         const handleClassiClick = async () => {
-            setContent(await classesPage(session.user.id, setContent));
+            setContent(await ClassesPage(session.user.id, setContent));
         };
 
         const handleSessioniClick = async () => {    
-            setContent(await sessionsPage(session.user.id, setContent));
+            setContent(await SessionsPage(session.user.id, setContent));
         };
 
         const handleLogoutClick = async () => {    

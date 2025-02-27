@@ -1,4 +1,4 @@
-import { registerUser } from '@/actions/user';
+import { registerUser } from '@/actions/users';
 import { registerSchema } from '@/app/lib/zod';
 import { NextResponse } from 'next/server';
 

@@ -1,6 +1,5 @@
-import ErrorText from "@/app/components/errorText";
+import ErrorText from "@/app/components/ErrorText";
 import { session_phases } from "@/app/lib/enums";
-import ForwardEmail from "next-auth/providers/forwardemail"
 import { redirect } from "next/navigation";
 import { useState } from "react";
 

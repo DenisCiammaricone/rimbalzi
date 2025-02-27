@@ -1,7 +1,6 @@
 'use client'
 import { signOut, useSession } from "next-auth/react"
-import { useRouter } from "next/router";
-import { redirect } from 'next/navigation'
+import { redirect } from "next/navigation";
 
 export default function logOut() {
     const { data: session, status } = useSession();
@@ -16,8 +15,7 @@ export default function logOut() {
             </div>
         )
     } else if (status === "unauthenticated") {
-        console.log("No session")
-        //redirect("/login")
+        redirect("/login")
     } else {
         return (
             <div className='flex min-h-screen justify-center items-center text-3xl font-bold'>

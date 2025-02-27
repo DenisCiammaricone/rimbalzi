@@ -1,5 +1,4 @@
-import ErrorText from "@/app/components/errorText";
-import dashboard from "../page";
+import ErrorText from "@/app/components/ErrorText";
 import { useState } from "react";
 import { redirect } from "next/navigation";
 

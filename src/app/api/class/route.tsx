@@ -1,6 +1,5 @@
 import { createNewClass, deleteClass, getClassesByTeacherId, updateClass } from '@/actions/classes';
 import { newClassSchema, updateClassSchema } from '@/app/lib/zod';
-import { createCipheriv } from 'crypto';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 

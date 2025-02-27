@@ -3,8 +3,9 @@ import { newSessionSchema, updateSessionSchema } from '@/app/lib/zod';
 import { NextResponse } from 'next/server';
 import { getSessionsByTeacherId } from '@/actions/sessions';
 import { getClassesByGradeSectionAndSchool } from '@/actions/classes';
-import { getTeacherSchoolId } from '@/actions/user';
+import { getTeacherSchoolId } from '@/actions/users';
 
+//TODO: Fix all the nested try catch blocks
 export async function POST(req: Request) {
     try {
         const body = await req.json();

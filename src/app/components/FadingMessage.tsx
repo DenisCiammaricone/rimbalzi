@@ -1,5 +1,4 @@
-import { useSearchParams } from "next/navigation";
-import { createRef, useEffect } from "react";
+import { createRef } from "react";
 
 export default function FadingMessage( {type, message}: {type: string, message: string} ) {
     const messageBoxRef = createRef<HTMLDivElement>();

@@ -1,9 +1,7 @@
 'use client'
-import ErrorText from '@/app/components/errorText';
-import { signIn } from "next-auth/react"
-import { AuthError, CredentialsSignin } from 'next-auth';
+import ErrorText from '@/app/components/ErrorText';
+import { signIn } from "next-auth/react";
 import React, { Suspense, useState } from 'react';
-import { set } from 'zod';
 import { redirect, useSearchParams } from 'next/navigation';
 
 

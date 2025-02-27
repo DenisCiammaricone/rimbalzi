@@ -1,9 +1,8 @@
-import ErrorText from "@/app/components/errorText";
+import ErrorText from "@/app/components/ErrorText";
 import { session_phases } from "@/app/lib/enums";
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { ZodError } from "zod";
 
 export function NewSession({teacherId}: {teacherId: string}) {
     const [errorData, setErrorData] = useState('')

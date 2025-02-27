@@ -2,7 +2,7 @@ import NextAuth, { AuthError, CredentialsSignin } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { signInSchema } from "./app/lib/zod"
 import { ZodError } from "zod"
-import { getUserFromDb } from "./actions/user"
+import { getUserFromDb } from "./actions/users"
 import React from "react"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({

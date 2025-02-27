@@ -6,6 +6,7 @@ import { permissions } from "@/db/schema/permissions";
 import { group_permissions } from "@/db/schema/group_permissions";
 import { groups } from "@/db/schema/groups";
 
+// TODO: Move this in the lib/utils file
 function password_verify(passwordLocal: string, passwordDB: string): boolean {
     if (bcrypt.compareSync(passwordLocal, passwordDB)) {
         return true;
@@ -13,10 +14,17 @@ function password_verify(passwordLocal: string, passwordDB: string): boolean {
     return false;
 }
 
+/**
+ * @returns school id of a teacher
+ */
 export async function getTeacherSchoolId(teacher_id: number) {
   return await db.select({ schoolId: users.schoolId }).from(users).where(eq(users.id, teacher_id)).then(res => res[0]?.schoolId);
 }
 
+/**
+ * TODO: Make it return an instance of User interface
+ * @returns user data from the database 
+ */
 export async function getUserFromDb(email: string, password: string) {
   const res = await db.select().from(users).where(eq(users.email, email)).limit(1);
   
@@ -27,6 +35,10 @@ export async function getUserFromDb(email: string, password: string) {
   return { id: res[0].id.toString(), email: res[0].email, name: res[0].name }
 }
 
+/**
+ * Register a new user
+ * @returns 1 if the user is registered successfully
+ */
 export async function registerUser(email: string | null, password: string | null, name: string | null, surname: string | null, schoolId: string | null) {
   if(!email || !password || !name || !surname || !schoolId) {
     throw new Error("Missing parameters");
@@ -34,7 +46,7 @@ export async function registerUser(email: string | null, password: string | null
   const hashedPassword = bcrypt.hashSync(password, 0);
   try {
     const res = await db.insert(users).values({email: email, password: hashedPassword, name: name, surname: surname, schoolId: Number(schoolId)});
-    return res;
+    return res[0].affectedRows;
   } catch (error: any) {
     if(error.code === 'ER_DUP_ENTRY'){
       throw new Error("Account già esistente");
@@ -57,6 +69,10 @@ export async function getUserPermissions(id: number) {
   return permissionsArray
 }
 
+/**
+ * Check if a user is in a group 
+ * @returns true if user is in the group, false otherwise
+ */
 export async function isUserInGroupById(user_id: number = -1, group_name: string) {
   const group = await db.select({id: groups.id})
   .from(users)
@@ -69,6 +85,9 @@ export async function isUserInGroupById(user_id: number = -1, group_name: string
   return true;
 }
 
+/**
+ * @returns the gorup of a certain user
+ */
 export async function getUserGroupById(user_id: number) {
   const group = await db.select({id: groups.id, name: groups.name})
   .from(users)

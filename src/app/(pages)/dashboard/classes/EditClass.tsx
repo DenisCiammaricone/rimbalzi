@@ -1,5 +1,4 @@
-import ErrorText from "@/app/components/errorText";
-import ForwardEmail from "next-auth/providers/forwardemail"
+import ErrorText from "@/app/components/ErrorText";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 
