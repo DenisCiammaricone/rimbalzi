@@ -2,7 +2,7 @@ import { EditClass } from "./EditClass";
 import { NewClass } from "./NewClass";
 import React from "react";
 
-export async function ClassesPage(uid: string = "0", setContent: any) {
+export async function ClassesPage(uid: string = "0", setContent: React.Dispatch<React.SetStateAction<React.JSX.Element>>) {
     const response = await fetch('/api/class?uid=' + uid, {
         method: 'GET',
         headers: {

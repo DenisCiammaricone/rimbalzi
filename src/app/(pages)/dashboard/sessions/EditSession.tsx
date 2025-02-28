@@ -3,7 +3,7 @@ import { session_phases } from "@/app/lib/enums";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 
-export function EditSession({ teacherId, sessionId, sessionData }: { teacherId:string, sessionId: string, sessionData: Session }) {
+export function EditSession({ teacherId, sessionData }: { teacherId:string, sessionData: Session }) {
     const [errorData, setErrorData] = useState('')
     return (
         <div>

@@ -1,7 +1,7 @@
 import { EditSession } from "./EditSession";
 import { NewSession } from "./NewSession";
 
-export async function SessionsPage(uid: string = "0", setContent: any) {
+export async function SessionsPage(uid: string = "0", setContent: React.Dispatch<React.SetStateAction<React.JSX.Element>>) {
     const response = await fetch('/api/session?uid=' + uid, {
         method: 'GET',
         headers: {
@@ -49,7 +49,7 @@ export async function SessionsPage(uid: string = "0", setContent: any) {
                                 {sessionItem.phase}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => setContent(<><EditSession teacherId={uid} sessionId={sessionItem.id} sessionData={sessionItem}></EditSession></>)}>Edit</a>
+                                <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => setContent(<><EditSession teacherId={uid} sessionData={sessionItem}></EditSession></>)}>Edit</a>
                             </td>
                         </tr>
                     ))}

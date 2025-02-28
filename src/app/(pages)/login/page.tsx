@@ -1,15 +1,24 @@
 'use client'
 import ErrorText from '@/app/components/ErrorText';
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import React, { Suspense, useState } from 'react';
-import { redirect, useSearchParams } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
-
-let credentialsError: boolean = false;
 export default function LoginPage() {
+    const { data: session, status } = useSession();
     const [loginError, setLoginError] = useState("");
-    const searchParams = useSearchParams();
-    credentialsError = searchParams.get("code") === "credentials";
+    if(status === "authenticated") {
+        redirect('/')
+    }
+    if(status === "loading") {
+        return (
+            <div className='flex min-h-screen justify-center items-center text-3xl font-bold'>
+                <svg viewBox="25 25 50 50">
+                    <circle r="20" cy="50" cx="50"></circle>
+                </svg>
+            </div>
+        )
+    }
     return (
         < Suspense >
             <div id="login-register-formBox" className='flex flex-col gap-5 2xl:w-1/6 xl:w-1/4 lg:w-1/4 md:w-1/3 sm:w-full mx-auto p-5 mt-20 '>

@@ -7,6 +7,10 @@ import { SessionsPage } from './sessions/SessionsPage';
 import FadingMessage from '@/app/components/FadingMessage';
 import { ClassesPage } from './classes/ClassesPage';
 
+function SideBarButton({text, onClick}:{text:string, onClick?:()=>void}) {
+    return (<div><a onClick={onClick}> {text} </a></div>)
+}
+
 // TODO: Trovare un modo più elegante per gestire il content
 export default function dashboard() {
     const searchParams = useSearchParams();
@@ -45,9 +49,9 @@ export default function dashboard() {
             <div className='flex flex-col mx-auto w-3/4'>
                 <div className='flex'>
                     <div className='flex flex-col w-1/4' id="sideBar">
-                        <div><a onClick={handleClassiClick}> Classi </a></div>
-                        <div><a onClick={handleSessioniClick}> Sessioni </a></div>
-                        <div><a onClick={handleLogoutClick}> Logout </a></div>
+                        <SideBarButton text="Classi" onClick={handleClassiClick}></SideBarButton>
+                        <SideBarButton text="Sessioni" onClick={handleSessioniClick}></SideBarButton>
+                        <SideBarButton text="Logout" onClick={handleLogoutClick}></SideBarButton>
                     </div>
                     <div className=' w-3/4' id="contentView">{content}</div>
                 </div>
