@@ -13,13 +13,13 @@ function SideBarButton({text, onClick}:{text:string, onClick?:()=>void}) {
 
 // TODO: Trovare un modo più elegante per gestire il content
 export default function dashboard() {
-    const searchParams = useSearchParams();
+    //const searchParams = useSearchParams();
     const { data: session, status } = useSession();
     const [content, setContent] = useState(<></>);
 
     // Per messaggi di errore e successo
-    const type = searchParams.get("type");
-    const message = searchParams.get("message");
+    //const type = searchParams.get("type");
+    //const message = searchParams.get("message");
  
     
     if(status === "loading") {
@@ -45,7 +45,7 @@ export default function dashboard() {
 
         return (
             <>
-            {type && message ? <FadingMessage type={type || ""} message={message || ""}></FadingMessage> : <></>}
+            <FadingMessage/>
             <div className='flex flex-col mx-auto w-3/4'>
                 <div className='flex'>
                     <div className='flex flex-col w-1/4' id="sideBar">
@@ -61,5 +61,4 @@ export default function dashboard() {
     } else if (status === "unauthenticated") {
         redirect("/login");
     }
-    
 }
