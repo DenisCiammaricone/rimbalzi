@@ -46,16 +46,22 @@ export async function createNewSession(class_grade: string, class_section: strin
  * Update a session
  * @returns 1 if the session is updated
  */
-export async function updateSession(teacher_id:string, class_id: string, session_code: string, session_phase: string, details: string) {
+export async function updateSession(teacher_id:string, class_id: string, session_code: string, session_phase: string, details: string, old_session_phase: string) {
     if(!session_phases.includes(session_phase)) {
         throw new Error("Invalid session phase");
     }
+    console.log("teacher_id: " + teacher_id + " class_id: " + class_id + " session_code: " + session_code + " session_phase: " + session_phase + " details: " + details)
     // TODO: Rewrite the followind query in another fuction?
-    const q = await db.select({code: sessions.code}).from(sessions).where(and(eq(sessions.userId, Number(teacher_id)), eq(sessions.classId, Number(class_id)),eq(sessions.phase, session_phase))).limit(1)
+    try {
+    const q = await db.select().from(sessions).where(and(eq(sessions.userId, Number(teacher_id)), eq(sessions.classId, Number(class_id)), eq(sessions.phase, old_session_phase))).limit(1);
+
     // Checks if a certain class already has a session in the same phase
     if(q && q[0].code != session_code && await classSessionPhaseAlreadyExists(teacher_id, class_id, session_phase) ) {
         throw new Error("Class already has a session in this phase")
     }
+} catch (error:any) {
+    console.log("Error: " + error)
+}
 
     try {
         const res = await db.update(sessions).set({phase: session_phase, details: details}).where(eq(sessions.code, session_code)).execute();

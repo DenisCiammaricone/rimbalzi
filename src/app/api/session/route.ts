@@ -64,7 +64,7 @@ export async function PUT(req: Request) {
         const body = await req.json();
         const { teacher_id, class_id, session_code, session_phase, details } = await updateSessionSchema.parseAsync(body);
         checkForUnauthorizedTeacher(teacher_id);
-        let result = await updateSession(teacher_id, class_id, session_code, session_phase, details);
+        let result = await updateSession(teacher_id, class_id, session_code, session_phase, details, body.old_session_phase);
         if(result) {
             return NextResponse.json({ message: 'Ok'}, { status: 200 });
         }

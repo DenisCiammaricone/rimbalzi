@@ -20,6 +20,7 @@ export function EditSession({ teacherId, sessionData }: { teacherId:string, sess
                         session_code: sessionData.code,
                         session_phase: formData.get('session_phase'),
                         details: formData.get('details'),
+                        old_session_phase : sessionData.phase
                     })
                 })
                 if (response.status === 400) {
