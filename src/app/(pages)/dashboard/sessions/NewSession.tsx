@@ -44,10 +44,8 @@ export function NewSession({teacherId}: {teacherId: string}) {
                     console.log(data)
                     if(data.data.name === "ZodError") {
                         setErrorData(data.data.issues[0].message);
-                    } else if (data.data instanceof String) {
+                    } else if(data.data) {
                         setErrorData(data.data);
-                    } else {
-                        setErrorData("Errore sconosciuto. Contatta un amministratore")
                     }
                 }
                 if(response.status === 200) {
