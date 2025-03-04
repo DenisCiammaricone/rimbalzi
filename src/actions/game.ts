@@ -1,0 +1,20 @@
+import { db } from "@/app/lib/db/db";
+import { sessionKeys } from "@/db/schema/sessionKeys";
+import { sessions } from "@/db/schema/sessions";
+import { eq, and } from "drizzle-orm"
+
+export async function isSessionCodeValid(code: string) {
+    const res = await db.select({ id: sessions.id }).from(sessions).where(eq(sessions.code, code));
+    return res.length > 0;
+}
+
+export async function getSessionTeacher(session_id: string) {
+    const res = await db.select({ teacher_id: sessions.userId }).from(sessions).where(eq(sessions.code, session_id));
+    return res[0].teacher_id;
+}
+
+export async function doesPupilExistsForSession(pupil_code: string, session_code: string) {
+
+    const res = await db.select({ id: sessionKeys.sessionId }).from(sessionKeys).leftJoin(sessions, eq(sessions.id, sessionKeys.sessionId)).where(and(eq(sessionKeys.key, pupil_code), eq(sessions.code, session_code)))
+    return res.length > 0;
+}

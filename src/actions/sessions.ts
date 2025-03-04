@@ -11,14 +11,14 @@ import { sessionKeys } from "@/db/schema/sessionKeys";
  * Create a new session
  * @returns id of the just created session
  */
-export async function createNewSession(class_grade: string, class_section: string, session_phase: string, teacher_id: string, details: string = ""){ 
+export async function createNewSession(class_grade: string, class_section: string, session_phase: string, teacher_id: string, details: string = "") {
     const school_id = await getTeacherSchoolId(Number(teacher_id));
     if (!school_id) {
         throw "School ID is undefined";
     }
 
     const classId = await getClassesByGradeSectionAndSchool(class_grade, class_section, school_id.toString());
-    if(!session_phases.includes(session_phase)) {
+    if (!session_phases.includes(session_phase)) {
         throw "Invalid session phase";
     }
 
@@ -28,16 +28,16 @@ export async function createNewSession(class_grade: string, class_section: strin
         // TODO: Review the following line? Autogeneration does things
         code = Math.random().toString(36).substring(2, 8).toUpperCase(); // Generates a 6-char alphanumeric code
         exists = await db.select().from(sessions).where(eq(sessions.code, code)).limit(1);
-    } while (exists.length > 0); 
+    } while (exists.length > 0);
 
-    if( await classSessionPhaseAlreadyExists(teacher_id, classId, session_phase) ) {
+    if (await classSessionPhaseAlreadyExists(teacher_id, classId, session_phase)) {
         throw "Class already has a session in this phase"
     }
 
     try {
-        const res = await db.insert(sessions).values({phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId)}).$returningId().execute();
+        const res = await db.insert(sessions).values({ phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId) }).$returningId().execute();
         return res[0].id;
-    } catch (error:any) {
+    } catch (error: any) {
         throw new Error(error);
     }
 }
@@ -46,27 +46,27 @@ export async function createNewSession(class_grade: string, class_section: strin
  * Update a session
  * @returns 1 if the session is updated
  */
-export async function updateSession(teacher_id:string, class_id: string, session_code: string, session_phase: string, details: string, old_session_phase: string) {
-    if(!session_phases.includes(session_phase)) {
+export async function updateSession(teacher_id: string, class_id: string, session_code: string, session_phase: string, details: string, old_session_phase: string) {
+    if (!session_phases.includes(session_phase)) {
         throw new Error("Invalid session phase");
     }
     console.log("teacher_id: " + teacher_id + " class_id: " + class_id + " session_code: " + session_code + " session_phase: " + session_phase + " details: " + details)
     // TODO: Rewrite the followind query in another fuction?
     try {
-    const q = await db.select().from(sessions).where(and(eq(sessions.userId, Number(teacher_id)), eq(sessions.classId, Number(class_id)), eq(sessions.phase, old_session_phase))).limit(1);
+        const q = await db.select().from(sessions).where(and(eq(sessions.userId, Number(teacher_id)), eq(sessions.classId, Number(class_id)), eq(sessions.phase, old_session_phase))).limit(1);
 
-    // Checks if a certain class already has a session in the same phase
-    if(q && q[0].code != session_code && await classSessionPhaseAlreadyExists(teacher_id, class_id, session_phase) ) {
-        throw new Error("Class already has a session in this phase")
+        // Checks if a certain class already has a session in the same phase
+        if (q && q[0].code != session_code && await classSessionPhaseAlreadyExists(teacher_id, class_id, session_phase)) {
+            throw new Error("Class already has a session in this phase")
+        }
+    } catch (error: any) {
+        console.log("Error: " + error)
     }
-} catch (error:any) {
-    console.log("Error: " + error)
-}
 
     try {
-        const res = await db.update(sessions).set({phase: session_phase, details: details}).where(eq(sessions.code, session_code)).execute();
+        const res = await db.update(sessions).set({ phase: session_phase, details: details }).where(eq(sessions.code, session_code)).execute();
         return res[0].affectedRows;
-    } catch (error:any) {
+    } catch (error: any) {
         throw new Error(error);
     }
 }
@@ -80,7 +80,7 @@ export async function deleteSession(session_code: string) {
     try {
         const res = await db.delete(sessions).where(eq(sessions.code, session_code));
         return res[0].affectedRows;
-    } catch (error:any) {
+    } catch (error: any) {
         throw error;
     }
 }
@@ -96,10 +96,10 @@ export async function createSessionKeys(sessionId: string, classId: string) {
     let insert = [];
     const classDetails = await getClassById(classId);
     for (let i = 0; i < classDetails.femaleNumber; i++) {
-        insert.push({sex: 'F', sessionId: Number(sessionId)});
+        insert.push({ sex: 'F', sessionId: Number(sessionId) });
     }
     for (let i = 0; i < classDetails.maleNumber; i++) {
-        insert.push({sex: 'M', sessionId: Number(sessionId)});
+        insert.push({ sex: 'M', sessionId: Number(sessionId) });
     }
     const result = await db.insert(sessionKeys).values(insert);
     return result;
@@ -114,13 +114,22 @@ export async function getSessionsByTeacherId(teacher_id: string) {
     const tid = Number(teacher_id);
 
     //Should never occur since we check the teacher_id in the zod schema
-    if(isNaN(tid)) {
+    if (isNaN(tid)) {
         throw ('Invalid teacher id');
     }
 
-    const res = await db.select({id: sessions.id, code: sessions.code, phase: sessions.phase, details: sessions.details, class_grade: classes.grade, class_section: classes.section, class_id: classes.id}).from(sessions).leftJoin(classes, eq(classes.id, sessions.classId)).where(eq(sessions.userId, tid));
+    const res = await db.select({ id: sessions.id, code: sessions.code, phase: sessions.phase, details: sessions.details, class_grade: classes.grade, class_section: classes.section, class_id: classes.id }).from(sessions).leftJoin(classes, eq(classes.id, sessions.classId)).where(eq(sessions.userId, tid));
 
     return res;
+}
+
+export async function getSessionIdByCode(code: string) {
+    try {
+        const res = await db.select({ id: sessions.id }).from(sessions).where(eq(sessions.code, code));
+        return res[0].id;
+    } catch (error: any) {
+        throw new Error(error);
+    }
 }
 
 /**
@@ -129,6 +138,6 @@ export async function getSessionsByTeacherId(teacher_id: string) {
  */
 async function classSessionPhaseAlreadyExists(teacher_id: string, class_id: string, session_phase: string) {
     const res = await db.select().from(sessions).where(and(eq(sessions.userId, Number(teacher_id)), eq(sessions.classId, Number(class_id)), eq(sessions.phase, session_phase)))
-    if (res.length > 0) { return true}
+    if (res.length > 0) { return true }
     return false
 }
