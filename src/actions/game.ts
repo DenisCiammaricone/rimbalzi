@@ -1,4 +1,5 @@
 import { db } from "@/app/lib/db/db";
+import { session_sequences } from "@/db/schema/session_sequences";
 import { sessionKeys } from "@/db/schema/sessionKeys";
 import { sessions } from "@/db/schema/sessions";
 import { eq, and } from "drizzle-orm"
@@ -17,4 +18,13 @@ export async function doesPupilExistsForSession(pupil_code: string, session_code
 
     const res = await db.select({ id: sessionKeys.sessionId }).from(sessionKeys).leftJoin(sessions, eq(sessions.id, sessionKeys.sessionId)).where(and(eq(sessionKeys.key, pupil_code), eq(sessions.code, session_code)))
     return res.length > 0;
+}
+
+export async function getSequence(session_code: string) {
+    try {
+        const res = await db.select({ sequence: session_sequences.sequences }).from(session_sequences).leftJoin(sessions, eq(sessions.sequenceId, session_sequences.id)).where(eq(sessions.code, session_code));
+        return res[0].sequence;
+    } catch (error: any) {
+        throw new Error("Errore nel recupero della sequenza" + error.toString());
+    }
 }

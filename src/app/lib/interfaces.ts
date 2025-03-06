@@ -17,3 +17,12 @@ interface Session {
     phase: string;
     details: string;
 }
+
+interface Level {
+    level: number;
+    size: number;
+    obstacles: { [key: string]: string };
+}
+interface Sequence {
+    levels: Level[];
+}

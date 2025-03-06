@@ -28,7 +28,17 @@ export function PupilPage({ session_code }: { session_code: string }) {
                     })
                 })
                 if (response.status === 200) {
-                    setContent(<Game />)
+                    const session = await fetch('/api/game/sequence?session_code=' + session_code, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    if (session.status == 200) {
+                        const sequence = await session.json();
+                        setContent(<Game sequence={sequence.data} isMeasure={false} />)
+                    }
+
                 } else {
                     window.location.reload(); // TODO: Fallo in un modo nextjs con router
                 }

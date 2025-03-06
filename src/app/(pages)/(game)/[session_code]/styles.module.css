@@ -1,0 +1,44 @@
+.gameBoard {
+    display: grid;
+    grid-gap: 10px;
+    margin: 0 auto;
+    padding: 10px;
+    width: 30em;
+    height: 30em;
+    background-color: aqua;
+}
+
+.cell {
+    background-color: green;
+    border-radius: .5em;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+/* ARROWS: */
+.arrow {
+    margin: auto;
+    font-size: 2em;
+    background-color: red;
+    border-radius: .5em;
+}
+
+.l_arrow {
+    margin-left: 0;
+}
+
+.r_arrow {
+    margin-right: 0;
+}
+
+.d_arrow {
+    margin-bottom: 0;
+}
+
+.u_arrow {
+    margin-top: 0;
+}
