@@ -6,7 +6,7 @@ export function Game({ sequence, isMeasure }: { sequence: Sequence, isMeasure: b
 
     let currLevel = sequence.levels[level];
     useEffect(() => {
-        console.log("Switched to: level_" + level)
+        console.log("Switched to: level_" + (level + 1))
         currLevel = sequence.levels[level];
     }, [level])
 
