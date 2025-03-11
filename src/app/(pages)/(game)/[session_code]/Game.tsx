@@ -6,14 +6,14 @@ export function Game({ sequence, isMeasure }: { sequence: Sequence, isMeasure: b
 
     let currLevel = sequence.levels[level];
     useEffect(() => {
-        console.log("Switched to: level_" + (level + 1))
         currLevel = sequence.levels[level];
     }, [level])
 
     return (
         <div>
             <h1>Game</h1>
-            <Board level={currLevel} />
+            { /* ShowPreview deve essere true solo se si vuole mostrare il vero posizionamento degli ostacoli */ }
+            <Board level={currLevel} showPreview={false} />
             <GameLevels setLevel={setLevel} />
         </div>
     )

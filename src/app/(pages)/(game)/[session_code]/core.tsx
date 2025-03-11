@@ -15,13 +15,34 @@ export function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): strin
     }
 }
 
-function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number) {
-    console.log("Cell clicked on: " + row + "," + col)
-    currentTarget.innerHTML = 'X'
+function updateLevelGuess(guess: Level, row: number, col: number, obstacle: string): Level {
+    guess.obstacles[row + "_" + col] = obstacle
+    return guess
 }
 
-function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level) {
-    console.log("Arrow clicked on: " + currentTarget.id)
+function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, currLevelGuess: Level) {
+    switch (currentTarget.innerHTML) {
+        case '/':
+            currentTarget.innerHTML = '\\'
+            break;
+        case '\\': 
+            currentTarget.innerHTML = ''
+            break;
+        case '':
+            currentTarget.innerHTML = '/'
+            break;
+    }
+    let a = updateLevelGuess(currLevelGuess, row, col, currentTarget.innerHTML)
+    console.log(a.level + ": ", a.obstacles)
+}
+
+// Passo arrowClickObj per poter avere la variabile come reference
+function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, arrowClickObj: {value: number}) {
+    if(parseInt(currentTarget.innerHTML)) {
+        return
+    } else {
+        arrowClickObj.value++
+    }
     const [ballPosition, direction] = checkOutputArrow(currentTarget.id, level)
     let outputTarget: HTMLElement | null = null
     if (direction === 'ltr' || direction === 'rtl') {
@@ -31,13 +52,13 @@ function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level) {
     }
     console.log("Output arrow: ")
     if (outputTarget) {
-        outputTarget.innerHTML = 'X'
+        currentTarget.innerHTML = arrowClickObj.value.toString()
+        outputTarget.innerHTML = arrowClickObj.value.toString()
     }
 }
 
 function changeLevelClick(currentTarget: EventTarget & HTMLButtonElement, setLevel: Dispatch<SetStateAction<number>>) {
     setLevel(parseInt(currentTarget.value))
-    console.log("Switching to: level_" + (parseInt(currentTarget.value) + 1))
 }
 
 function checkOutputArrow(inputArrow: string, level: Level): [[number, number], string] {
@@ -116,8 +137,13 @@ function checkOutputArrow(inputArrow: string, level: Level): [[number, number], 
     return [ballPosition, direction];
 }
 
-export function Board({ level }: { level: Level }) {
+export function Board({ level, showPreview }: { level: Level, showPreview: boolean }) {
     const size: number = Number(level.size) // WARNING: This is a number, not a string
+    let arrowClickObj = {value: 0}; // Uso un oggetto così da passare la variabile per reference
+    let levelGuess: Level = {
+        size: size, obstacles: {},
+        level: level.level
+    }
 
     let ltr = 0 // Left to right arrow counter
     let rtl = 0 // Right to left arrow counter
@@ -139,28 +165,28 @@ export function Board({ level }: { level: Level }) {
                             if (ltrElement) {
                                 ltrElement.innerHTML = '&rarr;'
                             }
-                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level)}>&rarr;</div>
+                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&rarr;</div>
                         } else if (index % (size + 2) === size + 1) {
                             rtl++
                             const rtlElement = document.getElementById("rtl_" + rtl);
                             if (rtlElement) {
                                 rtlElement.innerHTML = '&larr;';
                             }
-                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level)}>&larr;</div>
+                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&larr;</div>
                         } else if (index < size + 2) {
                             utd++
                             const utdElement = document.getElementById("utd_" + utd);
                             if (utdElement) {
                                 utdElement.innerHTML = '&darr;';
                             }
-                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level)}>&darr;</div>
+                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&darr;</div>
                         } else if (index >= (size + 1) * (size + 2)) {
                             dtu++
                             const dtuElement = document.getElementById("dtu_" + dtu);
                             if (dtuElement) {
                                 dtuElement.innerHTML = '&uarr;';
                             }
-                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level)}>&uarr;</div>
+                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&uarr;</div>
                         }
                         else {
                             if (column < size) {
@@ -172,7 +198,7 @@ export function Board({ level }: { level: Level }) {
 
                             const obstacle = level.obstacles[row + "_" + column]
                             return (
-                                <BoardCell key={index} row={row} col={column} obstacle={obstacle} preview={true}></BoardCell>
+                                <BoardCell key={index} row={row} col={column} levelGuess={levelGuess} obstacle={obstacle} preview={showPreview}></BoardCell>
                             )
                         }
                     }
@@ -189,13 +215,21 @@ export function Board({ level }: { level: Level }) {
  * @param preview true if the cell should draw the obstacle false otherwise
  * @returns drawing of a cell
  */
-function BoardCell({ row, col, obstacle, preview }: { row: number, col: number, obstacle?: string, preview?: boolean }) {
+function BoardCell({ row, col, levelGuess, obstacle, preview }: { row: number, col: number, levelGuess: Level, obstacle?: string, preview?: boolean }) {
+    const cell = document.getElementById(row + "_" + col + "_cell")
+    if(preview && obstacle){
+        if (cell) {
+            cell.innerHTML = obstacle 
+        }
+    } else if(cell) {
+        cell.innerHTML = ''
+    }
     return (
         <div
+            id={row + "_" + col + "_cell"}
             className={styles.cell}
-            onClick={(e) => cellClick(e.currentTarget, row, col)}
+            onClick={(e) => cellClick(e.currentTarget, row, col, levelGuess)}
         >
-            {preview && obstacle}
         </div>
     )
 }
