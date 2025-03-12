@@ -1,6 +1,6 @@
 import styles from './styles.module.css'
 import { Dispatch, SetStateAction } from 'react'
-
+import  Cookies  from 'js-cookie'
 
 export function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
     switch (direction) {
@@ -15,12 +15,20 @@ export function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): strin
     }
 }
 
-function updateLevelGuess(guess: Level, row: number, col: number, obstacle: string): Level {
-    guess.obstacles[row + "_" + col] = obstacle
-    return guess
+function updateSequenceGuess(lvlNum: number, row: number, col: number, obstacle: string): Sequence {
+    // guess.levels[lvlNum].obstacles[row + "_" + col] = obstacle
+    if(Cookies.get('guess')) {
+        let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
+        guess.levels[lvlNum].obstacles[row + "_" + col] = obstacle
+        Cookies.set('guess', JSON.stringify(guess))
+        return guess
+    } else {
+        console.log("Errore: problema con il guess nei cookies")
+        return {} as Sequence
+    }
 }
 
-function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, currLevelGuess: Level) {
+function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number) {
     switch (currentTarget.innerHTML) {
         case '/':
             currentTarget.innerHTML = '\\'
@@ -32,8 +40,8 @@ function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col
             currentTarget.innerHTML = '/'
             break;
     }
-    let a = updateLevelGuess(currLevelGuess, row, col, currentTarget.innerHTML)
-    console.log(a.level + ": ", a.obstacles)
+    let a = updateSequenceGuess(lvlNumber-1, row, col, currentTarget.innerHTML)
+    console.log(a.levels[lvlNumber-1].level + ": ", a.levels[lvlNumber-1].obstacles)
 }
 
 // Passo arrowClickObj per poter avere la variabile come reference
@@ -140,9 +148,12 @@ function checkOutputArrow(inputArrow: string, level: Level): [[number, number], 
 export function Board({ level, showPreview }: { level: Level, showPreview: boolean }) {
     const size: number = Number(level.size) // WARNING: This is a number, not a string
     let arrowClickObj = {value: 0}; // Uso un oggetto così da passare la variabile per reference
-    let levelGuess: Level = {
-        size: size, obstacles: {},
-        level: level.level
+    let sequenceGuess: Sequence = {
+        levels: Array.from({ length: 10 }, (_, index) => ({
+            level: index + 1,
+            size: 0, // or any appropriate size value
+            obstacles: {}
+        }))
     }
 
     let ltr = 0 // Left to right arrow counter
@@ -196,9 +207,15 @@ export function Board({ level, showPreview }: { level: Level, showPreview: boole
                                 row++
                             }
 
-                            const obstacle = level.obstacles[row + "_" + column]
+                            // const obstacle = level.obstacles[row + "_" + column]
+                            let obstacle: string
+                            if(showPreview) {
+                                obstacle = level.obstacles[row + "_" + column]
+                            } else {
+                                obstacle = JSON.parse(Cookies.get('guess') || '').levels[level.level - 1].obstacles[row + "_" + column]
+                            }
                             return (
-                                <BoardCell key={index} row={row} col={column} levelGuess={levelGuess} obstacle={obstacle} preview={showPreview}></BoardCell>
+                                <BoardCell key={index} row={row} col={column} lvlNumber={level.level} obstacle={obstacle} preview={showPreview}></BoardCell>
                             )
                         }
                     }
@@ -207,6 +224,7 @@ export function Board({ level, showPreview }: { level: Level, showPreview: boole
         </div >
     )
 }
+
 /**
  * 
  * @param row the row of the cell
@@ -215,21 +233,27 @@ export function Board({ level, showPreview }: { level: Level, showPreview: boole
  * @param preview true if the cell should draw the obstacle false otherwise
  * @returns drawing of a cell
  */
-function BoardCell({ row, col, levelGuess, obstacle, preview }: { row: number, col: number, levelGuess: Level, obstacle?: string, preview?: boolean }) {
+function BoardCell({ row, col, lvlNumber, obstacle, preview }: { row: number, col: number, lvlNumber: number, obstacle?: string, preview?: boolean }) {
     const cell = document.getElementById(row + "_" + col + "_cell")
     if(preview && obstacle){
         if (cell) {
             cell.innerHTML = obstacle 
         }
     } else if(cell) {
-        cell.innerHTML = ''
+        console.log("Obstacle " + row + "_" + col, obstacle)
+        if(obstacle) {
+            cell.innerHTML = obstacle
+        } else {
+            cell.innerHTML = ''
+        }
     }
     return (
         <div
             id={row + "_" + col + "_cell"}
             className={styles.cell}
-            onClick={(e) => cellClick(e.currentTarget, row, col, levelGuess)}
+            onClick={(e) => cellClick(e.currentTarget, row, col, lvlNumber)}
         >
+        {obstacle}
         </div>
     )
 }
