@@ -20,11 +20,27 @@ export async function doesPupilExistsForSession(pupil_code: string, session_code
     return res.length > 0;
 }
 
-export async function getSequence(session_code: string) {
+export async function getSequence(session_code: string) : Promise<Sequence> {
     try {
         const res = await db.select({ sequence: session_sequences.sequences }).from(session_sequences).leftJoin(sessions, eq(sessions.sequenceId, session_sequences.id)).where(eq(sessions.code, session_code));
-        return res[0].sequence;
+        return res[0].sequence as Sequence; // Prima non cera as Sequence e Promise<Sequence> non era necessario
     } catch (error: any) {
         throw new Error("Errore nel recupero della sequenza" + error.toString());
     }
+}
+
+export async function isLevelSuccess(session_code: string, level: Level): Promise<boolean> {
+    const sequence = await getSequence(session_code);
+    let obstacle = undefined
+    for(const key in sequence.levels[level.level - 1].obstacles) {
+        if (level.obstacles[key] === undefined) {
+            obstacle = ''
+        } else{
+            obstacle = level.obstacles[key]
+        }
+        if(obstacle !== sequence.levels[level.level - 1].obstacles[key]) {
+            return false;
+        }
+    }
+    return true;
 }

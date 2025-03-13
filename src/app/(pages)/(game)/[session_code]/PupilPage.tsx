@@ -36,7 +36,7 @@ export function PupilPage({ session_code }: { session_code: string }) {
                     })
                     if (session.status == 200) {
                         const sequence = await session.json();
-                        setContent(<Game sequence={sequence.data} isMeasure={false} />)
+                        setContent(<Game sequence={sequence.data} isMeasure={false} sessionCode={session_code} />)
                     }
 
                 } else {

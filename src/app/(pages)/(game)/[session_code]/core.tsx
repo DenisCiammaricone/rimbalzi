@@ -28,6 +28,39 @@ function updateSequenceGuess(lvlNum: number, row: number, col: number, obstacle:
     }
 }
 
+// TODO: Re-render cells when the obstacles are updated
+export function resetLevel(level: number) {
+    if(Cookies.get('guess')) {
+        let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
+        guess.levels[level-1].obstacles = {}
+        Cookies.set('guess', JSON.stringify(guess))
+    } else {
+        console.log("Errore: problema con il guess nei cookies")
+        throw new Error("Errore: problema con il guess nei cookies")
+    }
+
+}
+
+export async function verifyLevel(level: number, sessionCode: string): Promise<boolean> {
+    const lvl = level - 1
+    if(Cookies.get('guess')) {
+        const res = await fetch('api/game/verifyLevel?lvl=' + lvl + '&session=' + sessionCode, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const data = await res.json()
+        if(res.status === 200 && data.message === 'Ok') {
+            return true
+
+        }
+    } else {
+        throw new Error("Errore: problema con il guess nei cookies")
+    }
+    return false;
+}
+
 function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number) {
     switch (currentTarget.innerHTML) {
         case '/':
@@ -148,13 +181,6 @@ function checkOutputArrow(inputArrow: string, level: Level): [[number, number], 
 export function Board({ level, showPreview }: { level: Level, showPreview: boolean }) {
     const size: number = Number(level.size) // WARNING: This is a number, not a string
     let arrowClickObj = {value: 0}; // Uso un oggetto così da passare la variabile per reference
-    let sequenceGuess: Sequence = {
-        levels: Array.from({ length: 10 }, (_, index) => ({
-            level: index + 1,
-            size: 0, // or any appropriate size value
-            obstacles: {}
-        }))
-    }
 
     let ltr = 0 // Left to right arrow counter
     let rtl = 0 // Right to left arrow counter
