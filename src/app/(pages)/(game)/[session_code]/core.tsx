@@ -82,16 +82,20 @@ export async function verifyLevel(level: number, sessionCode: string): Promise<b
 // TODO: Per migliorare la responsiveness fare una rotta API verifySequence anzichè chiaare verifyLevel 10 volte
 export async function verifySequence(sessionCode: string) {
     let verified = Array(10).fill(false)
+    
     if(Cookies.get('guess')) {
-        //console.log(Cookies.get('guess'))
-        for(let i = 0; i < 10; i++) {
-            //console.log(await verifyLevel(i+1, sessionCode))
-            if(await verifyLevel(i+1, sessionCode)){
-                //console.log("Livello " + i + " verificato")
-                verified[i] = true
-            } else {
-                //console.log("Livello " + i + " non verificato")
+        const res = await fetch('api/game/verifySequence?&session=' + sessionCode, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
             }
+        })
+        const data = await res.json()
+        if(res.status === 200 && data.message === 'Ok') {
+            verified = data.verifiedLevels
+            return verified
+        } else {
+            throw new Error("Errore: problema con il guess nei cookies")
         }
     }
     return verified
