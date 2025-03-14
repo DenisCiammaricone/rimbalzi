@@ -1,10 +1,12 @@
-import { Board, GameLevels, resetLevel, verifyLevel } from "@/app/(pages)/(game)/[session_code]/core";
+import { Board, GameLevels, resetLevel, verifyLevel, VerifyLevelButton, verifySequence } from "@/app/(pages)/(game)/[session_code]/core";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 
 export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence, isMeasure: boolean, sessionCode: string }) {
     const [level, setLevel] = useState(0);
-
+    const [levelStatus, setLevelStatus] = useState(Array(10).fill(false));
+    
+    
     // TODO: Cancellare i cookies 'guess' ogni volta che si fa il login da pupil in una sessione
     // Inizializza il guess nei cookies
     if(Cookies.get('guess') === undefined) {
@@ -18,10 +20,18 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
         Cookies.set('guess', JSON.stringify(emptySequence));
     }
 
+    // useEffect(() => {
+    //     const verifySeq = async () => {
+    //         const verifiedSeq = await verifySequence(sessionCode)
+    //         setLevelStatus(verifiedSeq)
+    //     }
+    //     verifySeq();
+    // }, [])
+
     let currLevel = sequence.levels[level];
     useEffect(() => {
         currLevel = sequence.levels[level];
-    }, [level])
+    }, [level, levelStatus])
 
     return (
         <div>
@@ -30,9 +40,9 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
             <Board level={currLevel} showPreview={false} />
             <div className="flex flex-row gap-4">
                 <button onClick={() => resetLevel(currLevel.level)}>Reset</button>
-                <button onClick={ async () => verifyLevel(currLevel.level, sessionCode)}>Verify</button>
+                <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} setLevelStatus={setLevelStatus}/>
             </div>
-            <GameLevels setLevel={setLevel} />
+            <GameLevels setLevel={setLevel} setLevelStatus={setLevelStatus} levelStatus={levelStatus} sessionCode={sessionCode}/>
         </div>
     )
 }

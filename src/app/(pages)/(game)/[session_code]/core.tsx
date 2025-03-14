@@ -1,6 +1,7 @@
 import styles from './styles.module.css'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import  Cookies  from 'js-cookie'
+import { array } from 'zod';
 
 export function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
     switch (direction) {
@@ -13,6 +14,23 @@ export function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): strin
         case 'dtu':
             return 'utd';
     }
+}
+
+export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode}:{setLevelStatus: Dispatch<SetStateAction<any[]>>, lvlNumber: number, sessionCode: string}) {
+    async function check() {
+        if(await verifyLevel(lvlNumber, sessionCode)) {
+            setLevelStatus((prev) => {
+                let newStatus = [...prev]
+                newStatus[lvlNumber-1] = true
+                return newStatus
+            })
+        }
+    }
+
+    return (
+        <button onClick={check}>Verify</button>
+    )
+
 }
 
 function updateSequenceGuess(lvlNum: number, row: number, col: number, obstacle: string): Sequence {
@@ -61,6 +79,24 @@ export async function verifyLevel(level: number, sessionCode: string): Promise<b
     return false;
 }
 
+// TODO: Per migliorare la responsiveness fare una rotta API verifySequence anzichè chiaare verifyLevel 10 volte
+export async function verifySequence(sessionCode: string) {
+    let verified = Array(10).fill(false)
+    if(Cookies.get('guess')) {
+        //console.log(Cookies.get('guess'))
+        for(let i = 0; i < 10; i++) {
+            //console.log(await verifyLevel(i+1, sessionCode))
+            if(await verifyLevel(i+1, sessionCode)){
+                //console.log("Livello " + i + " verificato")
+                verified[i] = true
+            } else {
+                //console.log("Livello " + i + " non verificato")
+            }
+        }
+    }
+    return verified
+}
+
 function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number) {
     switch (currentTarget.innerHTML) {
         case '/':
@@ -74,7 +110,7 @@ function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col
             break;
     }
     let a = updateSequenceGuess(lvlNumber-1, row, col, currentTarget.innerHTML)
-    console.log(a.levels[lvlNumber-1].level + ": ", a.levels[lvlNumber-1].obstacles)
+    //console.log(a.levels[lvlNumber-1].level + ": ", a.levels[lvlNumber-1].obstacles)
 }
 
 // Passo arrowClickObj per poter avere la variabile come reference
@@ -91,7 +127,7 @@ function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, a
     } else if (direction === 'utd' || direction === 'dtu') {
         outputTarget = document.getElementById(negateDirection(direction) + "_" + ballPosition[1])
     }
-    console.log("Output arrow: ")
+    //console.log("Output arrow: ")
     if (outputTarget) {
         currentTarget.innerHTML = arrowClickObj.value.toString()
         outputTarget.innerHTML = arrowClickObj.value.toString()
@@ -266,7 +302,7 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview }: { row: number, co
             cell.innerHTML = obstacle 
         }
     } else if(cell) {
-        console.log("Obstacle " + row + "_" + col, obstacle)
+        //console.log("Obstacle " + row + "_" + col, obstacle)
         if(obstacle) {
             cell.innerHTML = obstacle
         } else {
@@ -284,11 +320,28 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview }: { row: number, co
     )
 }
 
-export function GameLevels({ setLevel }: { setLevel: Dispatch<SetStateAction<number>> }) {
+export function GameLevels({ setLevel, setLevelStatus, levelStatus, sessionCode }: { setLevel: Dispatch<SetStateAction<number>>, setLevelStatus: Dispatch<SetStateAction<any[]>>, levelStatus: any[], sessionCode: string }) {
     const _lvlNumber = 10
-    const gameLevels = Array.from({ length: _lvlNumber }, (_, index) => (
-        <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(e.currentTarget, setLevel)}>{index + 1}</button>
-    ))
+    useEffect(() => {
+        const verifySeq = async () => {
+            const verifiedSeq = await verifySequence(sessionCode)
+            setLevelStatus(verifiedSeq)
+        }
+        verifySeq();
+    },[])
+    const gameLevels = Array.from({ length: _lvlNumber }, (_, index) => {
+        if(levelStatus[index]) {
+            return (
+                <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(e.currentTarget, setLevel)} className='text-green-500'>{index + 1}</button>
+            )        
+        } else {
+            return (
+                <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(e.currentTarget, setLevel)} className='text-red-500'>{index + 1}</button>
+            )
+        }
+    })
+
+
 
     return (
         <div id="gameLevels">
