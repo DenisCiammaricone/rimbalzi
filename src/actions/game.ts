@@ -23,6 +23,9 @@ export async function doesPupilExistsForSession(pupil_code: string, session_code
 export async function getSequence(session_code: string) : Promise<Sequence> {
     try {
         const res = await db.select({ sequence: session_sequences.sequences }).from(session_sequences).leftJoin(sessions, eq(sessions.sequenceId, session_sequences.id)).where(eq(sessions.code, session_code));
+        if(typeof (res[0].sequence) === 'string') {
+            return JSON.parse(res[0].sequence) as Sequence;
+        }
         return res[0].sequence as Sequence; // Prima non cera as Sequence e Promise<Sequence> non era necessario
     } catch (error: any) {
         throw new Error("Errore nel recupero della sequenza" + error.toString());

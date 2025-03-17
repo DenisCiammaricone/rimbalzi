@@ -21,11 +21,11 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
     }
 
     // useEffect(() => {
-    //     const verifySeq = async () => {
-    //         const verifiedSeq = await verifySequence(sessionCode)
-    //         setLevelStatus(verifiedSeq)
-    //     }
-    //     verifySeq();
+    //      const verifySeq = async () => {
+    //          const verifiedSeq = await verifySequence(sessionCode)
+    //          setLevelStatus(verifiedSeq)
+    //      }
+    //      verifySeq();
     // }, [])
 
     let currLevel = sequence.levels[level];
