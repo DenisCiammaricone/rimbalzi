@@ -1,4 +1,4 @@
-import { Board, GameLevels, resetLevel, verifyLevel, VerifyLevelButton, verifySequence } from "@/app/(pages)/(game)/[session_code]/core";
+import { Board, GameLevels, resetLevel, VerifyLevelButton } from "@/app/(pages)/(game)/[session_code]/core";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 

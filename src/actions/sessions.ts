@@ -35,7 +35,8 @@ export async function createNewSession(class_grade: string, class_section: strin
     }
 
     try {
-        const res = await db.insert(sessions).values({ phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId) }).$returningId().execute();
+        //TODO: Sequence Id should be assigned based on the phase and class
+        const res = await db.insert(sessions).values({ phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId), sequenceId: 0 }).$returningId().execute();
         return res[0].id;
     } catch (error: any) {
         throw new Error(error);
