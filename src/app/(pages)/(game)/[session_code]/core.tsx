@@ -1,9 +1,8 @@
 import styles from './styles.module.css'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import  Cookies  from 'js-cookie'
-import { array } from 'zod';
 
-export function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
+function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
     switch (direction) {
         case 'ltr':
             return 'rtl';
@@ -18,7 +17,7 @@ export function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): strin
 
 export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode}:{setLevelStatus: Dispatch<SetStateAction<any[]>>, lvlNumber: number, sessionCode: string}) {
     async function check() {
-        if(await verifyLevel(lvlNumber, sessionCode)) {
+        if(await verifyLevelMask(lvlNumber, sessionCode)) {
             setLevelStatus((prev) => {
                 let newStatus = [...prev]
                 newStatus[lvlNumber-1] = true
@@ -59,29 +58,10 @@ export function resetLevel(level: number) {
 
 }
 
-export async function verifyLevel(level: number, sessionCode: string): Promise<boolean> {
+async function verifyLevelMask(level: number, sessionCode: string): Promise<boolean> {
     const lvl = level - 1
     if(Cookies.get('guess')) {
-        const res = await fetch('api/game/verifyLevel?lvl=' + lvl + '&session=' + sessionCode, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        const data = await res.json()
-        if(res.status === 200 && data.message === 'Ok') {
-            return true
-
-        }
-    } else {
-        throw new Error("Errore: problema con il guess nei cookies")
-    }
-    return false;
-}
-
-export async function verifyLevelMask() {
-    if(Cookies.get('guess')) {
-        const res = await fetch('api/game/verifyLevelMask', {
+        const res = await fetch('api/game/verifyLevelMask?lvl=' + lvl + '&session=' + sessionCode, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -98,11 +78,11 @@ export async function verifyLevelMask() {
 }
 
 // TODO: Per migliorare la responsiveness fare una rotta API verifySequence anzichè chiaare verifyLevel 10 volte
-export async function verifySequence(sessionCode: string) {
+async function verifySequence(sessionCode: string) {
     let verified = Array(10).fill(false)
     
     if(Cookies.get('guess')) {
-        const res = await fetch('api/game/verifySequence?&session=' + sessionCode, {
+        const res = await fetch('api/game/verifySequenceMask?&session=' + sessionCode, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
