@@ -42,7 +42,7 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
                 <button onClick={() => resetLevel(currLevel.level)}>Reset</button>
                 <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} setLevelStatus={setLevelStatus}/>
             </div>
-            <GameLevels setLevel={setLevel} setLevelStatus={setLevelStatus} levelStatus={levelStatus} sessionCode={sessionCode}/>
+            <GameLevels setLevel={setLevel} level={level} setLevelStatus={setLevelStatus} levelStatus={levelStatus} sessionCode={sessionCode}/>
         </div>
     )
 }

@@ -136,7 +136,19 @@ function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, a
     }
 }
 
-function changeLevelClick(currentTarget: EventTarget & HTMLButtonElement, setLevel: Dispatch<SetStateAction<number>>) {
+async function changeLevelClick(currentLevel: Number, sessionCode: string, currentTarget: EventTarget & HTMLButtonElement, setLevel: Dispatch<SetStateAction<number>>) {
+    const res = await fetch('api/game/changeLevel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                session_code: sessionCode,
+                from: currentLevel, 
+                to: parseInt(currentTarget.value)
+            })
+
+    })
     setLevel(parseInt(currentTarget.value))
 }
 
@@ -322,8 +334,9 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview }: { row: number, co
     )
 }
 
-export function GameLevels({ setLevel, setLevelStatus, levelStatus, sessionCode }: { setLevel: Dispatch<SetStateAction<number>>, setLevelStatus: Dispatch<SetStateAction<any[]>>, levelStatus: any[], sessionCode: string }) {
+export function GameLevels({ setLevel, level, setLevelStatus, levelStatus, sessionCode }: { setLevel: Dispatch<SetStateAction<number>>, level: Number, setLevelStatus: Dispatch<SetStateAction<any[]>>, levelStatus: any[], sessionCode: string }) {
     const _lvlNumber = 10
+
     useEffect(() => {
         const verifySeq = async () => {
             const verifiedSeq = await verifySequence(sessionCode)
@@ -331,14 +344,15 @@ export function GameLevels({ setLevel, setLevelStatus, levelStatus, sessionCode 
         }
         verifySeq();
     },[])
+
     const gameLevels = Array.from({ length: _lvlNumber }, (_, index) => {
         if(levelStatus[index]) {
             return (
-                <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(e.currentTarget, setLevel)} className='text-green-500'>{index + 1}</button>
+                <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(level, sessionCode, e.currentTarget, setLevel)} className='text-green-500'>{index + 1}</button>
             )        
         } else {
             return (
-                <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(e.currentTarget, setLevel)} className='text-red-500'>{index + 1}</button>
+                <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(level, sessionCode, e.currentTarget, setLevel)} className='text-red-500'>{index + 1}</button>
             )
         }
     })
