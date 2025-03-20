@@ -26,3 +26,40 @@ interface Level {
 interface Sequence {
     levels: Level[];
 }
+
+interface ModifyCell {
+    action: string;
+    level: number;
+    x: number;
+    y: number;
+    currentObstacle: string;
+    newObstacle: string;
+    timestamp: Date;
+}
+
+interface VerifyLevel {
+    action: string;
+    level: number;
+    outcome: boolean;
+    board: JSON; // JSON Level object
+    timestamp: Date;
+}
+
+interface CleanLevel {
+    action: string;
+    level: number;
+    timestamp: Date;
+}
+
+class ChangeLevel {
+    action: string = "chg_lvl";
+    level: number = -1;
+    to: number = -1;
+    timestamp: Date = new Date();
+}
+
+interface CompleteSequence {
+    action: string;
+    board: JSON; // JSON Level object
+    timestamp: Date;
+}

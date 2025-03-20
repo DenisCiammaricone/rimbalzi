@@ -37,12 +37,12 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
         <div>
             <h1>Game</h1>
             { /* ShowPreview deve essere true solo se si vuole mostrare il vero posizionamento degli ostacoli */ }
-            <Board level={currLevel} showPreview={false} />
+            <Board level={currLevel} showPreview={false} session_code={sessionCode} />
             <div className="flex flex-row gap-4">
-                <button onClick={() => resetLevel(currLevel.level)}>Reset</button>
+                <button onClick={() => resetLevel(currLevel.level, sessionCode)}>Reset</button>
                 <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} setLevelStatus={setLevelStatus}/>
             </div>
-            <GameLevels setLevel={setLevel} setLevelStatus={setLevelStatus} levelStatus={levelStatus} sessionCode={sessionCode}/>
+            <GameLevels setLevel={setLevel} level={level} setLevelStatus={setLevelStatus} levelStatus={levelStatus} sessionCode={sessionCode}/>
         </div>
     )
 }
