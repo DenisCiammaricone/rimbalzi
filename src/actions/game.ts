@@ -203,3 +203,33 @@ export async function logLevelSwitch(from: number, to: number, session_code: str
         throw new Error("Errore nel log del cambio di livello" + error.toString());
     }
 }
+
+export async function logLevelVerify(level_num: number, outcome: boolean, level: Level, session_code: string, pupil_code: string) {
+    try {
+        const sessionId = await getSessionIdByCode(session_code);
+        
+        const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'ver_lvl', 'level', ${level_num}, 'outcome', ${outcome}, 'board', ${JSON.stringify(level)}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
+    } catch (error: any) {
+        throw new Error("Errore nel log del cambio di livello" + error.toString());
+    }
+}
+
+export async function logChangeCellObstacle(level_num: number, x: number, y: number, starting_obstacle: string, new_obstacle: string, session_code: string, pupil_code: string) {
+    try {
+        const sessionId = await getSessionIdByCode(session_code);
+            
+        const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'mod_cel', 'level', ${level_num}, 'x', ${x}, 'y', ${y}, 'starting_obstacle', ${starting_obstacle}, 'new_obstacle', ${new_obstacle}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
+    } catch (error: any) {
+        throw new Error("Errore nel log del cambio di livello" + error.toString());
+    }
+}
+
+export async function logResetLevel (level_num: number, session_code: string, pupil_code: string) {
+    try {
+        const sessionId = await getSessionIdByCode(session_code);
+            
+        const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'cln_lvl', 'level', ${level_num}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
+    } catch (error: any) {
+        throw new Error("Errore nel log del cambio di livello" + error.toString());
+    }
+}

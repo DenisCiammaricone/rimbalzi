@@ -45,11 +45,28 @@ function updateSequenceGuess(lvlNum: number, row: number, col: number, obstacle:
     }
 }
 
-// TODO: Re-render cells when the obstacles are updated
-export function resetLevel(level: number) {
+export function resetLevel(level: number, session_code: string) {
     if(Cookies.get('guess')) {
         let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
+        for( let i = 1; i <= 5; i++) {
+            for( let j = 1; j <= 5; j++) {
+                const cell = document.getElementById(i + "_" + j + "_cell");
+                if (cell) {
+                    cell.innerHTML = '';
+                }
+            }
+        }
         guess.levels[level-1].obstacles = {}
+        const res = fetch('api/game/logResetLevel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                session_code: session_code,
+                lvlNum: level,
+            })
+        })
         Cookies.set('guess', JSON.stringify(guess))
     } else {
         console.log("Errore: problema con il guess nei cookies")
@@ -99,18 +116,41 @@ async function verifySequence(sessionCode: string) {
     return verified
 }
 
-function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number) {
+async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number, session_code: string) {
+    let oldObstacle = ''
+    let newObstacle = ''
     switch (currentTarget.innerHTML) {
         case '/':
             currentTarget.innerHTML = '\\'
+            oldObstacle = '/'
+            newObstacle = '\\'
             break;
         case '\\': 
             currentTarget.innerHTML = ''
+            oldObstacle = '\\'
+            newObstacle = ''
             break;
         case '':
             currentTarget.innerHTML = '/'
+            oldObstacle = ''
+            newObstacle = '/'
             break;
     }
+
+    const res = await fetch('api/game/logObstacleChange', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            session_code: session_code,
+            level: lvlNumber,
+            x: row,
+            y: col,
+            starting_obstacle: oldObstacle,
+            new_obstacle: newObstacle
+        })
+    })
     let a = updateSequenceGuess(lvlNumber-1, row, col, currentTarget.innerHTML)
     //console.log(a.levels[lvlNumber-1].level + ": ", a.levels[lvlNumber-1].obstacles)
 }
@@ -137,15 +177,15 @@ function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, a
 }
 
 async function changeLevelClick(currentLevel: Number, sessionCode: string, currentTarget: EventTarget & HTMLButtonElement, setLevel: Dispatch<SetStateAction<number>>) {
-    const res = await fetch('api/game/changeLevel', {
+    const res = await fetch('api/game/logChangeLevel', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 session_code: sessionCode,
-                from: currentLevel, 
-                to: parseInt(currentTarget.value)
+                from: currentLevel.valueOf() + 1, 
+                to: parseInt(currentTarget.value) + 1
             })
 
     })
@@ -228,7 +268,7 @@ function checkOutputArrow(inputArrow: string, level: Level): [[number, number], 
     return [ballPosition, direction];
 }
 
-export function Board({ level, showPreview }: { level: Level, showPreview: boolean }) {
+export function Board({ level, showPreview, session_code }: { level: Level, showPreview: boolean, session_code: string }) {
     const size: number = Number(level.size) // WARNING: This is a number, not a string
     let arrowClickObj = {value: 0}; // Uso un oggetto così da passare la variabile per reference
 
@@ -291,7 +331,7 @@ export function Board({ level, showPreview }: { level: Level, showPreview: boole
                                 obstacle = JSON.parse(Cookies.get('guess') || '').levels[level.level - 1].obstacles[row + "_" + column]
                             }
                             return (
-                                <BoardCell key={index} row={row} col={column} lvlNumber={level.level} obstacle={obstacle} preview={showPreview}></BoardCell>
+                                <BoardCell key={index} row={row} col={column} lvlNumber={level.level} obstacle={obstacle} preview={showPreview} session_code={session_code}></BoardCell>
                             )
                         }
                     }
@@ -309,7 +349,7 @@ export function Board({ level, showPreview }: { level: Level, showPreview: boole
  * @param preview true if the cell should draw the obstacle false otherwise
  * @returns drawing of a cell
  */
-function BoardCell({ row, col, lvlNumber, obstacle, preview }: { row: number, col: number, lvlNumber: number, obstacle?: string, preview?: boolean }) {
+function BoardCell({ row, col, lvlNumber, obstacle, preview, session_code }: { row: number, col: number, lvlNumber: number, obstacle?: string, preview?: boolean, session_code: string }) {
     const cell = document.getElementById(row + "_" + col + "_cell")
     if(preview && obstacle){
         if (cell) {
@@ -327,7 +367,7 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview }: { row: number, co
         <div
             id={row + "_" + col + "_cell"}
             className={styles.cell}
-            onClick={(e) => cellClick(e.currentTarget, row, col, lvlNumber)}
+            onClick={(e) => cellClick(e.currentTarget, row, col, lvlNumber, session_code)}
         >
         {obstacle}
         </div>
