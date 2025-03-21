@@ -369,6 +369,7 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview, session_code }: { r
             className={styles.cell}
             onClick={(e) => cellClick(e.currentTarget, row, col, lvlNumber, session_code)}
         >
+            
         {obstacle}
         </div>
     )
