@@ -13,11 +13,13 @@ import { sessionKeys } from "@/db/schema/sessionKeys";
  */
 export async function createNewSession(class_grade: string, class_section: string, session_phase: string, teacher_id: string, details: string = "") {
     const school_id = await getTeacherSchoolId(Number(teacher_id));
+    console.log("AA")
     if (!school_id) {
         throw "School ID is undefined";
     }
 
     const classId = await getClassesByGradeSectionAndSchool(class_grade, class_section, school_id.toString());
+    console.log("BB")
     if (!session_phases.includes(session_phase)) {
         throw "Invalid session phase";
     }
@@ -33,12 +35,15 @@ export async function createNewSession(class_grade: string, class_section: strin
     if (await classSessionPhaseAlreadyExists(teacher_id, classId, session_phase)) {
         throw "Class already has a session in this phase"
     }
+    console.log("KK")
 
     try {
         //TODO: Sequence Id should be assigned based on the phase and class
-        const res = await db.insert(sessions).values({ phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId), sequenceId: 0 }).$returningId().execute();
+        const res = await db.insert(sessions).values({ phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId), sequenceId: 1 }).$returningId().execute();
+        console.log("CC")
         return res[0].id;
     } catch (error: any) {
+        console.log(error.toString())
         throw new Error(error);
     }
 }

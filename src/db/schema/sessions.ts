@@ -13,5 +13,5 @@ export const sessions = mysqlTable('sessions', {
     startedAt: timestamp('started_at'),
     userId: int('user_id').notNull().references(() => users.id),
     classId: int('class_id').notNull().references(() => classes.id),
-    sequenceId: int('sequence_id').notNull().references(() => session_sequences.id),
+    sequenceId: int('sequence_id').notNull().default(1).references(() => session_sequences.id),
 });
