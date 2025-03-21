@@ -142,3 +142,26 @@ async function classSessionPhaseAlreadyExists(teacher_id: string, class_id: stri
     if (res.length > 0) { return true }
     return false
 }
+
+export async function startSession(session_id: string) {
+    const res = await db.select({ startedAt: sessions.startedAt }).from(sessions).where(eq(sessions.id, Number(session_id)));
+    if(res[0].startedAt) {
+        throw new Error("Session already started");
+    }
+    const result = await db.update(sessions).set({ startedAt: new Date() }).where(eq(sessions.id, Number(session_id)));
+    return result;
+}
+
+export async function isTeacherOwnerOfSession(teacher_id: string, session_code: string) {
+    const res = await db.select().from(sessions).where(and(eq(sessions.userId, Number(teacher_id)), eq(sessions.code, session_code)));
+    if(res.length > 0) {
+        return true;
+    }
+    return false;
+}
+
+export async function getSessionKeys(session_code: string) {
+    const session_id = await getSessionIdByCode(session_code);
+    const res = await db.select().from(sessionKeys).where(eq(sessionKeys.sessionId, Number(session_id)));
+    return res;
+}

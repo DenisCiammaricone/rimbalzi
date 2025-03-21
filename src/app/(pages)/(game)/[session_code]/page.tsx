@@ -3,12 +3,12 @@ import { TeacherPage } from "./TeacherPage";
 import { PupilPage } from "./PupilPage";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
     const params = useParams()
     const [authorized, setAuthorized] = useState(false)
-
-
+    
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch('/api/game?session_code=' + params.session_code, {
@@ -33,5 +33,6 @@ export default function Page() {
         fetchData();
     }, [])
 
-    return <><h1>My Page {params.session_code}</h1> {authorized ? <TeacherPage></TeacherPage> : <PupilPage session_code={String(params.session_code)}></PupilPage>}</>
+    const sessionCode = Array.isArray(params.session_code) ? params.session_code[0] : params.session_code || '';
+    return <><h1>My Page {sessionCode}</h1> {authorized ? <TeacherPage session_code={sessionCode}></TeacherPage> : <PupilPage session_code={sessionCode}></PupilPage>}</>
 }
