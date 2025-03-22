@@ -1,5 +1,6 @@
 import { getSequence } from "@/actions/game";
-import { isSessionStarted } from "@/actions/sessions";
+import { getSessionStatus, isSessionStarted } from "@/actions/sessions";
+import { session_states } from "@/app/lib/enums";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -12,12 +13,16 @@ export async function GET(req: Request) {
         // TODO: se pupilCode || se utente loggato è admin della sessione
         if (pupilCode) {
             try {
-                const isStarted = await isSessionStarted(session_code);
-                if(isStarted) {
+                const sessionStatus = await getSessionStatus(session_code);
+                if(sessionStatus === 'started') {
                     const sequence = await getSequence(session_code);
-                    return NextResponse.json({ data: sequence }, { status: 200 });
+                    return NextResponse.json({ data: sequence, session_state: session_states[1]}, { status: 200 });
+                } else if (sessionStatus === 'waiting') {
+                    return NextResponse.json({ data: "Sessione non ancora iniziata", session_state: session_states[0] }, { status: 400 });
+                } else if(sessionStatus === 'finished') {
+                    return NextResponse.json({ data: "Sessione già terminata", session_state: session_states[2] }, { status: 400 });
                 } else {
-                    return NextResponse.json({ data: "Sessione non iniziata" }, { status: 400 });
+                    return NextResponse.json({ data: "Errore sconosciuto" }, { status: 500 });
                 }
             } catch (error: any) {
                 return NextResponse.json({ data: "Errore sconosciuto nel recupero della sequenza" + error.toString() }, { status: 500 });

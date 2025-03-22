@@ -39,7 +39,14 @@ export function PupilPage({ session_code }: { session_code: string }) {
                         setContent(<Game sequence={sequence.data} isMeasure={false} sessionCode={session_code} />)
                     } else if (session.status === 400) {
                         // Sessione non iniziata
-                        setContent(<p>Sessione non iniziata... Riavvia la pagina quando te lo dice il docente</p>)
+                        const session_data = await session.json();
+                        if(session_data.session_state) {
+                            if(session_data.session_state === 'waiting') {
+                                setContent(<p>Sessione non iniziata... Riavvia la pagina quando te lo dice il docente</p>)
+                            } else if(session_data.session_state === 'finished') {
+                                setContent(<p>Sessione già terminata</p>)
+                            }
+                        }
                     }
                     
                 } else {

@@ -172,10 +172,25 @@ export async function getSessionKeys(session_code: string) {
     return res;
 }
 
+// ! Deprecated function... use getSessionStatus instead
 export async function isSessionStarted(session_code: string) {
     const res = await db.select({ startedAt: sessions.startedAt }).from(sessions).where(eq(sessions.code, session_code));
     if(res[0].startedAt) {
         return true;
     }
     return false;
+}
+
+// ! Deprecated function... use getSessionStatus instead
+export async function isSessionFinished(session_code: string) {
+    const res = await db.select({ startedAt: sessions.startedAt }).from(sessions).where(eq(sessions.code, session_code));
+    if(res[0].startedAt) {
+        return true;
+    }
+    return false;
+}
+
+export async function getSessionStatus(session_code: string) {
+    const res = await db.select({ state: sessions.state }).from(sessions).where(eq(sessions.code, session_code));
+    return res[0].state;
 }
