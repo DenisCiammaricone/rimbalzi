@@ -34,11 +34,14 @@ export function PupilPage({ session_code }: { session_code: string }) {
                             'Content-Type': 'application/json',
                         }
                     })
-                    if (session.status == 200) {
+                    if (session.status === 200) {
                         const sequence = await session.json();
                         setContent(<Game sequence={sequence.data} isMeasure={false} sessionCode={session_code} />)
+                    } else if (session.status === 400) {
+                        // Sessione non iniziata
+                        setContent(<p>Sessione non iniziata... Riavvia la pagina quando te lo dice il docente</p>)
                     }
-
+                    
                 } else {
                     window.location.reload(); // TODO: Fallo in un modo nextjs con router
                 }

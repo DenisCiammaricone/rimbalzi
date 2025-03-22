@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, int, mysqlEnum, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 import { users } from "./users";
 import { classes } from "./classes";
 import { session_sequences } from "./session_sequences";

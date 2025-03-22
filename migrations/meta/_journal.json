@@ -71,6 +71,41 @@
       "when": 1742572455251,
       "tag": "0009_hesitant_titanium_man",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1742648464538,
+      "tag": "0010_productive_baron_zemo",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1742648508043,
+      "tag": "0011_useful_colonel_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1742648637318,
+      "tag": "0012_tough_bloodaxe",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1742648797462,
+      "tag": "0013_messy_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1742648927900,
+      "tag": "0014_redundant_layla_miller",
+      "breakpoints": true
     }
   ]
 }

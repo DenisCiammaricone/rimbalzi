@@ -2,7 +2,7 @@ import { db } from "@/app/lib/db/db";
 import { sessions } from "@/db/schema/sessions";
 import { getClassById, getClassesByGradeSectionAndSchool } from "./classes";
 import { getTeacherSchoolId } from "./users";
-import { session_phases } from "@/app/lib/enums";
+import { session_phases, session_states } from "@/app/lib/enums";
 import { eq, and } from "drizzle-orm";
 import { classes } from "@/db/schema/classes";
 import { sessionKeys } from "@/db/schema/sessionKeys";
@@ -153,7 +153,8 @@ export async function startSession(session_id: string) {
     if(res[0].startedAt) {
         throw new Error("Session already started");
     }
-    const result = await db.update(sessions).set({ startedAt: new Date() }).where(eq(sessions.id, Number(session_id)));
+    console.log(session_states[0])
+    const result = await db.update(sessions).set({ startedAt: new Date(), state: session_states[1] }).where(eq(sessions.id, Number(session_id)));
     return result;
 }
 
@@ -169,4 +170,12 @@ export async function getSessionKeys(session_code: string) {
     const session_id = await getSessionIdByCode(session_code);
     const res = await db.select().from(sessionKeys).where(eq(sessionKeys.sessionId, Number(session_id)));
     return res;
+}
+
+export async function isSessionStarted(session_code: string) {
+    const res = await db.select({ startedAt: sessions.startedAt }).from(sessions).where(eq(sessions.code, session_code));
+    if(res[0].startedAt) {
+        return true;
+    }
+    return false;
 }
