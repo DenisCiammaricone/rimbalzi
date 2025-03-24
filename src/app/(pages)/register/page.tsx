@@ -12,7 +12,7 @@ export default function RegisterPage() {
     // Fetch Schools to populate the select
     useEffect(() => {
         async function fetchSchools() {
-            const response = await fetch('/api/db/schools', {
+            const response = await fetch('/api/schools', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
