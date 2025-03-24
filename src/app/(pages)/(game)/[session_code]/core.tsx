@@ -40,7 +40,9 @@ export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode, isMea
                 let newStatus = [...prev];
                 newStatus[lvlNumber-1] = true;
                 return newStatus;
-        })}}>Verifica Livello</button>
+            })
+            alert("Verifica... Clicca ok!")
+        }}>Verifica Livello</button>
     )
 
 }
@@ -303,30 +305,30 @@ export function Board({ level, showPreview, session_code }: { level: Level, show
                             ltr++
                             const ltrElement = document.getElementById("ltr_" + ltr);
                             if (ltrElement) {
-                                ltrElement.innerHTML = '&rArr;'
+                                ltrElement.innerHTML = '&rarr;'
                             }
-                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&rArr;</div>
+                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&rarr;</div>
                         } else if (index % (size + 2) === size + 1) {
                             rtl++
                             const rtlElement = document.getElementById("rtl_" + rtl);
                             if (rtlElement) {
-                                rtlElement.innerHTML = '&lArr;';
+                                rtlElement.innerHTML = '&larr;';
                             }
-                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&lArr;</div>
+                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&larr;</div>
                         } else if (index < size + 2) {
                             utd++
                             const utdElement = document.getElementById("utd_" + utd);
                             if (utdElement) {
-                                utdElement.innerHTML = '&dArr;';
+                                utdElement.innerHTML = '&darr;';
                             }
-                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&dArr;</div>
+                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&darr;</div>
                         } else if (index >= (size + 1) * (size + 2)) {
                             dtu++
                             const dtuElement = document.getElementById("dtu_" + dtu);
                             if (dtuElement) {
-                                dtuElement.innerHTML = '&uArr;';
+                                dtuElement.innerHTML = '&uarr;';
                             }
-                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&uArr;</div>
+                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&uarr;</div>
                         }
                         else {
                             if (column < size) {
