@@ -22,13 +22,30 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
         Cookies.set('guess', JSON.stringify(emptySequence));
     }
 
-    // useEffect(() => {
-    //      const verifySeq = async () => {
-    //          const verifiedSeq = await verifySequence(sessionCode)
-    //          setLevelStatus(verifiedSeq)
-    //      }
-    //      verifySeq();
-    // }, [])
+    useEffect(() => {
+        const fetch_data = async () => {
+            const savedGame = await fetch('/api/game/savedGame?session_code=' + sessionCode, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            if(savedGame.status === 200) {
+                const savedGameData = await savedGame.json();
+                savedGameData.data.map((move: any) => {if(move.action === 'ver_lvl') {
+                    setLevelVerified((prev) => {
+                        let newLevels = [...prev];
+                        newLevels[move.level] = true;
+                        return newLevels;
+                })}})
+                /*savedGameData.data.moves.forEach(element => {
+                
+                });*/
+                console.log(savedGameData.data);
+            }
+        }
+        fetch_data();
+    }, [])
 
     let currLevel = sequence.levels[level];
     useEffect(() => {

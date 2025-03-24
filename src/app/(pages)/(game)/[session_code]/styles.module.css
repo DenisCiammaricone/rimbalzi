@@ -76,6 +76,12 @@
     font-size: 16px;
 }
 
+.levelVerified {
+    width: 14.5em;
+    text-align: center;
+    margin: auto;
+}
+
 .positive { 
     background-color: #04AA6D; /* Green */
 }

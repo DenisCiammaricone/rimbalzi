@@ -18,7 +18,7 @@ function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
 export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified}:{setLevelStatus: Dispatch<SetStateAction<any[]>>, lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: boolean[]}) {
     if (isMeasure && levelVerified[lvlNumber-1]) {
         return (
-            <div>Questo livello è stato già verificato</div>
+            <div className={styles.levelVerified}>Livello già verificato</div>
         )
 
     }
