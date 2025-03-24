@@ -11,6 +11,7 @@ export const sessions = mysqlTable('sessions', {
     details: varchar('details', { length: 256 }),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     startedAt: timestamp('started_at'),
+    endedAt: timestamp('ended_at'),
     userId: int('user_id').notNull().references(() => users.id),
     classId: int('class_id').notNull().references(() => classes.id),
     sequenceId: int('sequence_id').notNull().default(1).references(() => session_sequences.id),

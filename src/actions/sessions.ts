@@ -153,9 +153,13 @@ export async function startSession(session_id: string) {
     if(res[0].startedAt) {
         throw new Error("Session already started");
     }
-    console.log(session_states[0])
     const result = await db.update(sessions).set({ startedAt: new Date(), state: session_states[1] }).where(eq(sessions.id, Number(session_id)));
     return result;
+}
+
+export async function endSession(session_id: string) {
+    const result = await db.update(sessions).set({ endedAt: new Date(), state: session_states[2] }).where(eq(sessions.id, Number(session_id)));
+    return result
 }
 
 export async function isTeacherOwnerOfSession(teacher_id: string, session_code: string) {
@@ -180,6 +184,7 @@ export async function isSessionStarted(session_code: string) {
     }
     return false;
 }
+
 
 // ! Deprecated function... use getSessionStatus instead
 export async function isSessionFinished(session_code: string) {
