@@ -41,7 +41,6 @@ export function PupilPage({ session_code }: { session_code: string }) {
                     if(isMeasureCheck.status === 200) {
                         const isMeasureData = await isMeasureCheck.json();
                         isMeasure = isMeasureData.data;
-                        console.log(isMeasure)
                     }
 
                     const session = await fetch('/api/game/sequence?session_code=' + session_code, {

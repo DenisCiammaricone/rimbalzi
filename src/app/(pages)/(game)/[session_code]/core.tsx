@@ -34,13 +34,13 @@ export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode, isMea
 
     
     return (
-        <button onClick={() => {
+        <button className={styles.gameButton + ' ' + styles.positive} onClick={() => {
             check();
             setLevelVerified((prev) => {
                 let newStatus = [...prev];
                 newStatus[lvlNumber-1] = true;
                 return newStatus;
-        })}}>Verify</button>
+        })}}>Verifica Livello</button>
     )
 
 }
@@ -303,30 +303,30 @@ export function Board({ level, showPreview, session_code }: { level: Level, show
                             ltr++
                             const ltrElement = document.getElementById("ltr_" + ltr);
                             if (ltrElement) {
-                                ltrElement.innerHTML = '&rarr;'
+                                ltrElement.innerHTML = '&rArr;'
                             }
-                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&rarr;</div>
+                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&rArr;</div>
                         } else if (index % (size + 2) === size + 1) {
                             rtl++
                             const rtlElement = document.getElementById("rtl_" + rtl);
                             if (rtlElement) {
-                                rtlElement.innerHTML = '&larr;';
+                                rtlElement.innerHTML = '&lArr;';
                             }
-                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&larr;</div>
+                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&lArr;</div>
                         } else if (index < size + 2) {
                             utd++
                             const utdElement = document.getElementById("utd_" + utd);
                             if (utdElement) {
-                                utdElement.innerHTML = '&darr;';
+                                utdElement.innerHTML = '&dArr;';
                             }
-                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&darr;</div>
+                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&dArr;</div>
                         } else if (index >= (size + 1) * (size + 2)) {
                             dtu++
                             const dtuElement = document.getElementById("dtu_" + dtu);
                             if (dtuElement) {
-                                dtuElement.innerHTML = '&uarr;';
+                                dtuElement.innerHTML = '&uArr;';
                             }
-                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&uarr;</div>
+                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&uArr;</div>
                         }
                         else {
                             if (column < size) {
@@ -415,8 +415,7 @@ export function GameLevels({ setLevel, level, setLevelStatus, levelStatus, sessi
 
     return (
         <div id="gameLevels">
-            <h1>LevelChooser:</h1>
-            <div id="gameLevels" className='flex flex-row gap-4'>
+            <div className={'flex flex-row gap-5 ' + styles.gameLevels}>
                 {gameLevels}
             </div>
         </div>
