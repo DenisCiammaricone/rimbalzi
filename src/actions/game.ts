@@ -233,3 +233,17 @@ export async function logResetLevel (level_num: number, session_code: string, pu
         throw new Error("Errore nel log del cambio di livello" + error.toString());
     }
 }
+
+export async function isSessionMeasure(session_code: string) {
+    try { 
+        const sessionId = await getSessionIdByCode(session_code);
+        const res = await db.select({phase: sessions.phase}).from(sessions).where(eq(sessions.id, sessionId));
+        if(res[0].phase === 'test1' || res[0].phase === 'test2') {
+            return true;
+        }
+    } catch(error: any) {
+        throw new Error("Errore nel recupero della fase della sessione" + error.toString());
+    }
+
+    return false;
+}

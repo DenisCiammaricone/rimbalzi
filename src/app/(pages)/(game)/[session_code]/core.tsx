@@ -15,7 +15,13 @@ function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
     }
 }
 
-export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode}:{setLevelStatus: Dispatch<SetStateAction<any[]>>, lvlNumber: number, sessionCode: string}) {
+export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified}:{setLevelStatus: Dispatch<SetStateAction<any[]>>, lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: boolean[]}) {
+    if (isMeasure && levelVerified[lvlNumber-1]) {
+        return (
+            <div>Questo livello è stato già verificato</div>
+        )
+
+    }
     async function check() {
         if(await verifyLevelMask(lvlNumber, sessionCode)) {
             setLevelStatus((prev) => {
@@ -26,8 +32,15 @@ export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode}:{setL
         }
     }
 
+    
     return (
-        <button onClick={check}>Verify</button>
+        <button onClick={() => {
+            check();
+            setLevelVerified((prev) => {
+                let newStatus = [...prev];
+                newStatus[lvlNumber-1] = true;
+                return newStatus;
+        })}}>Verify</button>
     )
 
 }

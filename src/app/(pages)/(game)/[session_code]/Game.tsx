@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 
 export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence, isMeasure: boolean, sessionCode: string }) {
     const [level, setLevel] = useState(0);
+    const [levelVerified, setLevelVerified] = useState(Array(10).fill(false));
     const [levelStatus, setLevelStatus] = useState(Array(10).fill(false));
     
     
@@ -40,7 +41,7 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
             <Board level={currLevel} showPreview={false} session_code={sessionCode} />
             <div className="flex flex-row gap-4">
                 <button onClick={() => resetLevel(currLevel.level, sessionCode)}>Reset</button>
-                <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} setLevelStatus={setLevelStatus}/>
+                <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} setLevelStatus={setLevelStatus} isMeasure={isMeasure} levelVerified={levelVerified} setLevelVerified={setLevelVerified}/>
             </div>
             <GameLevels setLevel={setLevel} level={level} setLevelStatus={setLevelStatus} levelStatus={levelStatus} sessionCode={sessionCode}/>
         </div>

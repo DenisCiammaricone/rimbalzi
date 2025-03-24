@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 export default function Page() {
     const params = useParams()
     const [authorized, setAuthorized] = useState(false)
-    
+
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch('/api/game?session_code=' + params.session_code, {
