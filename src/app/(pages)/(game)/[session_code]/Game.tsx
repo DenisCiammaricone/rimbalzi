@@ -7,8 +7,6 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
     const [level, setLevel] = useState(0);
     const [levelVerified, setLevelVerified] = useState(Array(10).fill(Number(0)));
     
-    
-    // TODO: Cancellare i cookies 'guess' ogni volta che si fa il login da pupil in una sessione
     // Inizializza il guess nei cookies
     if(Cookies.get('guess') === undefined) {
         let emptySequence: Sequence = {
