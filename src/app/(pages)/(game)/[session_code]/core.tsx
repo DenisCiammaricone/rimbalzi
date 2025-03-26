@@ -15,8 +15,8 @@ function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
     }
 }
 
-export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified}:{setLevelStatus: Dispatch<SetStateAction<any[]>>, lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: boolean[]}) {
-    if (isMeasure && levelVerified[lvlNumber-1]) {
+export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified}:{lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: Number[]}) {
+    if (isMeasure && levelVerified[lvlNumber-1] === -1) {
         return (
             <div className={styles.levelVerified}>Livello già verificato</div>
         )
@@ -24,9 +24,17 @@ export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode, isMea
     }
     async function check() {
         if(await verifyLevelMask(lvlNumber, sessionCode)) {
-            setLevelStatus((prev) => {
+            setLevelVerified((prev) => {
                 let newStatus = [...prev]
-                newStatus[lvlNumber-1] = true
+                newStatus[lvlNumber-1] = 1
+                console.log(newStatus)
+                return newStatus
+            })
+        } else {
+            setLevelVerified((prev) => {
+                let newStatus = [...prev]
+                newStatus[lvlNumber-1] = -1
+                console.log(newStatus)
                 return newStatus
             })
         }
@@ -36,11 +44,11 @@ export function VerifyLevelButton({setLevelStatus, lvlNumber, sessionCode, isMea
     return (
         <button className={styles.gameButton + ' ' + styles.positive} onClick={() => {
             check();
-            setLevelVerified((prev) => {
-                let newStatus = [...prev];
-                newStatus[lvlNumber-1] = true;
-                return newStatus;
-            })
+            // setLevelVerified((prev) => {
+            //     let newStatus = [...prev];
+            //     newStatus[lvlNumber-1] = true;
+            //     return newStatus;
+            // })
             alert("Verifica... Clicca ok!")
         }}>Verifica Livello</button>
     )
@@ -390,25 +398,33 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview, session_code }: { r
     )
 }
 
-export function GameLevels({ setLevel, level, setLevelStatus, levelStatus, sessionCode }: { setLevel: Dispatch<SetStateAction<number>>, level: Number, setLevelStatus: Dispatch<SetStateAction<any[]>>, levelStatus: any[], sessionCode: string }) {
+export function GameLevels({ setLevel, level, levelVerified, sessionCode }: { setLevel: Dispatch<SetStateAction<number>>, level: Number, levelVerified: Number[], sessionCode: string }) {
     const _lvlNumber = 10
 
-    useEffect(() => {
-        const verifySeq = async () => {
-            const verifiedSeq = await verifySequence(sessionCode)
-            setLevelStatus(verifiedSeq)
-        }
-        verifySeq();
-    },[])
+    useEffect(() => {
+        Array.from({ length: _lvlNumber }, (_, index) => {
+            if(levelVerified[index] === 1) {
+                document.getElementById(index + "_levelButton")?.classList.add('text-green-500')
+            }
+            if(levelVerified[index] === -1) {
+                document.getElementById(index + "_levelButton")?.classList.add('text-red-500')
+            }
 
+        })
+    }, [levelVerified])
+    
     const gameLevels = Array.from({ length: _lvlNumber }, (_, index) => {
-        if(levelStatus[index]) {
+        if(levelVerified[index] === 1) {
             return (
                 <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(level, sessionCode, e.currentTarget, setLevel)} className='text-green-500'>{index + 1}</button>
             )        
-        } else {
+        } else if(levelVerified[index] === -1) {
             return (
                 <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(level, sessionCode, e.currentTarget, setLevel)} className='text-red-500'>{index + 1}</button>
+            )
+        } else {
+            return (
+                <button key={index} id={index + "_levelButton"} value={index} onClick={(e) => changeLevelClick(level, sessionCode, e.currentTarget, setLevel)} className='text-orange-400'>{index + 1}</button>
             )
         }
     })

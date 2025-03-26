@@ -252,6 +252,12 @@ export async function getPupilGameData(session_code: string, pupil_code: string)
     try {
         const sessionId = await getSessionIdByCode(session_code);
         const res = await db.select({moves: games.moves}).from(games).where(and(eq(games.sessionId, sessionId), eq(games.sessionKey, pupil_code)));
+        
+        // This is to prevent problems with different DB (local: mysql, remote: mariadb)
+        if(typeof (res[0].moves) === 'string') {
+            return JSON.parse(res[0].moves);
+        }
+        
         return res[0].moves; 
     } catch (error: any) {
         throw new Error("Errore nel recupero dei dati della sessione" + error.toString());

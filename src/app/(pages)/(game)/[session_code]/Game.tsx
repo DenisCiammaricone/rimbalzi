@@ -5,8 +5,7 @@ import Cookies from 'js-cookie';
 
 export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence, isMeasure: boolean, sessionCode: string }) {
     const [level, setLevel] = useState(0);
-    const [levelVerified, setLevelVerified] = useState(Array(10).fill(false));
-    const [levelStatus, setLevelStatus] = useState(Array(10).fill(false));
+    const [levelVerified, setLevelVerified] = useState(Array(10).fill(Number(0)));
     
     
     // TODO: Cancellare i cookies 'guess' ogni volta che si fa il login da pupil in una sessione
@@ -35,13 +34,18 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
                 savedGameData.data.map((move: any) => {if(move.action === 'ver_lvl') {
                     setLevelVerified((prev) => {
                         let newLevels = [...prev];
-                        newLevels[move.level] = true;
+                        if(move.outcome ) {
+                            newLevels[move.level] = 1;
+                        } else {
+                            newLevels[move.level] = -1;
+                        } 
                         return newLevels;
                 })}})
                 /*savedGameData.data.moves.forEach(element => {
                 
                 });*/
                 console.log(savedGameData.data);
+                console.log(levelVerified)
             }
         }
         fetch_data();
@@ -50,7 +54,7 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
     let currLevel = sequence.levels[level];
     useEffect(() => {
         currLevel = sequence.levels[level];
-    }, [level, levelStatus])
+    }, [level])
 
     return (
         <div id={styles.game} className="flex flex-col items-center">
@@ -59,9 +63,9 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
             <Board level={currLevel} showPreview={false} session_code={sessionCode} />
             <div className="flex flex-row gap-4">
                 <button className={styles.gameButton + ' ' + styles.negative} onClick={() => resetLevel(currLevel.level, sessionCode)}>Reset</button>
-                <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} setLevelStatus={setLevelStatus} isMeasure={isMeasure} levelVerified={levelVerified} setLevelVerified={setLevelVerified}/>
+                <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified} setLevelVerified={setLevelVerified}/>
             </div>
-            <GameLevels setLevel={setLevel} level={level} setLevelStatus={setLevelStatus} levelStatus={levelStatus} sessionCode={sessionCode}/>
+            <GameLevels setLevel={setLevel} level={level} levelVerified={levelVerified} sessionCode={sessionCode}/>
         </div>
     )
 }
