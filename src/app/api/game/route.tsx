@@ -9,7 +9,6 @@ export async function GET(req: Request) {
         const session = await auth()
         const sessionTeacher = await getSessionTeacher(session_code)
         // If not logged in or the user is not the teacher then return unauthorized
-        console.log(session?.user.id + " " + sessionTeacher)
         if (!session || session.user.id !== String(sessionTeacher)) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

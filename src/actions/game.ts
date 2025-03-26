@@ -129,7 +129,6 @@ function checkOutputArrow(inputArrow: string, level: Level): [[number, number], 
     // Until the ball is inside the board
     while (ballPosition[0] >= 1 && ballPosition[0] <= level.size && ballPosition[1] >= 1 && ballPosition[1] <= level.size) {
         const obstacle = level.obstacles[ballPosition[0] + "_" + ballPosition[1]];
-        //console.log(obstacle + " at: " + ballPosition[0] + "," + ballPosition[1]);
         switch (direction) {
             case 'ltr':
                 if (obstacle === '\\') {

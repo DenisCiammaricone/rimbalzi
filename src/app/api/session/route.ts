@@ -14,7 +14,6 @@ export async function POST(req: Request) {
         const { class_grade, class_section, session_phase  } = await newSessionSchema.parseAsync(body);
         try {
             let result = await createNewSession(class_grade, class_section, session_phase, body.teacher_id, body.details)
-            console.log("ABAB")
             try {
                 
                 const schoolId = await getTeacherSchoolId(body.teacher_id);

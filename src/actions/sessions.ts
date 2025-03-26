@@ -13,13 +13,11 @@ import { sessionKeys } from "@/db/schema/sessionKeys";
  */
 export async function createNewSession(class_grade: string, class_section: string, session_phase: string, teacher_id: string, details: string = "") {
     const school_id = await getTeacherSchoolId(Number(teacher_id));
-    console.log("AA")
     if (!school_id) {
         throw "School ID is undefined";
     }
 
     const classId = await getClassesByGradeSectionAndSchool(class_grade, class_section, school_id.toString());
-    console.log("BB")
     if (!session_phases.includes(session_phase)) {
         throw "Invalid session phase";
     }
@@ -35,15 +33,12 @@ export async function createNewSession(class_grade: string, class_section: strin
     if (await classSessionPhaseAlreadyExists(teacher_id, classId, session_phase)) {
         throw "Class already has a session in this phase"
     }
-    console.log("KK")
 
     try {
         //TODO: Sequence Id should be assigned based on the phase and class
         const res = await db.insert(sessions).values({ phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId), sequenceId: 1 }).$returningId().execute();
-        console.log("CC")
         return res[0].id;
     } catch (error: any) {
-        console.log(error.toString())
         throw new Error(error);
     }
 }
@@ -56,7 +51,6 @@ export async function updateSession(teacher_id: string, class_id: string, sessio
     if (!session_phases.includes(session_phase)) {
         throw new Error("Invalid session phase");
     }
-    console.log("teacher_id: " + teacher_id + " class_id: " + class_id + " session_code: " + session_code + " session_phase: " + session_phase + " details: " + details)
     // TODO: Rewrite the followind query in another fuction?
     try {
         const q = await db.select().from(sessions).where(and(eq(sessions.userId, Number(teacher_id)), eq(sessions.classId, Number(class_id)), eq(sessions.phase, old_session_phase))).limit(1);
@@ -66,7 +60,7 @@ export async function updateSession(teacher_id: string, class_id: string, sessio
             throw new Error("Class already has a session in this phase")
         }
     } catch (error: any) {
-        console.log("Error: " + error)
+        throw new Error(error);
     }
 
     try {

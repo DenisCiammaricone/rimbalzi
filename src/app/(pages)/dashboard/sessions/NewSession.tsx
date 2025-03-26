@@ -41,7 +41,6 @@ export function NewSession({teacherId}: {teacherId: string}) {
                 })
                 if(response.status === 400) {
                     const data = await response.json();
-                    console.log(data)
                     if(data.data.name === "ZodError") {
                         setErrorData(data.data.issues[0].message);
                     } else if(data.data) {

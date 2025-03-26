@@ -27,14 +27,12 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
             setLevelVerified((prev) => {
                 let newStatus = [...prev]
                 newStatus[lvlNumber-1] = 1
-                console.log(newStatus)
                 return newStatus
             })
         } else {
             setLevelVerified((prev) => {
                 let newStatus = [...prev]
                 newStatus[lvlNumber-1] = -1
-                console.log(newStatus)
                 return newStatus
             })
         }
@@ -63,7 +61,6 @@ function updateSequenceGuess(lvlNum: number, row: number, col: number, obstacle:
         Cookies.set('guess', JSON.stringify(guess))
         return guess
     } else {
-        console.log("Errore: problema con il guess nei cookies")
         return {} as Sequence
     }
 }
@@ -71,11 +68,9 @@ function updateSequenceGuess(lvlNum: number, row: number, col: number, obstacle:
 export function loadGuessLevel(level: Level) {
     if(Cookies.get('guess')) {
         let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
-        console.log("LVL:" + level.obstacles)
         guess.levels[level.level - 1].obstacles = level.obstacles
         Cookies.set('guess', JSON.stringify(guess))
     } else {
-        console.log("Errore: problema con il guess nei cookies")
         throw new Error("Errore: problema con il guess nei cookies")
     }
 }
@@ -104,7 +99,6 @@ export function resetLevel(level: number, session_code: string) {
         })
         Cookies.set('guess', JSON.stringify(guess))
     } else {
-        console.log("Errore: problema con il guess nei cookies")
         throw new Error("Errore: problema con il guess nei cookies")
     }
 
@@ -187,7 +181,6 @@ async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: numbe
         })
     })
     let a = updateSequenceGuess(lvlNumber-1, row, col, currentTarget.innerHTML)
-    //console.log(a.levels[lvlNumber-1].level + ": ", a.levels[lvlNumber-1].obstacles)
 }
 
 // Passo arrowClickObj per poter avere la variabile come reference
@@ -204,7 +197,6 @@ function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, a
     } else if (direction === 'utd' || direction === 'dtu') {
         outputTarget = document.getElementById(negateDirection(direction) + "_" + ballPosition[1])
     }
-    //console.log("Output arrow: ")
     if (outputTarget) {
         currentTarget.innerHTML = arrowClickObj.value.toString()
         outputTarget.innerHTML = arrowClickObj.value.toString()
@@ -251,7 +243,6 @@ function checkOutputArrow(inputArrow: string, level: Level): [[number, number], 
     // Until the ball is inside the board
     while (ballPosition[0] >= 1 && ballPosition[0] <= level.size && ballPosition[1] >= 1 && ballPosition[1] <= level.size) {
         const obstacle = level.obstacles[ballPosition[0] + "_" + ballPosition[1]];
-        //console.log(obstacle + " at: " + ballPosition[0] + "," + ballPosition[1]);
         switch (direction) {
             case 'ltr':
                 if (obstacle === '\\') {
@@ -391,7 +382,6 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview, session_code }: { r
             cell.innerHTML = obstacle 
         }
     } else if(cell) {
-        //console.log("Obstacle " + row + "_" + col, obstacle)
         if(obstacle) {
             cell.innerHTML = obstacle
         } else {

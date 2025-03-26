@@ -33,7 +33,6 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
                 savedGameData.data.map((move: any) => {
                     
                     if(move.action === 'ver_lvl') {
-                        console.log("board: " + JSON.parse(move.board));
                         loadGuessLevel(JSON.parse(move.board))
                         setLevelVerified((prev) => {
                             let newLevels = [...prev];
@@ -46,9 +45,6 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
                         })
                     }
                 })
-                
-                console.log(savedGameData.data);
-                console.log(levelVerified)
             }
         }
         fetch_data();

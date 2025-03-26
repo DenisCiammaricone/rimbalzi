@@ -16,7 +16,6 @@ export function TeacherPage({session_code}:{session_code: string}) {
             })
             if(response.status === 200) {
                 const data = await response.json()
-                console.log(data)
                 setSessionKeys(data.keys)
             } 
 
