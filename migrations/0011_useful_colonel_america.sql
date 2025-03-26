@@ -1,0 +1,1 @@
+ALTER TABLE `sessions` MODIFY COLUMN `completed` boolean NOT NULL;

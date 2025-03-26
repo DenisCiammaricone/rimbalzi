@@ -5,43 +5,113 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1737064314681,
-      "tag": "0000_aspiring_anthem",
+      "when": 1740394545248,
+      "tag": "0000_parched_wong",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1737065373264,
-      "tag": "0001_cuddly_alice",
+      "when": 1740585577594,
+      "tag": "0001_chemical_tenebrous",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "5",
-      "when": 1737065448938,
-      "tag": "0002_ordinary_korg",
+      "when": 1740748554640,
+      "tag": "0002_bitter_brother_voodoo",
       "breakpoints": true
     },
     {
       "idx": 3,
       "version": "5",
-      "when": 1737065647263,
-      "tag": "0003_sour_iron_fist",
+      "when": 1741193051733,
+      "tag": "0003_burly_ezekiel",
       "breakpoints": true
     },
     {
       "idx": 4,
       "version": "5",
-      "when": 1737065737689,
-      "tag": "0004_tiny_stature",
+      "when": 1741193087914,
+      "tag": "0004_mysterious_taskmaster",
       "breakpoints": true
     },
     {
       "idx": 5,
       "version": "5",
-      "when": 1737103754116,
-      "tag": "0005_tiresome_fallen_one",
+      "when": 1742401758302,
+      "tag": "0005_exotic_ink",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1742401872305,
+      "tag": "0006_left_madripoor",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1742402879613,
+      "tag": "0007_dear_silverclaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1742403068519,
+      "tag": "0008_even_ghost_rider",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1742572455251,
+      "tag": "0009_hesitant_titanium_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1742648464538,
+      "tag": "0010_productive_baron_zemo",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1742648508043,
+      "tag": "0011_useful_colonel_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1742648637318,
+      "tag": "0012_tough_bloodaxe",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1742648797462,
+      "tag": "0013_messy_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1742648927900,
+      "tag": "0014_redundant_layla_miller",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "5",
+      "when": 1742837352816,
+      "tag": "0015_clear_riptide",
       "breakpoints": true
     }
   ]

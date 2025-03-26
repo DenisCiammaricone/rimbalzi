@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 
-const Navbar = async () => {
+export default async function NavBar(){
+  //TODO: Use use session hook
     const session = await auth()
     return (
       <div id="navBar" className="flex justify-between w-3/4 mx-auto top-5 my-5">
@@ -18,5 +19,3 @@ const Navbar = async () => {
       </div>
     );
 }
-
-export default Navbar;

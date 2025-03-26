@@ -9,6 +9,7 @@
   --primary: #3C91E6;
   --secondary: #9FD356;
   --tertiary: #FA824C;
+  --error: red;
 
   /* 50% opacity*/
   --primary-50: #3C91E680;
@@ -22,6 +23,12 @@
     --foreground: #ededed;
   }
 } */
+input,
+select,
+textarea {
+  color: black;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -50,24 +57,30 @@ body {
   color: var(--secondary);
 }
 
-#loginBox {
+#login-register-formBox {
   background-color: var(--secondary-50);
   border-radius: 0.5rem;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
 
-#loginBox h1 {
+#login-register-formBox h1 {
   font-size: 2rem;
   font-weight: bold;
 }
 
-#loginBox button {
+#login-register-formBox button {
   background-color: var(--tertiary);
   padding: 0.5rem;
   border-radius: 1rem;
 }
 
-#loginBox input {
+#login-register-formBox input {
+  color: var(--background);
+  padding: 0.5rem;
+  border-radius: 0.6rem;
+}
+
+#login-register-formBox select {
   color: var(--background);
   padding: 0.5rem;
   border-radius: 0.6rem;
@@ -75,4 +88,56 @@ body {
 
 .link {
   color: var(--tertiary);
+}
+
+.error_text {
+  color: var(--error);
+}
+
+#sideBar {
+  background-color: var(--secondary-50);
+}
+
+#contentView {
+  background-color: var(--tertiary-50);
+}
+
+
+/*Loader blackbox*/
+svg {
+  width: 3.25em;
+  transform-origin: center;
+  animation: rotate4 2s linear infinite;
+}
+
+circle {
+  fill: none;
+  stroke: hsl(214, 97%, 59%);
+  stroke-width: 2;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash4 {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dashoffset: -125px;
+  }
 }

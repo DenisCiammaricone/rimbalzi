@@ -1,0 +1,60 @@
+import { EditSession } from "./EditSession";
+import { NewSession } from "./NewSession";
+
+export async function SessionsPage(uid: string = "0", setContent: React.Dispatch<React.SetStateAction<React.JSX.Element>>) {
+    const response = await fetch('/api/session?uid=' + uid, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    const data = await response.json();
+
+    return (
+        <div>
+            <button onClick={() => setContent(<><NewSession teacherId={uid}></NewSession></>)}>Prenota Sessione</button>
+            <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                    <tr>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Codice
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Classe
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Dettagli
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Fase
+                        </th>
+                        <th scope="col" className="relative px-6 py-3">
+                            <span className="sr-only">Modifica</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.sessions.map((sessionItem: Session) => (
+                        <tr key={sessionItem.id}>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {sessionItem.code}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {sessionItem.class_grade} {sessionItem.class_section}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {sessionItem.details}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {sessionItem.phase}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => setContent(<><EditSession teacherId={uid} sessionData={sessionItem}></EditSession></>)}>Edit</a>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+}
