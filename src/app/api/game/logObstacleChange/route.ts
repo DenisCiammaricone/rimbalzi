@@ -10,7 +10,6 @@ export async function POST(req: Request) {
 
     try {
         const pupilCode = cookieStore.get('pupil_code');
-        
         if(body.session_code && await isSessionCodeValid(sessionCode)) {
             try {
                 if (pupilCode) {

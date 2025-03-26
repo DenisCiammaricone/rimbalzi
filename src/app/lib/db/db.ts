@@ -17,5 +17,5 @@ export const getConnection = async () => {
     return connection;
 };
 
-export let db = drizzle(await getConnection());
+export const db = drizzle(await getConnection());
 //export const db = drizzle( client: await getConnection());

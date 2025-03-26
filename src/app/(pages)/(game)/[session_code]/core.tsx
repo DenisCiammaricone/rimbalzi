@@ -68,6 +68,18 @@ function updateSequenceGuess(lvlNum: number, row: number, col: number, obstacle:
     }
 }
 
+export function loadGuessLevel(level: Level) {
+    if(Cookies.get('guess')) {
+        let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
+        console.log("LVL:" + level.obstacles)
+        guess.levels[level.level - 1].obstacles = level.obstacles
+        Cookies.set('guess', JSON.stringify(guess))
+    } else {
+        console.log("Errore: problema con il guess nei cookies")
+        throw new Error("Errore: problema con il guess nei cookies")
+    }
+}
+
 export function resetLevel(level: number, session_code: string) {
     if(Cookies.get('guess')) {
         let guess: Sequence = JSON.parse(Cookies.get('guess') || '')

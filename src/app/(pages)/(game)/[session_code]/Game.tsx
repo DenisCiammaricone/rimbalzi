@@ -1,4 +1,4 @@
-import { Board, GameLevels, resetLevel, VerifyLevelButton } from "@/app/(pages)/(game)/[session_code]/core";
+import { Board, GameLevels, loadGuessLevel, resetLevel, VerifyLevelButton } from "@/app/(pages)/(game)/[session_code]/core";
 import { useEffect, useState } from "react";
 import styles from './styles.module.css'
 import Cookies from 'js-cookie';
@@ -31,19 +31,24 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
             })
             if(savedGame.status === 200) {
                 const savedGameData = await savedGame.json();
-                savedGameData.data.map((move: any) => {if(move.action === 'ver_lvl') {
-                    setLevelVerified((prev) => {
-                        let newLevels = [...prev];
-                        if(move.outcome ) {
-                            newLevels[move.level] = 1;
-                        } else {
-                            newLevels[move.level] = -1;
-                        } 
-                        return newLevels;
-                })}})
-                /*savedGameData.data.moves.forEach(element => {
                 
-                });*/
+                savedGameData.data.map((move: any) => {
+                    
+                    if(move.action === 'ver_lvl') {
+                        console.log("board: " + JSON.parse(move.board));
+                        loadGuessLevel(JSON.parse(move.board))
+                        setLevelVerified((prev) => {
+                            let newLevels = [...prev];
+                            if(move.outcome ) {
+                                newLevels[move.level] = 1;
+                            } else {
+                                newLevels[move.level] = -1;
+                            } 
+                            return newLevels;
+                        })
+                    }
+                })
+                
                 console.log(savedGameData.data);
                 console.log(levelVerified)
             }

@@ -12,6 +12,7 @@ export function PupilPage({ session_code }: { session_code: string }) {
     let pupilCode = Cookies.get('pupil_code');
     let isMeasure = false;
 
+    Cookies.remove('guess');
     useEffect(() => {
         pupilCode = Cookies.get('pupil_code');
 
