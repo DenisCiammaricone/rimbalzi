@@ -16,7 +16,7 @@ function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
 }
 
 export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified}:{lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: Number[]}) {
-    if (isMeasure && levelVerified[lvlNumber-1] === 1) {
+    if (isMeasure && levelVerified[lvlNumber-1] === 1 || levelVerified[lvlNumber-1] === -1) {
         return (
             <div className={styles.levelVerified}>Livello già verificato</div>
         )
@@ -53,6 +53,15 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
 
 }
 
+export function ResetLevelButton({currentLevel, sessionCode, isMeasure, levelVerified}:{currentLevel: number, sessionCode: string, isMeasure: boolean, levelVerified: Number[]}) {
+    if (isMeasure && levelVerified[currentLevel-1] === 1 || levelVerified[currentLevel-1] === -1) {
+        return (<></>)
+    }
+    return (
+        <button className={styles.gameButton + ' ' + styles.negative} onClick={() => resetLevel(currentLevel, sessionCode)}>Reset</button>
+    )
+}
+
 function updateSequenceGuess(lvlNum: number, row: number, col: number, obstacle: string): Sequence {
     // guess.levels[lvlNum].obstacles[row + "_" + col] = obstacle
     if(Cookies.get('guess')) {
@@ -69,6 +78,17 @@ export function loadGuessLevel(level: Level) {
     if(Cookies.get('guess')) {
         let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
         guess.levels[level.level - 1].obstacles = level.obstacles
+        Cookies.set('guess', JSON.stringify(guess))
+    } else {
+        throw new Error("Errore: problema con il guess nei cookies")
+    }
+}
+
+export function deleteGuessLevel(level: number) {
+    if(Cookies.get('guess')) {
+        let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
+        guess.levels[level-1].obstacles = {}
+        console.log("Level: ", level, " deleted: ", guess.levels[level])
         Cookies.set('guess', JSON.stringify(guess))
     } else {
         throw new Error("Errore: problema con il guess nei cookies")

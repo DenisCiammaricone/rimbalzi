@@ -1,4 +1,4 @@
-import { Board, GameLevels, loadGuessLevel, resetLevel, VerifyLevelButton } from "@/app/(pages)/(game)/[session_code]/core";
+import { Board, deleteGuessLevel, GameLevels, loadGuessLevel, resetLevel, ResetLevelButton, VerifyLevelButton } from "@/app/(pages)/(game)/[session_code]/core";
 import { useEffect, useState } from "react";
 import styles from './styles.module.css'
 import Cookies from 'js-cookie';
@@ -43,6 +43,9 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
                             } 
                             return newLevels;
                         })
+                    } else if(move.action === 'cln_lvl') {
+                        console.log("Cleaning level: ", move.level);
+                        deleteGuessLevel(move.level);
                     }
                 })
             }
@@ -61,7 +64,7 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
             { /* ShowPreview deve essere true solo se si vuole mostrare il vero posizionamento degli ostacoli */ }
             <Board level={currLevel} showPreview={false} session_code={sessionCode} />
             <div className="flex flex-row gap-4">
-                <button className={styles.gameButton + ' ' + styles.negative} onClick={() => resetLevel(currLevel.level, sessionCode)}>Reset</button>
+                <ResetLevelButton currentLevel={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified}></ResetLevelButton>
                 <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified} setLevelVerified={setLevelVerified}/>
             </div>
             <GameLevels setLevel={setLevel} level={level} levelVerified={levelVerified} sessionCode={sessionCode}/>
