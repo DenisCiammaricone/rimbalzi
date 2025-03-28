@@ -16,14 +16,16 @@ function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
 }
 
 export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified}:{lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: Number[]}) {
-    if (isMeasure && levelVerified[lvlNumber-1] === 1 || levelVerified[lvlNumber-1] === -1) {
+    console.log(isMeasure)
+    if (isMeasure && (levelVerified[lvlNumber-1] === 1 || levelVerified[lvlNumber-1] === -1)) {
         return (
             <div className={styles.levelVerified}>Livello già verificato</div>
         )
     }
 
     async function check() {
-        if(await verifyLevelMask(lvlNumber, sessionCode)) {
+        const res = await verifyLevelMask(lvlNumber, sessionCode)
+        if(res) {
             setLevelVerified((prev) => {
                 let newStatus = [...prev]
                 newStatus[lvlNumber-1] = 1
@@ -36,25 +38,30 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
                 return newStatus
             })
         }
+        return res;
     }
 
     
     return (
-        <button className={styles.gameButton + ' ' + styles.positive} onClick={() => {
-            check();
+        <button className={styles.gameButton + ' ' + styles.positive} onClick={async () => {
+            const res = await check();
             // setLevelVerified((prev) => {
             //     let newStatus = [...prev];
             //     newStatus[lvlNumber-1] = true;
             //     return newStatus;
             // })
-            alert("Verifica... Clicca ok!")
+            if(res) {
+                alert('Livello corretto :D')
+            } else {
+                alert('Hai commesso qualche errore :(')
+            }
         }}>Verifica Livello</button>
     )
 
 }
 
 export function ResetLevelButton({currentLevel, sessionCode, isMeasure, levelVerified}:{currentLevel: number, sessionCode: string, isMeasure: boolean, levelVerified: Number[]}) {
-    if (isMeasure && levelVerified[currentLevel-1] === 1 || levelVerified[currentLevel-1] === -1) {
+    if (isMeasure && (levelVerified[currentLevel-1] === 1 || levelVerified[currentLevel-1] === -1)) {
         return (<></>)
     }
     return (

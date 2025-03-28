@@ -46,6 +46,11 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
                     } else if(move.action === 'cln_lvl') {
                         console.log("Cleaning level: ", move.level);
                         deleteGuessLevel(move.level);
+                        setLevelVerified((prev) => {
+                            let newLevels = [...prev];
+                            newLevels[move.level] = 0;
+                            return newLevels;
+                        })
                     }
                 })
             }

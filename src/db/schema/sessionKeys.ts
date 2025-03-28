@@ -4,7 +4,7 @@ import { sessions } from "./sessions";
 
 export const sessionKeys = mysqlTable('sessionKeys', {
     id: int('id').primaryKey().autoincrement(),
-    key: varchar('key', {length: 8}).notNull().$default(() => generateUniqueString(8)),
+    key: varchar('key', {length: 4}).notNull().$default(() => generateUniqueString(4)),
     sex: char('sex').notNull(),
     sessionId: int('session_id').notNull().references(() => sessions.id, {onDelete: 'cascade'}),
 }, (table) => [
@@ -13,7 +13,7 @@ export const sessionKeys = mysqlTable('sessionKeys', {
 
 function generateUniqueString(length: number = 12): string {
     const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      "abcdefghijklmnopqrstuvwxyz0123456789";
     let uniqueString = "";
     for (let i = 0; i < length; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
