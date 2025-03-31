@@ -10,7 +10,7 @@ export default function logOut() {
             <div className="w-full h-full min-h-screen flex flex-col items-center justify-center">
                 <h1>Logout</h1>
                 <p>Sicuro di voler effettuare il logout?</p>
-                <button onClick={() => { signOut({redirect: false}) }}>Si</button>
+                <button onClick={() => { signOut({redirectTo: '/'}) }}>Si</button>
             </div>
         )
     } else if (status === "unauthenticated") {

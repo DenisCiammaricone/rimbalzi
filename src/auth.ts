@@ -45,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      return baseUrl
+      return url
     },
     async jwt({ token, user, account, trigger, session }) {
       if (account && user) {
