@@ -65,7 +65,10 @@ export function Game({ sequence, isMeasure, sessionCode }: { sequence: Sequence,
 
     return (
         <div id={styles.game} className="flex flex-col items-center">
-            <h1>Rimbalzi</h1>
+            <div>
+                <h1>Rimbalzi</h1>
+                <h2>Livello {currLevel.level}</h2>
+            </div>
             { /* ShowPreview deve essere true solo se si vuole mostrare il vero posizionamento degli ostacoli */ }
             <Board level={currLevel} showPreview={false} session_code={sessionCode} />
             <div className="flex flex-row gap-4">

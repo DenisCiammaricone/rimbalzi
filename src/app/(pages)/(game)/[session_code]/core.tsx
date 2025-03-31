@@ -333,7 +333,6 @@ export function Board({ level, showPreview, session_code }: { level: Level, show
     let row = 1 // Row index
     return (
         <div>
-            <h2>Livello {level.level}</h2>
             <div className={styles.gameBoard} style={{ gridTemplateColumns: 'repeat(' + (size + 2) + ', 1fr)', gridTemplateRows: 'repeat(' + (size + 2) + ', 1fr)' }}>
                 {Array.from({ length: ((size + 2) * (size + 2)) }).map((_, index) => {
                     if (index === 0 || index === (size + 1) || index === (size + 2) * (size + 1) || index === (size + 2) * (size + 2) - 1) {
