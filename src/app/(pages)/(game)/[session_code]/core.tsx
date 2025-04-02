@@ -1,5 +1,5 @@
 import styles from './styles.module.css'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import  Cookies  from 'js-cookie'
 
 function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
@@ -15,8 +15,9 @@ function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
     }
 }
 
-export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified}:{lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: Number[]}) {
-    console.log(isMeasure)
+export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified, levelObstaclesCounter, maxObstaclesCount}:{lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: Number[], levelObstaclesCounter: number[], maxObstaclesCount?: number} ) {
+    const maxObstacleCount = maxObstaclesCount || 10000
+    
     if (isMeasure && (levelVerified[lvlNumber-1] === 1 || levelVerified[lvlNumber-1] === -1)) {
         return (
             <div className={styles.levelVerified}>Livello già verificato</div>
@@ -41,22 +42,19 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
         return res;
     }
 
-    
-    return (
-        <button className={styles.gameButton + ' ' + styles.positive} onClick={async () => {
+    //console.log("LVL: " + lvlNumber + " Obstacles num: " + levelObstaclesCounter[lvlNumber-1] + ": " + (levelObstaclesCounter[lvlNumber-1] >= maxObstacleCount))
+    let button = <button id="gameVerifyButton" className={styles.gameButton + ' ' + styles.positive} disabled>Verifica Livello</button>
+    if(levelObstaclesCounter[lvlNumber-1] < maxObstacleCount) { 
+        button = <button id="gameVerifyButton" className={styles.gameButton + ' ' + styles.positive} onClick={async () => {
             const res = await check();
-            // setLevelVerified((prev) => {
-            //     let newStatus = [...prev];
-            //     newStatus[lvlNumber-1] = true;
-            //     return newStatus;
-            // })
             if(res) {
                 alert('Livello corretto :D')
             } else {
                 alert('Hai commesso qualche errore :(')
             }
         }}>Verifica Livello</button>
-    )
+    }
+    return button 
 
 }
 
@@ -95,7 +93,6 @@ export function deleteGuessLevel(level: number) {
     if(Cookies.get('guess')) {
         let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
         guess.levels[level-1].obstacles = {}
-        console.log("Level: ", level, " deleted: ", guess.levels[level])
         Cookies.set('guess', JSON.stringify(guess))
     } else {
         throw new Error("Errore: problema con il guess nei cookies")
@@ -172,7 +169,10 @@ async function verifySequence(sessionCode: string) {
     return verified
 }
 
-async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number, session_code: string) {
+async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number, session_code: string, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number) {
+    const maxObstacleCount = maxObstaclesCount || 10000
+    
+
     let oldObstacle = ''
     let newObstacle = ''
     switch (currentTarget.innerHTML) {
@@ -187,6 +187,10 @@ async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: numbe
             newObstacle = ''
             break;
         case '':
+            if(levelObstaclesCounter[lvlNumber-1] >= maxObstacleCount) {
+                alert("Non puoi avere più di 3 ostacoli!")
+                return
+            }
             currentTarget.innerHTML = '/'
             oldObstacle = ''
             newObstacle = '/'
@@ -207,6 +211,21 @@ async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: numbe
             new_obstacle: newObstacle
         })
     })
+    if(oldObstacle === '') {
+        setLevelObstaclesCounter((prev) => {
+            let newLevelObstaclesCounter = [...prev]
+            newLevelObstaclesCounter[lvlNumber-1]++
+            return newLevelObstaclesCounter
+        })
+        console.log("adding 1")
+    } else if(newObstacle === '') {
+        setLevelObstaclesCounter((prev) => {
+            let newLevelObstaclesCounter = [...prev]
+            newLevelObstaclesCounter[lvlNumber-1]--
+            return newLevelObstaclesCounter
+        })
+        console.log("subtracing 1")
+    }
     let a = updateSequenceGuess(lvlNumber-1, row, col, currentTarget.innerHTML)
 }
 
@@ -321,7 +340,7 @@ function checkOutputArrow(inputArrow: string, level: Level): [[number, number], 
     return [ballPosition, direction];
 }
 
-export function Board({ level, showPreview, session_code }: { level: Level, showPreview: boolean, session_code: string }) {
+export function Board({ level, showPreview, session_code, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount }: { level: Level, showPreview: boolean, session_code: string, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number}) {
     const size: number = Number(level.size) // WARNING: This is a number, not a string
     let arrowClickObj = {value: 0}; // Uso un oggetto così da passare la variabile per reference
 
@@ -383,7 +402,7 @@ export function Board({ level, showPreview, session_code }: { level: Level, show
                                 obstacle = JSON.parse(Cookies.get('guess') || '').levels[level.level - 1].obstacles[row + "_" + column]
                             }
                             return (
-                                <BoardCell key={index} row={row} col={column} lvlNumber={level.level} obstacle={obstacle} preview={showPreview} session_code={session_code}></BoardCell>
+                                <BoardCell key={index} row={row} col={column} lvlNumber={level.level} obstacle={obstacle} preview={showPreview} session_code={session_code} levelObstaclesCounter={levelObstaclesCounter} setLevelObstaclesCounter={setLevelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}></BoardCell>
                             )
                         }
                     }
@@ -401,7 +420,7 @@ export function Board({ level, showPreview, session_code }: { level: Level, show
  * @param preview true if the cell should draw the obstacle false otherwise
  * @returns drawing of a cell
  */
-function BoardCell({ row, col, lvlNumber, obstacle, preview, session_code }: { row: number, col: number, lvlNumber: number, obstacle?: string, preview?: boolean, session_code: string }) {
+function BoardCell({ row, col, lvlNumber, obstacle, preview ,session_code, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount }: { row: number, col: number, lvlNumber: number, obstacle?: string, preview?: boolean, session_code: string, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number }) {
     const cell = document.getElementById(row + "_" + col + "_cell")
     if(preview && obstacle){
         if (cell) {
@@ -418,7 +437,7 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview, session_code }: { r
         <div
             id={row + "_" + col + "_cell"}
             className={styles.cell}
-            onClick={(e) => cellClick(e.currentTarget, row, col, lvlNumber, session_code)}
+            onClick={(e) => cellClick(e.currentTarget, row, col, lvlNumber, session_code, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount)}
         >
             
         {obstacle}

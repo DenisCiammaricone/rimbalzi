@@ -12,7 +12,7 @@ export function PupilPage({ session_code }: { session_code: string }) {
     let pupilCode = Cookies.get('pupil_code');
     let isMeasure = false;
 
-    Cookies.remove('guess');
+    Cookies.remove('guess')
     useEffect(() => {
         pupilCode = Cookies.get('pupil_code');
 
@@ -54,7 +54,7 @@ export function PupilPage({ session_code }: { session_code: string }) {
                     if (session.status === 200) {
                         const sequence = await session.json();
                         
-                        setContent(<Game sequence={sequence.data} isMeasure={isMeasure} sessionCode={session_code} />)
+                        setContent(<Game sequence={sequence.data} isMeasure={isMeasure} sessionCode={session_code} maxObstaclesCount={3} />)
                     } else if (session.status === 400) {
                         // Sessione non iniziata
                         const session_data = await session.json();

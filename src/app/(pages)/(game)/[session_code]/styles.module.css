@@ -95,6 +95,10 @@
     background-color: #04AA6D; /* Green */
 }
 
+.positive:disabled {
+    background-color: #04aa6d52;
+}
+
 .negative {
     background-color: #f44336; /* Red */
 }
