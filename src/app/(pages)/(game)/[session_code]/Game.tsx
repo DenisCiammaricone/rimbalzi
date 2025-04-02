@@ -77,7 +77,7 @@ export function Game({ sequence, isMeasure, maxObstaclesCount, sessionCode }: { 
             { /* ShowPreview deve essere true solo se si vuole mostrare il vero posizionamento degli ostacoli */ }
             <Board level={currLevel} showPreview={false} session_code={sessionCode} levelObstaclesCounter={levelObstaclesCounter} setLevelObstaclesCounter={setLevelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}/>
             <div className="flex flex-row gap-4">
-                <ResetLevelButton currentLevel={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified}></ResetLevelButton>
+                <ResetLevelButton currentLevel={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified} setLevelObstaclesCounter={setLevelObstaclesCounter}></ResetLevelButton>
                 <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified} setLevelVerified={setLevelVerified} levelObstaclesCounter={levelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}/>
             </div>
             <GameLevels setLevel={setLevel} level={level} levelVerified={levelVerified} sessionCode={sessionCode}/>

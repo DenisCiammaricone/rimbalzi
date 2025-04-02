@@ -58,12 +58,12 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
 
 }
 
-export function ResetLevelButton({currentLevel, sessionCode, isMeasure, levelVerified}:{currentLevel: number, sessionCode: string, isMeasure: boolean, levelVerified: Number[]}) {
+export function ResetLevelButton({currentLevel, sessionCode, isMeasure, levelVerified, setLevelObstaclesCounter}:{currentLevel: number, sessionCode: string, isMeasure: boolean, levelVerified: Number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>}) {
     if (isMeasure && (levelVerified[currentLevel-1] === 1 || levelVerified[currentLevel-1] === -1)) {
         return (<></>)
     }
     return (
-        <button className={styles.gameButton + ' ' + styles.negative} onClick={() => resetLevel(currentLevel, sessionCode)}>Reset</button>
+        <button className={styles.gameButton + ' ' + styles.negative} onClick={() => resetLevel(currentLevel, sessionCode, setLevelObstaclesCounter)}>Reset</button>
     )
 }
 
@@ -99,7 +99,7 @@ export function deleteGuessLevel(level: number) {
     }
 }
 
-export function resetLevel(level: number, session_code: string) {
+export function resetLevel(level: number, session_code: string, setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>) {
     if(Cookies.get('guess')) {
         let guess: Sequence = JSON.parse(Cookies.get('guess') || '')
         for( let i = 1; i <= 5; i++) {
@@ -122,6 +122,12 @@ export function resetLevel(level: number, session_code: string) {
             })
         })
         Cookies.set('guess', JSON.stringify(guess))
+        
+        setLevelObstaclesCounter((prev) => {
+            let newLevelObstaclesCounter = [...prev]
+            newLevelObstaclesCounter[level-1] = 0
+            return newLevelObstaclesCounter
+        })
     } else {
         throw new Error("Errore: problema con il guess nei cookies")
     }
@@ -217,14 +223,12 @@ async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: numbe
             newLevelObstaclesCounter[lvlNumber-1]++
             return newLevelObstaclesCounter
         })
-        console.log("adding 1")
     } else if(newObstacle === '') {
         setLevelObstaclesCounter((prev) => {
             let newLevelObstaclesCounter = [...prev]
             newLevelObstaclesCounter[lvlNumber-1]--
             return newLevelObstaclesCounter
         })
-        console.log("subtracing 1")
     }
     let a = updateSequenceGuess(lvlNumber-1, row, col, currentTarget.innerHTML)
 }
