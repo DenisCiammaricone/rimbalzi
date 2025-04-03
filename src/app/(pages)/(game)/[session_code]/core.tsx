@@ -448,16 +448,23 @@ export function GameLevels({ setLevel, level, levelVerified, sessionCode, isMeas
     const _lvlNumber = 10
 
     useEffect(() => {
-        Array.from({ length: _lvlNumber }, (_, index) => {
-            if(levelVerified[index] === 1) {
-                document.getElementById(index + "_levelButton")?.classList.add('text-green-500')
-            }
-            if(levelVerified[index] === -1) {
-                document.getElementById(index + "_levelButton")?.classList.add('text-red-500')
-            }
-
-        })
-    }, [levelVerified])
+        if(isMeasure) {
+            Array.from({ length: _lvlNumber }, (_, index) => {
+                if(levelVerified[index] === 1 || levelVerified[index] === -1) {
+                    document.getElementById(index + "_levelButton")?.classList.add('text-blue-500')
+                }            
+            })
+        } else {
+            Array.from({ length: _lvlNumber }, (_, index) => {
+                if(levelVerified[index] === 1) {
+                    document.getElementById(index + "_levelButton")?.classList.add('text-green-500')
+                }
+                if(levelVerified[index] === -1) {
+                    document.getElementById(index + "_levelButton")?.classList.add('text-red-500')
+                }
+            })
+        }
+    }, [levelVerified, isMeasure])
     
     const gameLevels = Array.from({ length: _lvlNumber }, (_, index) => {
         if(isMeasure) {
