@@ -80,7 +80,7 @@ export function Game({ sequence, isMeasure, maxObstaclesCount, sessionCode }: { 
                 <ResetLevelButton currentLevel={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified} setLevelObstaclesCounter={setLevelObstaclesCounter}></ResetLevelButton>
                 <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified} setLevelVerified={setLevelVerified} levelObstaclesCounter={levelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}/>
             </div>
-            <GameLevels setLevel={setLevel} level={level} levelVerified={levelVerified} sessionCode={sessionCode}/>
+            <GameLevels setLevel={setLevel} level={level} levelVerified={levelVerified} sessionCode={sessionCode} isMeasure={isMeasure}/>
         </div>
     )
 }
