@@ -270,10 +270,10 @@ export async function getCorrectLevelsForSession(session_code: string) {
 
         let correctLevels: Record<string, number[]> = {}
         res.map((game) => {
-            if(typeof (game.moves) === 'string') {
-                game.moves = JSON.parse(game.moves);
-            }
-            (game.moves as any[]).map((move: any) => {
+            console.log("Game: ", game.sessionKey, typeof(game.moves))
+            const moves = typeof game.moves === 'string' ? JSON.parse(game.moves) : game.moves;
+            moves.map((move: any) => {
+                console.log("Move: ", move)
                 if(move.action === 'ver_lvl' && move.outcome === true) {
                     if (correctLevels[game.sessionKey] === undefined) {
                         correctLevels[game.sessionKey] = [move.level];
@@ -283,6 +283,19 @@ export async function getCorrectLevelsForSession(session_code: string) {
                 }
             })
         })
+        console.log("Correct levels: ", correctLevels)
+        // res.map((game) => {
+        //     const moves = typeof game.moves === 'string' ? JSON.parse(game.moves) : game.moves;
+        //     (moves as any[]).map((move: any) => {
+        //         if(move.action === 'ver_lvl' && move.outcome === true) {
+        //             if (correctLevels[game.sessionKey] === undefined) {
+        //                 correctLevels[game.sessionKey] = [move.level];
+        //             } else {
+        //                 correctLevels[game.sessionKey].push(move.level);
+        //             }
+        //         }
+        //     })
+        // })
 
         return correctLevels;
     } catch (error: any) {

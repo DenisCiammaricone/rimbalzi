@@ -31,7 +31,7 @@ export function TeacherPage({session_code}:{session_code: string}) {
             if(statusResponse.status === 200) {
                 const data = await statusResponse.json()
                 setSessionPupilCompletedLevels(data.correctLevels)
-                console.log("Pupils completed levels: ", data.correctLevels['5TbKmLk9'])   
+                console.log("Pupils completed levels: ", data.correctLevels)   
             }
 
             response = await fetch('/api/session/status?session_code=' + params.session_code, {
@@ -120,7 +120,7 @@ export function TeacherPage({session_code}:{session_code: string}) {
                                 <td>
                                     <div className="flex gap-2">
                                         {Array.from({ length: 10 }, (_, i) => (
-                                            <span key={`${key.key}_${i + 1}`} id={`${key.key}_${i + 1}`} className={`text-green-400 font-bold text-center ${sessionPupilCompletedLevels[key.key]?.includes(i) ? "text-green-500" : "text-gray-400"}`}>
+                                            <span key={`${key.key}_${i + 1}`} id={`${key.key}_${i + 1}`} className={`font-bold text-center ${sessionPupilCompletedLevels[key.key]?.includes(i) ? "text-green-500" : "text-gray-400"}`}>
                                                 {i + 1}
                                             </span>
                                         ))}
