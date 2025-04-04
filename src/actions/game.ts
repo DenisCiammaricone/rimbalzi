@@ -262,3 +262,30 @@ export async function getPupilGameData(session_code: string, pupil_code: string)
         throw new Error("Errore nel recupero dei dati della sessione" + error.toString());
     }
 }
+
+export async function getCorrectLevelsForSession(session_code: string) {
+    try {
+        const sessionId = await getSessionIdByCode(session_code);
+        const res = await db.select({moves: games.moves, sessionKey: games.sessionKey}).from(games).where(eq(games.sessionId, sessionId));
+
+        let correctLevels: Record<string, number[]> = {}
+        res.map((game) => {
+            if(typeof (game.moves) === 'string') {
+                game.moves = JSON.parse(game.moves);
+            }
+            (game.moves as any[]).map((move: any) => {
+                if(move.action === 'ver_lvl' && move.outcome === true) {
+                    if (correctLevels[game.sessionKey] === undefined) {
+                        correctLevels[game.sessionKey] = [move.level];
+                    } else {
+                        correctLevels[game.sessionKey].push(move.level);
+                    }
+                }
+            })
+        })
+
+        return correctLevels;
+    } catch (error: any) {
+        throw new Error("Errore nel recupero dei livelli corretti per la sessione" + error.toString());
+    }
+}
