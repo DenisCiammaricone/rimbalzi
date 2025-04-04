@@ -10,7 +10,6 @@ export default function logOut() {
             <div className="w-full h-full min-h-screen flex flex-col items-center justify-center">
                 <h1>Logout</h1>
                 <p>Sicuro di voler effettuare il logout?</p>
-                // ? Forse è preferibile utilizzare process.env.NEXTAUTH_URL 
                 <button onClick={() => { signOut({callbackUrl: 'https://labinformaticaescuola.it'}) }}>Si</button>
             </div>
         )

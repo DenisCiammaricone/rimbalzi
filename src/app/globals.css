@@ -103,6 +103,8 @@ body {
 }
 
 
+
+
 /*Loader blackbox*/
 svg {
   width: 3.25em;
@@ -112,7 +114,7 @@ svg {
 
 circle {
   fill: none;
-  stroke: hsl(214, 97%, 59%);
+  stroke: hsl(44, 100%, 39%);
   stroke-width: 2;
   stroke-dasharray: 1, 200;
   stroke-dashoffset: 0;
