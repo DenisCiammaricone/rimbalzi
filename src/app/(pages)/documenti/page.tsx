@@ -1,0 +1,19 @@
+import TextBlock from "@/app/components/TextBlock";
+import NavBar from "@/app/components/NavBar";
+
+export default function Documenti() {
+    return (
+        <div>
+            <NavBar></NavBar>
+            <div className="flex mx-auto w-3/4 mt-20">
+                <TextBlock data={
+                    <div>
+                        <h1 className="text-3xl mt-0">Documenti</h1>
+                        <br></br>
+                        <p className="text-lg">Elenco della documentazione utile per conoscere il progetto</p>
+                    </div>
+                }>
+                </TextBlock>
+            </div>
+        </div>);
+}

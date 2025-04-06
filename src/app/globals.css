@@ -32,7 +32,7 @@ textarea {
 body {
   color: var(--foreground);
   background: var(--background);
-  background-image: url('../../public/wave.svg');
+  background-image: url('../../public/background1.jpg');
   background-repeat: no-repeat;
   background-size: cover;
 }
