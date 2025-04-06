@@ -1,2 +1,0 @@
-ALTER TABLE `sessions` ADD `sequence_id` int;--> statement-breakpoint
-ALTER TABLE `sessions` ADD CONSTRAINT `sessions_sequence_id_session_sequences_id_fk` FOREIGN KEY (`sequence_id`) REFERENCES `session_sequences`(`id`) ON DELETE no action ON UPDATE no action;
