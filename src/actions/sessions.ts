@@ -31,6 +31,7 @@ export async function createNewSession(class_grade: string, class_section: strin
     } while (exists.length > 0);
 
     if (await classSessionPhaseAlreadyExists(teacher_id, classId, session_phase)) {
+        //console.log("Class already has a session in this phase: ", session_phase);
         throw "Class already has a session in this phase"
     }
 
@@ -126,6 +127,15 @@ export async function getSessionsByTeacherId(teacher_id: string) {
 export async function getSessionIdByCode(code: string) {
     try {
         const res = await db.select({ id: sessions.id }).from(sessions).where(eq(sessions.code, code));
+        return res[0].id;
+    } catch (error: any) {
+        throw new Error(error);
+    }
+}
+
+export async function getPupilIdByCode(pupil_code: string, session_id: number) {
+    try {
+        const res = await db.select({ id: sessionKeys.id }).from(sessionKeys).where(and(eq(sessionKeys.sessionId, session_id), eq(sessionKeys.key, pupil_code)));
         return res[0].id;
     } catch (error: any) {
         throw new Error(error);

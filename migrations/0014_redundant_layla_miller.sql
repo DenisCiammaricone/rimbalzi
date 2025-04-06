@@ -1,1 +1,0 @@
-ALTER TABLE `sessions` ADD `state` varchar(16) DEFAULT 'waiting' NOT NULL;

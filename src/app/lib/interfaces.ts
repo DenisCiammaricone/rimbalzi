@@ -63,3 +63,7 @@ interface CompleteSequence {
     board: JSON; // JSON Level object
     timestamp: Date;
 }
+
+interface Dictionary<T> {
+    [key: string]: T;
+}

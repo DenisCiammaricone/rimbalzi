@@ -1,1 +1,0 @@
-ALTER TABLE `sessions` MODIFY COLUMN `sequence_id` int NOT NULL DEFAULT 1;

@@ -4,7 +4,11 @@ import { session_sequences } from "@/db/schema/session_sequences";
 import { sessionKeys } from "@/db/schema/sessionKeys";
 import { sessions } from "@/db/schema/sessions";
 import { eq, and, sql } from "drizzle-orm"
-import { getSessionIdByCode } from "./sessions";
+import { getPupilIdByCode, getSessionIdByCode } from "./sessions";
+import { changeLevelLogs } from "@/db/schema/logs_changeLevel";
+import { verifyLevelLogs } from "@/db/schema/logs_verifyLevels";
+import { cellModLogs } from "@/db/schema/logs_cellModify";
+import { cleanLevelLogs } from "@/db/schema/logs_cleanLevel";
 
 export async function isSessionCodeValid(code: string) {
     const res = await db.select({ id: sessions.id }).from(sessions).where(eq(sessions.code, code));
@@ -28,7 +32,8 @@ export async function getSequence(session_code: string) : Promise<Sequence> {
         if(typeof (res[0].sequence) === 'string') {
             return JSON.parse(res[0].sequence) as Sequence;
         }
-        return res[0].sequence as Sequence; // Prima non cera as Sequence e Promise<Sequence> non era necessario
+        //return res[0].sequence as Sequence; // Prima non cera as Sequence e Promise<Sequence> non era necessario
+        return {} as Sequence; // Prima non cera as Sequence e Promise<Sequence> non era necessario
     } catch (error: any) {
         throw new Error("Errore nel recupero della sequenza" + error.toString());
     }
@@ -187,7 +192,7 @@ export async function createSessionKeyLogRecord(pupil_code: string, session_code
         if (res.length > 0) {
             return;
         }
-        await db.insert(games).values({sessionId: sessionId, sessionKey: pupil_code});
+        await db.insert(games).values({sessionId: sessionId, sessionKey: pupil_code, moves: '[]'});
     } catch (error: any) {
         throw new Error("Errore nella creazione del record di log della chiave di sessione" + error.toString());
     }
@@ -196,7 +201,9 @@ export async function createSessionKeyLogRecord(pupil_code: string, session_code
 export async function logLevelSwitch(from: number, to: number, session_code: string, pupil_code: string) {
     try {
         const sessionId = await getSessionIdByCode(session_code);
+        const pupilId = await getPupilIdByCode(pupil_code, sessionId);
         //const res = await db.update(games).set({movesCount: sql`${games.movesCount} + 1`}).where(and(eq(games.sessionId, sessionId), eq(games.sessionKey, pupil_code)));
+        await db.insert(changeLevelLogs).values({session_id: sessionId, pupil_id: pupilId, level: from, to: to});
         const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'chg_lvl', 'from', ${from}, 'to', ${to}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
     } catch (error: any) {
         throw new Error("Errore nel log del cambio di livello" + error.toString());
@@ -206,7 +213,9 @@ export async function logLevelSwitch(from: number, to: number, session_code: str
 export async function logLevelVerify(level_num: number, outcome: boolean, level: Level, session_code: string, pupil_code: string) {
     try {
         const sessionId = await getSessionIdByCode(session_code);
-        
+        const pupilId = await getPupilIdByCode(pupil_code, sessionId);
+
+        await db.insert(verifyLevelLogs).values({session_id: sessionId, pupil_id: pupilId, level: level_num, board: JSON.stringify(level), outcome: outcome});
         const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'ver_lvl', 'level', ${level_num}, 'outcome', ${outcome}, 'board', ${JSON.stringify(level)}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
     } catch (error: any) {
         throw new Error("Errore nel log del cambio di livello" + error.toString());
@@ -216,7 +225,9 @@ export async function logLevelVerify(level_num: number, outcome: boolean, level:
 export async function logChangeCellObstacle(level_num: number, x: number, y: number, starting_obstacle: string, new_obstacle: string, session_code: string, pupil_code: string) {
     try {
         const sessionId = await getSessionIdByCode(session_code);
-            
+        const pupilId = await getPupilIdByCode(pupil_code, sessionId);
+
+        await db.insert(cellModLogs).values({session_id: sessionId, pupil_id: pupilId, level: level_num, x: x, y: y, startingObstacle: starting_obstacle, newObstacle: new_obstacle});
         const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'mod_cel', 'level', ${level_num}, 'x', ${x}, 'y', ${y}, 'starting_obstacle', ${starting_obstacle}, 'new_obstacle', ${new_obstacle}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
     } catch (error: any) {
         throw new Error("Errore nel log del cambio di livello" + error.toString());
@@ -226,7 +237,9 @@ export async function logChangeCellObstacle(level_num: number, x: number, y: num
 export async function logResetLevel (level_num: number, session_code: string, pupil_code: string) {
     try {
         const sessionId = await getSessionIdByCode(session_code);
-            
+        const pupilId = await getPupilIdByCode(pupil_code, sessionId);
+
+        await db.insert(cleanLevelLogs).values({session_id: sessionId, pupil_id: pupilId, level: level_num});
         const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'cln_lvl', 'level', ${level_num}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
     } catch (error: any) {
         throw new Error("Errore nel log del cambio di livello" + error.toString());
@@ -260,5 +273,45 @@ export async function getPupilGameData(session_code: string, pupil_code: string)
         return res[0].moves; 
     } catch (error: any) {
         throw new Error("Errore nel recupero dei dati della sessione" + error.toString());
+    }
+}
+
+export async function getCorrectLevelsForSession(session_code: string) {
+    try {
+        const sessionId = await getSessionIdByCode(session_code);
+        const res = await db.select({moves: games.moves, sessionKey: games.sessionKey}).from(games).where(eq(games.sessionId, sessionId));
+
+        let correctLevels: Record<string, number[]> = {}
+        res.map((game) => {
+            console.log("Game: ", game.sessionKey, typeof(game.moves))
+            const moves = typeof game.moves === 'string' ? JSON.parse(game.moves) : game.moves;
+            moves.map((move: any) => {
+                console.log("Move: ", move)
+                if(move.action === 'ver_lvl' && move.outcome === true) {
+                    if (correctLevels[game.sessionKey] === undefined) {
+                        correctLevels[game.sessionKey] = [move.level];
+                    } else {
+                        correctLevels[game.sessionKey].push(move.level);
+                    }
+                }
+            })
+        })
+        console.log("Correct levels: ", correctLevels)
+        // res.map((game) => {
+        //     const moves = typeof game.moves === 'string' ? JSON.parse(game.moves) : game.moves;
+        //     (moves as any[]).map((move: any) => {
+        //         if(move.action === 'ver_lvl' && move.outcome === true) {
+        //             if (correctLevels[game.sessionKey] === undefined) {
+        //                 correctLevels[game.sessionKey] = [move.level];
+        //             } else {
+        //                 correctLevels[game.sessionKey].push(move.level);
+        //             }
+        //         }
+        //     })
+        // })
+
+        return correctLevels;
+    } catch (error: any) {
+        throw new Error("Errore nel recupero dei livelli corretti per la sessione" + error.toString());
     }
 }
