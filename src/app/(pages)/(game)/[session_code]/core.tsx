@@ -29,7 +29,7 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
     
     if (isMeasure && (levelVerified[lvlNumber-1] === 1 || levelVerified[lvlNumber-1] === -1)) {
         return (
-            <div className={styles.levelVerified}>Livello già verificato</div>
+            <div className={styles.levelVerified}>Livello già confermato</div>
         )
     }
 
@@ -56,6 +56,8 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
         if(isMeasure) {
             if(res) {
                 alert('Livello Verificato :D')
+            } else {
+                alert('Livello Verificato :D')
             }
         } else {
             if(res) {
@@ -64,7 +66,7 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
                 alert('Hai commesso qualche errore :(')
             }
         }
-    }}>Verifica Livello</button> 
+    }}>{isMeasure ? 'Conferma' : 'Verifica Livello'}</button> 
 
 }
 
@@ -229,7 +231,7 @@ async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: numbe
 }
 
 // Passo arrowClickObj per poter avere la variabile come reference
-function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, arrowClickObj: {value: number}) {
+async function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, arrowClickObj: {value: number}, sessionCode: string) {
     if(parseInt(currentTarget.innerHTML)) {
         return
     } else {
@@ -245,7 +247,20 @@ function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, a
     if (outputTarget) {
         currentTarget.innerHTML = arrowClickObj.value.toString()
         outputTarget.innerHTML = arrowClickObj.value.toString()
+        const res = await fetch('api/game/logReleaseShot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                session_code: sessionCode,
+                level: level.level,
+                from: currentTarget.id,
+                to: outputTarget.id,
+            })
+        })
     }
+
 }
 
 async function changeLevelClick(currentLevel: Number, sessionCode: string, currentTarget: EventTarget & HTMLButtonElement, setLevel: Dispatch<SetStateAction<number>>) {
@@ -362,28 +377,28 @@ export function Board({ level, showPreview, session_code, levelObstaclesCounter,
                             if (ltrElement) {
                                 ltrElement.innerHTML = '&rarr;'
                             }
-                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&rarr;</div>
+                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj, session_code)}>&rarr;</div>
                         } else if (index % (size + 2) === size + 1) {
                             rtl++
                             const rtlElement = document.getElementById("rtl_" + rtl);
                             if (rtlElement) {
                                 rtlElement.innerHTML = '&larr;';
                             }
-                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&larr;</div>
+                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj, session_code)}>&larr;</div>
                         } else if (index < size + 2) {
                             utd++
                             const utdElement = document.getElementById("utd_" + utd);
                             if (utdElement) {
                                 utdElement.innerHTML = '&darr;';
                             }
-                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&darr;</div>
+                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj, session_code)}>&darr;</div>
                         } else if (index >= (size + 1) * (size + 2)) {
                             dtu++
                             const dtuElement = document.getElementById("dtu_" + dtu);
                             if (dtuElement) {
                                 dtuElement.innerHTML = '&uarr;';
                             }
-                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj)}>&uarr;</div>
+                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj, session_code)}>&uarr;</div>
                         }
                         else {
                             if (column < size) {

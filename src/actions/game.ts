@@ -9,6 +9,7 @@ import { changeLevelLogs } from "@/db/schema/logs_changeLevel";
 import { verifyLevelLogs } from "@/db/schema/logs_verifyLevels";
 import { cellModLogs } from "@/db/schema/logs_cellModify";
 import { cleanLevelLogs } from "@/db/schema/logs_cleanLevel";
+import { releaseShotLogs } from "@/db/schema/logs_releaseShot";
 
 export async function isSessionCodeValid(code: string) {
     const res = await db.select({ id: sessions.id }).from(sessions).where(eq(sessions.code, code));
@@ -218,7 +219,7 @@ export async function logLevelVerify(level_num: number, outcome: boolean, level:
         await db.insert(verifyLevelLogs).values({session_id: sessionId, pupil_id: pupilId, level: level_num, board: JSON.stringify(level), outcome: outcome});
         const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'ver_lvl', 'level', ${level_num}, 'outcome', ${outcome}, 'board', ${JSON.stringify(level)}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
     } catch (error: any) {
-        throw new Error("Errore nel log del cambio di livello" + error.toString());
+        throw new Error("Errore nel log della verifica di livello" + error.toString());
     }
 }
 
@@ -230,7 +231,7 @@ export async function logChangeCellObstacle(level_num: number, x: number, y: num
         await db.insert(cellModLogs).values({session_id: sessionId, pupil_id: pupilId, level: level_num, x: x, y: y, startingObstacle: starting_obstacle, newObstacle: new_obstacle});
         const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'mod_cel', 'level', ${level_num}, 'x', ${x}, 'y', ${y}, 'starting_obstacle', ${starting_obstacle}, 'new_obstacle', ${new_obstacle}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
     } catch (error: any) {
-        throw new Error("Errore nel log del cambio di livello" + error.toString());
+        throw new Error("Errore nel log del cambio di cella" + error.toString());
     }
 }
 
@@ -241,6 +242,18 @@ export async function logResetLevel (level_num: number, session_code: string, pu
 
         await db.insert(cleanLevelLogs).values({session_id: sessionId, pupil_id: pupilId, level: level_num});
         const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'cln_lvl', 'level', ${level_num}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
+    } catch (error: any) {
+        throw new Error("Errore nel log del reset di livello" + error.toString());
+    }
+}
+
+export async function logReleaseShot(level_num: number, from: string, to: string, session_code: string, pupil_code: string) {
+    try {
+        const sessionId = await getSessionIdByCode(session_code);
+        const pupilId = await getPupilIdByCode(pupil_code, sessionId);
+
+        await db.insert(releaseShotLogs).values({session_id: sessionId, pupil_id: pupilId, level: level_num, from: from, to: to});
+        const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'rel_sht', 'from', ${from}, 'to', ${to}, 'level', ${level_num}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
     } catch (error: any) {
         throw new Error("Errore nel log del cambio di livello" + error.toString());
     }
