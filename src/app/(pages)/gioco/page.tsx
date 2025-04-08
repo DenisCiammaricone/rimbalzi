@@ -6,7 +6,7 @@ export default function Gioco() {
     return (
         <div id="gioco">
             <Image
-                src="/background5.png" // Path from public folder
+                src="/backgrounds/background5.png" // Path from public folder
                 alt="Background Image"
                 fill
                 style={{

@@ -10,7 +10,7 @@ export default async function NavBarTop() {
                 <Image src="/logos/logo_full_.png" className="my-auto mx-auto" alt="" width={300} height={100}></Image>
               </a>            
           </li>
-          <li>Progetto <b>“Apprendimento dell'informatica</b> (MUR - PRIN_2022 - 2022BP7K3 - CUP:E53D23007730006)” - F1-2023-0113 - INF/01"</li>
+          <li>Progetto <b>PINI - “Apprendimento dell'informatica</b> (MUR - PRIN_2022 - 2022BP7K3 - CUP:E53D23007730006)” - F1-2023-0113 - INF/01"</li>
         </ul>
       </div>
       <div id="navBarRight">

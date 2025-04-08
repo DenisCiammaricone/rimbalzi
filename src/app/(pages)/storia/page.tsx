@@ -6,7 +6,7 @@ export default function Storia() {
     return (
         <div id="storia">
             <Image
-                src="/background2.png" // Path from public folder
+                src="/backgrounds/background2.png" // Path from public folder
                 alt="Background Image"
                 fill
                 style={{
