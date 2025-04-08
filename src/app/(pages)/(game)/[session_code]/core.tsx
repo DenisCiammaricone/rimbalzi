@@ -29,7 +29,7 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
     
     if (isMeasure && (levelVerified[lvlNumber-1] === 1 || levelVerified[lvlNumber-1] === -1)) {
         return (
-            <div className={styles.levelVerified}>Livello già verificato</div>
+            <div className={styles.levelVerified}>Livello già confermato</div>
         )
     }
 
@@ -66,7 +66,7 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
                 alert('Hai commesso qualche errore :(')
             }
         }
-    }}>Verifica Livello</button> 
+    }}>{isMeasure ? 'Conferma' : 'Verifica Livello'}</button> 
 
 }
 
