@@ -1,5 +1,5 @@
 import ErrorText from "@/app/components/ErrorText";
-import { session_phases } from "@/app/lib/enums";
+import { session_phases, session_phases_labels } from "@/app/lib/enums";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 
@@ -41,7 +41,7 @@ export function EditSession({ teacherId, sessionData }: { teacherId:string, sess
                 <select id="session_phase" name="session_phase" defaultValue={sessionData.phase} required>
                 {
                     session_phases.map((phase, i) => {
-                        return <option key={i} value={phase}>{phase}</option>
+                        return <option key={i} value={phase}>{session_phases_labels[i]}</option>
                     })
                 }
                 </select>

@@ -1,5 +1,5 @@
 import { getSessionStatus } from "@/actions/sessions";
-import { session_phases, session_states } from "@/app/lib/enums";
+import { session_states } from "@/app/lib/enums";
 
 export async function GET(req: Request) {
     const session_code = new URL(req.url).searchParams.get("session_code");

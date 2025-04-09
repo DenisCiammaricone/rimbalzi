@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { SessionsPage } from './sessions/SessionsPage';
 import FadingMessage from '@/app/components/FadingMessage';
 import { ClassesPage } from './classes/ClassesPage';
+import SpinningCircle from '@/app/components/SpinningCircle';
 
 function SideBarButton({text, onClick}:{text:string, onClick?:()=>void}) {
     return (<div><a onClick={onClick}> {text} </a></div>)
@@ -23,13 +24,7 @@ export default function dashboard() {
  
     
     if(status === "loading") {
-        return (
-            <div className='flex min-h-screen justify-center items-center text-3xl font-bold'>
-                <svg viewBox="25 25 50 50">
-                    <circle r="20" cy="50" cx="50"></circle>
-                </svg>
-            </div> 
-        );
+        return <SpinningCircle/>
     } else if (status === "authenticated") {
         const handleClassiClick = async () => {
             setContent(await ClassesPage(session.user.id, setContent));
@@ -46,14 +41,14 @@ export default function dashboard() {
         return (
             <>
             <FadingMessage/>
-            <div className='flex flex-col mx-auto w-3/4'>
+            <div className='flex flex-col mx-auto w-3/4 dashboard'>
                 <div className='flex'>
                     <div className='flex flex-col w-1/4' id="sideBar">
                         <SideBarButton text="Classi" onClick={handleClassiClick}></SideBarButton>
                         <SideBarButton text="Sessioni" onClick={handleSessioniClick}></SideBarButton>
                         <SideBarButton text="Logout" onClick={handleLogoutClick}></SideBarButton>
                     </div>
-                    <div className=' w-3/4' id="contentView">{content}</div>
+                    <div className='w-3/4' id="contentView">{content}</div>
                 </div>
             </div>
             </>

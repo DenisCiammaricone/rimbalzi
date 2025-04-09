@@ -7,10 +7,13 @@ export default function logOut() {
 
     if (status === "authenticated") {
         return (
-            <div className="w-full h-full min-h-screen flex flex-col items-center justify-center">
+            <div className="w-full h-full min-h-screen flex flex-col items-center justify-center"  id="logoutDiv">
                 <h1>Logout</h1>
                 <p>Sicuro di voler effettuare il logout?</p>
-                <button onClick={() => { signOut({callbackUrl: 'https://labinformaticaescuola.it'}) }}>Si</button>
+                <div className="flex gap-4 mt-4">
+                    <button className="negative" onClick={() => redirect('/')}>No</button>
+                    <button className="positive" onClick={() => { signOut({callbackUrl: 'https://labinformaticaescuola.it'}) }}>Si</button>
+                </div>
             </div>
         )
     } else if (status === "unauthenticated") {

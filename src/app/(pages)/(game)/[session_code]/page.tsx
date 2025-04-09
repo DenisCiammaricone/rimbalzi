@@ -25,8 +25,10 @@ export default function Page() {
                     case 302:
                         setAuthorized(1)
                         break;
-                    case 404:
+                    case 401:
                         setAuthorized(2)
+                        break;
+                    case 404:
                         redirect('/')
                         break;
                 }
@@ -40,10 +42,10 @@ export default function Page() {
     if(authorized === 0) {
         page = <SpinningCircle></SpinningCircle>
     } else if(authorized === 1) {
-        page = <TeacherPage session_code={sessionCode}></TeacherPage>
+        page = <div className="bg-gray-900/75"><TeacherPage session_code={sessionCode}></TeacherPage></div>
     }
     else if(authorized === 2) {
         page = <PupilPage session_code={sessionCode}></PupilPage>
     }
-    return <><h1>My Page {sessionCode}</h1> {page}</>
+    return <div>{page}</div>
 }

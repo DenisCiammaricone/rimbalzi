@@ -8,13 +8,23 @@
   --foreground: #FAFFFD;
   --primary: #3C91E6;
   --secondary: #9FD356;
-  --tertiary: #FA824C;
+  --tertiary: #d46f40;
   --error: red;
+
+  --primary-darker: #2B6BBE;
+  --secondary-darker: #5b9627;
+  --tertiary-darker: #ac5330;
 
   /* 50% opacity*/
   --primary-50: #3C91E680;
   --secondary-50: #9FD35680;
-  --tertiary-50: #FA824C80;
+  --tertiary-50: #d46f4080;
+
+  /* 80% opacity */
+  --background-80: #342E37CC;
+  --primary-80: #3C91E6CC;
+  --secondary-80: #9FD356CC;
+  --tertiary-80: #d46f40CC;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -95,11 +105,66 @@ body {
 }
 
 #sideBar {
-  background-color: var(--secondary-50);
+  padding: 2rem;
+  background-color: var(--secondary-80);
 }
 
 #contentView {
-  background-color: var(--tertiary-50);
+  padding: 2rem;
+  background-color: var(--background-80);
+}
+
+#contentView a{
+  font-weight: bold;
+  color: var(--primary);
+}
+#contentView a:hover{
+  color: var(--secondary);
+}
+
+#logoutDiv {
+  background-color: var(--background-80);
+}
+
+#logoutDiv button {
+  width: 5rem;
+}
+
+
+.dashboard button {
+  background-color: var(--primary);
+  width: 12rem;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  margin-bottom: .5rem;
+}
+
+.dashboard button:hover {
+  background-color: var(--primary-darker);
+}
+
+.negative{
+  font-weight: bold;
+  background-color: var(--tertiary);
+  padding: .5rem;
+  border: 2px solid var(--foreground);
+  border-radius: 0.5rem;
+}
+
+.negative:hover{
+  background-color: var(--tertiary-darker);
+}
+
+.positive {
+  font-weight: bold;
+  background-color: var(--primary);
+  padding: .5rem;
+  border: 2px solid var(--foreground);
+  border-radius: 0.5rem;
+}
+
+.positive:hover {
+  background-color: var(--primary-darker);
 }
 
 

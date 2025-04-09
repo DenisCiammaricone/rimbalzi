@@ -10,6 +10,7 @@ interface Class {
 
 interface Session {
     id: string;
+    state: string;
     code: string;
     class_id: string;
     class_grade: string;

@@ -60,9 +60,9 @@ export function TeacherPage({session_code}:{session_code: string}) {
 
     let handleSessionStateButton = null
     if(isSessionStarted === 2) {
-        handleSessionStateButton = <div className="text-red-500 font-bold">Sessione terminata</div>
+        handleSessionStateButton = <div className="negative">Sessione terminata</div>
     } else if(isSessionStarted === 1) {
-        handleSessionStateButton = <button onClick={async () => {
+        handleSessionStateButton = <button className='negative' onClick={async () => {
             const res = await fetch('/api/session/end', {
                 method: 'POST',
                 headers: {
@@ -78,7 +78,7 @@ export function TeacherPage({session_code}:{session_code: string}) {
             }
         }}>Termina Sessione</button>
     } else if(isSessionStarted === 0) {
-        handleSessionStateButton = <button onClick={async () => {
+        handleSessionStateButton = <button className='positive' onClick={async () => {
             const res = await fetch('/api/session/start', {
                 method: 'POST',
                 headers: {
@@ -100,6 +100,8 @@ export function TeacherPage({session_code}:{session_code: string}) {
     }
 
     return (
+        <>
+        <div>Codice Sessione: {session_code}</div>
         <div className="flex flex-col items-center justify-center h-screen ">
             <h1 className="font-bold text-4xl mb-10">Dashboard Insegnante</h1>
             <table className="table-auto w-96 mb-5 border-spacing-5 bg-gray-900/75 rounded-lg shadow-lg p-4 text-white p-6">
@@ -138,5 +140,6 @@ export function TeacherPage({session_code}:{session_code: string}) {
             </table>
             { handleSessionStateButton }
         </div>
+        </>
     )
 }

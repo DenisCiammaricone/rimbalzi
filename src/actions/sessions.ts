@@ -119,7 +119,7 @@ export async function getSessionsByTeacherId(teacher_id: string) {
         throw ('Invalid teacher id');
     }
 
-    const res = await db.select({ id: sessions.id, code: sessions.code, phase: sessions.phase, details: sessions.details, class_grade: classes.grade, class_section: classes.section, class_id: classes.id }).from(sessions).leftJoin(classes, eq(classes.id, sessions.classId)).where(eq(sessions.userId, tid));
+    const res = await db.select({ id: sessions.id, state: sessions.state, code: sessions.code, phase: sessions.phase, details: sessions.details, class_grade: classes.grade, class_section: classes.section, class_id: classes.id }).from(sessions).leftJoin(classes, eq(classes.id, sessions.classId)).where(eq(sessions.userId, tid));
 
     return res;
 }

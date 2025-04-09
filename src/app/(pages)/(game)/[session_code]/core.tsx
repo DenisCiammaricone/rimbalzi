@@ -513,7 +513,7 @@ export function GameLevels({ setLevel, level, levelVerified, sessionCode, isMeas
     
 
     return (
-        <div id="gameLevels">
+        <div>
             <div className={'flex flex-row gap-5 ' + styles.gameLevels}>
                 {gameLevels}
             </div>

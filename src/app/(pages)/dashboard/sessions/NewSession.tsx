@@ -1,5 +1,5 @@
 import ErrorText from "@/app/components/ErrorText";
-import { session_phases } from "@/app/lib/enums";
+import { session_phases, session_phases_labels } from "@/app/lib/enums";
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -64,7 +64,7 @@ export function NewSession({teacherId}: {teacherId: string}) {
                 // TODO: Verificare in che fase l'aula selezionata si trova
                 }
                 <select id="session_phase" name="session_phase" required>
-                    {session_phases.map((phase, i) => {return <option key={i} value={phase}>{phase}</option>})}
+                    {session_phases.map((phase, i) => {return <option key={i} value={phase}>{session_phases_labels[i]}</option>})}
                 </select>
                 <label htmlFor="detail">Dettagli sessione</label>
                 <textarea rows={5} id="details" name="details" />

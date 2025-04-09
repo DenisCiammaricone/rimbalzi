@@ -87,6 +87,6 @@ export function PupilPage({ session_code }: { session_code: string }) {
     }, []);
 
     return (
-        <>{content}</>
+        <><div>Codice Sessione: {session_code}</div>{content}</>
     )
 }
