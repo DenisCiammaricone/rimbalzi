@@ -4,10 +4,11 @@ import { PupilPage } from "./PupilPage";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import SpinningCircle from "@/app/components/SpinningCircle";
 
 export default function Page() {
     const params = useParams()
-    const [authorized, setAuthorized] = useState(false)
+    const [authorized, setAuthorized] = useState(0) // 0: default, 1: teacher, 2: pupil
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,9 +23,10 @@ export default function Page() {
                 // Se non sei autorizzato viene mostrata la pagina per gli studenti
                 switch (response.status) {
                     case 302:
-                        setAuthorized(true)
+                        setAuthorized(1)
                         break;
                     case 404:
+                        setAuthorized(2)
                         redirect('/')
                         break;
                 }
@@ -34,5 +36,14 @@ export default function Page() {
     }, [])
 
     const sessionCode = Array.isArray(params.session_code) ? params.session_code[0] : params.session_code || '';
-    return <><h1>My Page {sessionCode}</h1> {authorized ? <TeacherPage session_code={sessionCode}></TeacherPage> : <PupilPage session_code={sessionCode}></PupilPage>}</>
+    let page = null;
+    if(authorized === 0) {
+        page = <SpinningCircle></SpinningCircle>
+    } else if(authorized === 1) {
+        page = <TeacherPage session_code={sessionCode}></TeacherPage>
+    }
+    else if(authorized === 2) {
+        page = <PupilPage session_code={sessionCode}></PupilPage>
+    }
+    return <><h1>My Page {sessionCode}</h1> {page}</>
 }
