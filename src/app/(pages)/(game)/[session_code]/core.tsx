@@ -479,6 +479,7 @@ export function GameLevels({ setLevel, level, levelVerified, sessionCode, isMeas
                 }
             })
         }
+        
     }, [levelVerified, isMeasure])
     
     const gameLevels = Array.from({ length: _lvlNumber }, (_, index) => {
@@ -509,7 +510,7 @@ export function GameLevels({ setLevel, level, levelVerified, sessionCode, isMeas
         }
     })
 
-
+    
 
     return (
         <div id="gameLevels">

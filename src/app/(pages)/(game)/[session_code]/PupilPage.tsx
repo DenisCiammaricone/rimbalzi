@@ -53,6 +53,17 @@ export function PupilPage({ session_code }: { session_code: string }) {
 
                     if (session.status === 200) {
                         const sequence = await session.json();
+
+                        const fetchData = async () => {
+                            const logRes = await fetch('/api/game/logLoadGame', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ session_code: session_code })
+                            })
+                        }
+                        fetchData()
                         
                         setContent(<Game sequence={sequence.data} isMeasure={isMeasure} sessionCode={session_code} maxObstaclesCount={3} />)
                     } else if (session.status === 400) {

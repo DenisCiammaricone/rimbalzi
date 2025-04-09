@@ -59,6 +59,14 @@ export function Game({ sequence, isMeasure, maxObstaclesCount, sessionCode }: { 
                             })
                         }
                     })
+
+                    // const logRes = await fetch('/api/game/logLoadGame', {
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //     },
+                    //     body: JSON.stringify({ session_code: sessionCode })
+                    // })
                 }
             } catch (error) {
                 console.error("Error fetching saved games: ", error)

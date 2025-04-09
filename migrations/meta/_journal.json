@@ -29,6 +29,13 @@
       "when": 1744131292196,
       "tag": "0003_silly_sage",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1744184387550,
+      "tag": "0004_volatile_moonstone",
+      "breakpoints": true
     }
   ]
 }

@@ -10,6 +10,7 @@ import { verifyLevelLogs } from "@/db/schema/logs_verifyLevels";
 import { cellModLogs } from "@/db/schema/logs_cellModify";
 import { cleanLevelLogs } from "@/db/schema/logs_cleanLevel";
 import { releaseShotLogs } from "@/db/schema/logs_releaseShot";
+import { loadGameLogs } from "@/db/schema/logs_loadGame";
 
 export async function isSessionCodeValid(code: string) {
     const res = await db.select({ id: sessions.id }).from(sessions).where(eq(sessions.code, code));
@@ -256,6 +257,18 @@ export async function logReleaseShot(level_num: number, from: string, to: string
         const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'rel_sht', 'from', ${from}, 'to', ${to}, 'level', ${level_num}, 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
     } catch (error: any) {
         throw new Error("Errore nel log del cambio di livello" + error.toString());
+    }
+}
+
+export async function logLoadGame(session_code: string, pupil_code: string) {
+    try {
+        const sessionId = await getSessionIdByCode(session_code);
+        const pupilId = await getPupilIdByCode(pupil_code, sessionId);
+
+        await db.insert(loadGameLogs).values({session_id: sessionId, pupil_id: pupilId});
+        const res = await db.execute(sql`UPDATE games SET moves = JSON_ARRAY_APPEND(moves, '$', JSON_OBJECT('action', 'load', 'timestamp', ${new Date()})) WHERE session_id = ${sessionId} AND session_key = ${pupil_code}`);
+    } catch (error: any) {
+        throw new Error("Errore nel log del caricamento di partita" + error.toString());
     }
 }
 

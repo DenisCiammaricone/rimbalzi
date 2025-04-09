@@ -14,6 +14,7 @@ export function PupilLogIn({ session_code }: { session_code: string }) {
                             pupil_code: formData.get('pupil_code')
                         })
                     })
+                    
                     if (response.status === 200) {
                         window.location.reload(); // TODO: Fallo in un modo nextjs con router
                     }

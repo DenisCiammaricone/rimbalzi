@@ -1,4 +1,4 @@
-import { isSessionCodeValid, logReleaseShot } from "@/actions/game";
+import { isSessionCodeValid, logChangeCellObstacle, logLevelSwitch, logLoadGame, logReleaseShot, logResetLevel } from "@/actions/game";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -12,13 +12,13 @@ export async function POST(req: Request) {
         if(body.session_code && await isSessionCodeValid(sessionCode)) {
             try {
                 if (pupilCode) {
-                    await logReleaseShot(body.level, body.from, body.to, sessionCode, pupilCode.value);
-                    return NextResponse.json({ data: "Logged Shot Release" }, { status: 200 });
+                    await logLoadGame(sessionCode, pupilCode.value);
+                    return NextResponse.json({ data: "Game load logged" }, { status: 200 });
                 } else {
                     throw new Error("Pupil code is missing");
                 }
             } catch (error) {
-                return NextResponse.json({ data: "Error logging Release Shot" + error}, { status: 500 });
+                return NextResponse.json({ data: "Error logging load game" + error}, { status: 500 });
             }
             
         }
