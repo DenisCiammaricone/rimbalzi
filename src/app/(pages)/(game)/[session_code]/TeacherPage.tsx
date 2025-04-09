@@ -1,12 +1,11 @@
 import SpinningCircle from "@/app/components/SpinningCircle"
-import { read } from "fs"
-import { redirect, useParams } from "next/navigation"
+import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export function TeacherPage({session_code}:{session_code: string}) {
     const [sessionKeys, setSessionKeys] = useState<{ key: string, sex: string }[]>([])
     const [isSessionStarted, setIsSessionStarted] = useState(-1) // -1: default, 0: not started, 1: started, 2 finished
-    const [sessionPupilCompletedLevels, setSessionPupilCompletedLevels] = useState<Record<string, number[]>>({})
+    const [sessionPupilCompletedLevels, setSessionPupilCompletedLevels] = useState<Record<string, {level: number, success: boolean}[]>>({})
     const params = useParams()
 
     useEffect(() => {
@@ -22,7 +21,7 @@ export function TeacherPage({session_code}:{session_code: string}) {
                 setSessionKeys(data.keys)
             } 
 
-            let statusResponse = await fetch('/api/game/sessionCorrectLevels?session_code=' + params.session_code, {
+            let statusResponse = await fetch('/api/game/sessionLevelsOutcome?session_code=' + params.session_code, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -119,11 +118,17 @@ export function TeacherPage({session_code}:{session_code: string}) {
                                 <td className="text-center">{key.sex}</td>
                                 <td>
                                     <div className="flex gap-2">
-                                        {Array.from({ length: 10 }, (_, i) => (
-                                            <span key={`${key.key}_${i + 1}`} id={`${key.key}_${i + 1}`} className={`font-bold text-center ${sessionPupilCompletedLevels[key.key]?.includes(i) ? "text-green-500" : "text-gray-400"}`}>
+                                        {Array.from({ length: 10 }, (_, i) => {
+                                            const levelAttempt = sessionPupilCompletedLevels[key.key]?.find(entry => entry.level === i);
+                                            let colorClass = "text-gray-400"; // Default for not attempted
+            
+                                            if (levelAttempt) {
+                                                colorClass = levelAttempt.success ? "text-green-500" : "text-red-500";
+                                            }
+                                            return (<span key={`${key.key}_${i + 1}`} id={`${key.key}_${i + 1}`} className={`font-bold text-center ${colorClass}`}>
                                                 {i + 1}
-                                            </span>
-                                        ))}
+                                            </span>)
+                                        })}
                                     </div>
                                 </td>
                             </tr>

@@ -302,27 +302,24 @@ export async function getPupilGameData(session_code: string, pupil_code: string)
     }
 }
 
-export async function getCorrectLevelsForSession(session_code: string) {
+export async function getLevelsOutcomeForSession(session_code: string) {
     try {
         const sessionId = await getSessionIdByCode(session_code);
         const res = await db.select({moves: games.moves, sessionKey: games.sessionKey}).from(games).where(eq(games.sessionId, sessionId));
 
-        let correctLevels: Record<string, number[]> = {}
+        let correctLevels: Record<string, {level: number, success: boolean}[]> = {}
         res.map((game) => {
-            console.log("Game: ", game.sessionKey, typeof(game.moves))
             const moves = typeof game.moves === 'string' ? JSON.parse(game.moves) : game.moves;
             moves.map((move: any) => {
-                console.log("Move: ", move)
-                if(move.action === 'ver_lvl' && move.outcome === true) {
+                if(move.action === 'ver_lvl') {
                     if (correctLevels[game.sessionKey] === undefined) {
-                        correctLevels[game.sessionKey] = [move.level];
+                        correctLevels[game.sessionKey] = [{level: move.level, success: move.outcome}];
                     } else {
-                        correctLevels[game.sessionKey].push(move.level);
+                        correctLevels[game.sessionKey].push({level: move.level, success: move.outcome});
                     }
                 }
             })
         })
-        console.log("Correct levels: ", correctLevels)
         // res.map((game) => {
         //     const moves = typeof game.moves === 'string' ? JSON.parse(game.moves) : game.moves;
         //     (moves as any[]).map((move: any) => {

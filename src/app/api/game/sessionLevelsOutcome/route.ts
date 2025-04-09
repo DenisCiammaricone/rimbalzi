@@ -1,4 +1,4 @@
-import { getCorrectLevelsForSession, getSessionTeacher, isSessionCodeValid } from "@/actions/game";
+import { getLevelsOutcomeForSession, getSessionTeacher, isSessionCodeValid } from "@/actions/game";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
@@ -12,7 +12,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
         try {
-            return NextResponse.json({ data: "Codice sessione trovato. Authorizzato", correctLevels: await getCorrectLevelsForSession(session_code) }, { status: 200 });
+            return NextResponse.json({ data: "Codice sessione trovato. Authorizzato", correctLevels: await getLevelsOutcomeForSession(session_code) }, { status: 200 });
         } catch (error) {
             console.error("Error fetching session data:", error);
         }
