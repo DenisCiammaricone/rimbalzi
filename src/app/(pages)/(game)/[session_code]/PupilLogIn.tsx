@@ -11,7 +11,7 @@ export function PupilLogIn({ session_code }: { session_code: string }) {
                         },
                         body: JSON.stringify({
                             session_code: session_code,
-                            pupil_code: formData.get('pupil_code')
+                            pupil_code: formData.get('pupil_code')?.toString().toLowerCase()
                         })
                     })
                     
