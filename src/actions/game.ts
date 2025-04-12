@@ -3,7 +3,7 @@ import { games } from "@/db/schema/games";
 import { session_sequences } from "@/db/schema/session_sequences";
 import { sessionKeys } from "@/db/schema/sessionKeys";
 import { sessions } from "@/db/schema/sessions";
-import { eq, and, sql } from "drizzle-orm"
+import { eq, and, sql, desc, asc } from "drizzle-orm"
 import { getPupilIdByCode, getSessionIdByCode } from "./sessions";
 import { changeLevelLogs } from "@/db/schema/logs_changeLevel";
 import { verifyLevelLogs } from "@/db/schema/logs_verifyLevels";
@@ -336,5 +336,23 @@ export async function getLevelsOutcomeForSession(session_code: string) {
         return correctLevels;
     } catch (error: any) {
         throw new Error("Errore nel recupero dei livelli corretti per la sessione" + error.toString());
+    }
+}
+
+/**
+ * 
+ * @param pupil_code 
+ * @param sesssion_code 
+ * @returns millis between start and finish time of the session
+ */
+export async function getPupilFinishTime(pupil_code: string, sesssion_code: string) {
+    try {
+        const sessionId = await getSessionIdByCode(sesssion_code);
+        const pupilId = await getPupilIdByCode(pupil_code, sessionId);
+        let startTimeRes = await db.select({startTime: loadGameLogs.timestamp}).from(loadGameLogs).where(and(eq(loadGameLogs.session_id, sessionId), eq(loadGameLogs.pupil_id, pupilId))).limit(1).orderBy(asc(loadGameLogs.timestamp));
+        let finishTimeRes = await db.select({finishTime: verifyLevelLogs.timestamp}).from(verifyLevelLogs).where(and(eq(verifyLevelLogs.session_id, sessionId), eq(verifyLevelLogs.pupil_id, pupilId))).limit(1).orderBy(desc(verifyLevelLogs.timestamp));
+        return finishTimeRes[0].finishTime.getTime() - startTimeRes[0].startTime.getTime();
+    } catch (error: any) {
+        throw new Error("Errore nel recupero del tempo di completamento della sessione" + error.toString());
     }
 }

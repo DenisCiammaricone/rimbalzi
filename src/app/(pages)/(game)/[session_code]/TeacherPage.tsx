@@ -6,6 +6,7 @@ export function TeacherPage({session_code}:{session_code: string}) {
     const [sessionKeys, setSessionKeys] = useState<{ key: string, sex: string }[]>([])
     const [isSessionStarted, setIsSessionStarted] = useState(-1) // -1: default, 0: not started, 1: started, 2 finished
     const [sessionPupilCompletedLevels, setSessionPupilCompletedLevels] = useState<Record<string, {level: number, success: boolean}[]>>({})
+    const [pupilCompleteTimes, setPupilCompleteTimes] = useState<Record<string, number>>({})
     const params = useParams()
 
     useEffect(() => {
@@ -30,7 +31,44 @@ export function TeacherPage({session_code}:{session_code: string}) {
             if(statusResponse.status === 200) {
                 const data = await statusResponse.json()
                 setSessionPupilCompletedLevels(data.correctLevels)
-                console.log("Pupils completed levels: ", data.correctLevels)   
+                console.log(data.correctLevels)
+                Object.values(data.correctLevels).forEach((value: any, i) => {
+                    if(value.length === 10) {
+                        console.log(value, i, "completed")
+                        const pupilKey = Object.keys(data.correctLevels)[i]
+
+                        const res = fetch('/api/game/pupilFinishTime?session_code=' + params.session_code + '&pupil_code=' + pupilKey, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        }).then(async (res) => {
+                            if(res.status === 200) {
+                                
+                                const data = await res.json()
+
+                                setPupilCompleteTimes((prev) => {
+                                    let newStat = { ...prev, [pupilKey]: data.timeDiff }
+                                    return newStat
+                            })
+                            }
+                            
+                        })
+                    }
+                })
+                if(data.correctLevels.length === 10) {
+                    const res = await fetch('/api/game/sessionFinishTime?session_code=' + params.session_code, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    if(res.status === 200) {
+                        const data = await res.json()
+                        console.log(`Tempo totale: ${data.timeDiff}`)
+                        setPupilCompleteTimes(data.timeDiff)
+                    }
+                }
             }
 
             response = await fetch('/api/session/status?session_code=' + params.session_code, {
@@ -55,8 +93,7 @@ export function TeacherPage({session_code}:{session_code: string}) {
             }
         }
         fetchData();
-    }, [])  
-
+    }, []) 
 
     let handleSessionStateButton = null
     if(isSessionStarted === 2) {
@@ -104,12 +141,13 @@ export function TeacherPage({session_code}:{session_code: string}) {
         <div>Codice Sessione: {session_code}</div>
         <div className="flex flex-col items-center justify-center h-screen ">
             <h1 className="font-bold text-4xl mb-10">Dashboard Insegnante</h1>
-            <table className="table-auto w-96 mb-5 border-spacing-5 bg-gray-900/75 rounded-lg shadow-lg p-4 text-white p-6">
+            <table className="table-auto w-128 mb-5 border-spacing-5 bg-gray-900/75 rounded-lg shadow-lg p-4 text-white p-6">
                 <thead>
                     <tr>
                         <th className="w-32">Codice</th>
                         <th className="w-16">Sesso</th>
                         <th>Livelli completati</th>
+                        <th className="w-32">Finish Time</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -132,6 +170,23 @@ export function TeacherPage({session_code}:{session_code: string}) {
                                             </span>)
                                         })}
                                     </div>
+                                </td>
+                                <td className="text-center">
+                                <span
+                                        key={`${key.key}_finished`}
+                                        id={`${key.key}_finished`}
+                                        className="font-bold text-center text-green-500"
+                                    >{ (() => {
+                                        if(pupilCompleteTimes[key.key]) {
+                                            const millis = pupilCompleteTimes[key.key]
+                                            const timeInSeconds = Math.floor(millis / 1000);
+                                            const minutes = Math.floor(timeInSeconds / 60);
+                                            const seconds = timeInSeconds % 60;
+                                            return `${minutes}m ${seconds}s`;
+                                        }
+                                        return <></>
+                                    
+                                    })()}</span>
                                 </td>
                             </tr>
                         ))
