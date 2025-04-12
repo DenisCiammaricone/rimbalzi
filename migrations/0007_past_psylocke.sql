@@ -1,0 +1,1 @@
+ALTER TABLE `classes` ADD `control` boolean DEFAULT false NOT NULL;
