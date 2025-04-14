@@ -167,6 +167,9 @@ body {
 /* modal styling */
 .modal {
   /*background-color: rgba(52, 46, 55, 0.85);*/
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: var(--primary-darker-50);
   backdrop-filter: blur(8px);
   border-top: 5px solid var(--primary-50);

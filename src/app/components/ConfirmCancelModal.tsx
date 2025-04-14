@@ -16,7 +16,7 @@ export default function ConfirmCancelModal({ openButtonText, title, message, onO
                 {openButtonText}
             </button>
             
-            <Dialog open={isOpen} className="relative z-50 " onClose={() => setIsOpen(false)}>
+            <Dialog open={isOpen} className="z-50 " onClose={() => setIsOpen(false)}>
                 <div className="fixed flex w-screen modal items-center justify-center p-4">
                 <DialogPanel className="w-screen">
                     <DialogTitle className="text-2xl font-bold text-center">{title}</DialogTitle>
