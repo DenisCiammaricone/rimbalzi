@@ -15,6 +15,8 @@
   --secondary-darker: #5b9627;
   --tertiary-darker: #ac5330;
 
+  --primary-darker-50: #2B6BBE80;
+
   /* 50% opacity*/
   --primary-50: #3C91E680;
   --secondary-50: #9FD35680;
@@ -132,15 +134,7 @@ body {
 
 
 .dashboard button {
-  background-color: var(--primary);
   width: 12rem;
-  padding: 0.75rem;
-  border-radius: 1rem;
-  margin-bottom: .5rem;
-}
-
-.dashboard button:hover {
-  background-color: var(--primary-darker);
 }
 
 .negative{
@@ -169,6 +163,17 @@ body {
 
 
 
+
+/* modal styling */
+.modal {
+  /*background-color: rgba(52, 46, 55, 0.85);*/
+  background-color: var(--primary-darker-50);
+  backdrop-filter: blur(8px);
+  border-top: 5px solid var(--primary-50);
+  border-bottom: 5px solid var(--primary-50);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 1.5rem;
+}
 
 /*Loader blackbox*/
 svg {

@@ -12,8 +12,8 @@ export async function ClassesPage(uid: string = "0", setContent: React.Dispatch<
     const data = await response.json();
 
     return (
-        <div>
-            <button onClick={() => setContent(<><NewClass teacherId={uid}></NewClass></>)}>Nuova Classe</button>
+        <div className="flex flex-col gap-5">
+            <button className="positive" onClick={() => setContent(<><NewClass teacherId={uid}></NewClass></>)}>Nuova Classe</button>
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>

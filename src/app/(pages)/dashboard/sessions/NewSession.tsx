@@ -70,7 +70,7 @@ export function NewSession({teacherId}: {teacherId: string}) {
                 <textarea rows={5} id="details" name="details" />
                 <ErrorText error={errorData}></ErrorText>
                    
-                <button type="submit">Crea</button>
+                <button type="submit" className="positive">Crea</button>
             </form>
         </div>
     );

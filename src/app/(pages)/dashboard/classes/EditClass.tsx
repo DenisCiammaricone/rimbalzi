@@ -1,9 +1,11 @@
+import ConfirmCancelModal from "@/app/components/ConfirmCancelModal";
 import ErrorText from "@/app/components/ErrorText";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export function EditClass({ classId, classData }: { classId: string, classData: Class }) {
     const [errorData, setErrorData] = useState('')
+
     return (
         <div>
             <h1>Modifica classe {classData.grade + classData.section} </h1>
@@ -41,8 +43,9 @@ export function EditClass({ classId, classData }: { classId: string, classData: 
 
                 <ErrorText error={errorData}></ErrorText>
                 <div className="flex space-x-4">
-                    <button type="submit">Salva</button>
-                    <button type="button" onClick={async () =>  {
+                    
+                    
+                    <ConfirmCancelModal openButtonText={"Elimina"} openButtonStyle="negative" title={"Eliminazione Aula"} message={"Sei sicuro di voler cancellare questa aula? L'operazione è irreversibile"} onOk={async () =>  {
                         const res = await fetch('/api/class', {
                             method: 'DELETE',
                             headers: {
@@ -53,19 +56,15 @@ export function EditClass({ classId, classData }: { classId: string, classData: 
                                 teacher_id: classData.teacherId
                             })
                         })
-                        if (res.status === 200) {
-                            redirect('/')
-                        }
-                        if(res.status === 400) {
+                        if(await res.status === 400) {
                             const data = await res.json();
-                            // Codici per vincoli di integrità referenziale
-                            if(data.data.errno === 1451 || data.data.errno === 1216) {
-                                setErrorData("Questa classe non può essere eliminata perchè è associata a delle sessioni. Cancella prima le sessioni associate o contatta un amministratore");
-                            } else if(data.data){
-                                setErrorData(data.data);
-                            }
+                            setErrorData(data.data);
                         }
-                    }}>Elimina</button>
+                        if (await res.status === 200) {
+                            redirect('/dashboard')
+                        }
+                    }}></ConfirmCancelModal>
+                    <button type="submit" className="positive">Salva</button>
                 </div>
             </form >
         </div >

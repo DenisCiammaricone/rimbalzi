@@ -1,3 +1,4 @@
+import ConfirmCancelModal from "@/app/components/ConfirmCancelModal";
 import ErrorText from "@/app/components/ErrorText";
 import { session_phases, session_phases_labels } from "@/app/lib/enums";
 import { redirect } from "next/navigation";
@@ -50,8 +51,8 @@ export function EditSession({ teacherId, sessionData }: { teacherId:string, sess
 
                 <ErrorText error={errorData}></ErrorText>
                 <div className="flex space-x-4">
-                    <button type="submit">Salva</button>
-                    <button type="button" onClick={async () =>  {
+                    
+                    <ConfirmCancelModal openButtonText={"Elimina"} openButtonStyle="negative" title={"Annulla Modifica"} message={"Sei sicuro di voler annullare le modifiche? L'operazione è irreversibile"} onOk={async () =>  {
                         const res = await fetch('/api/session', {
                             method: 'DELETE',
                             headers: {
@@ -63,7 +64,8 @@ export function EditSession({ teacherId, sessionData }: { teacherId:string, sess
                             })
                         })
                         if (res.status === 200) {
-                            redirect('/dashboard')
+                            console.log("KAPPA!")
+                            //redirect('/dashboard?success=a')
                         }
                         if(res.status === 400) {
                             const data = await res.json();
@@ -71,7 +73,8 @@ export function EditSession({ teacherId, sessionData }: { teacherId:string, sess
                                 setErrorData(data.data);
                             }
                         }
-                    }}>Elimina</button>
+                    }}></ConfirmCancelModal>
+                    <button type="submit" className="positive">Salva</button>
                 </div>
             </form >
         </div >

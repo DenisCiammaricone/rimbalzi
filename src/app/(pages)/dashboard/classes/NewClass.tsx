@@ -27,7 +27,8 @@ export function NewClass ({teacherId}: {teacherId: string})  {
                     if(data.message) {
                         setErrorData(data.message);
                     }
-                } if(response.status === 200) {
+                } 
+                if(response.status === 200) {
                     redirect('/dashboard')
                 }
             }}>
@@ -56,7 +57,7 @@ export function NewClass ({teacherId}: {teacherId: string})  {
                 <div className="mx-auto">
                     {errorData && <ErrorText error={errorData}></ErrorText> }
                 </div>  
-                <button type="submit">Crea</button>
+                <button type="submit" className="positive">Crea</button>
             </form>
             
             

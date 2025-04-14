@@ -40,6 +40,9 @@ export async function deleteClass(classId: string) {
         const res = await db.delete(classes).where(eq(classes.id, Number(classId)));
         return res[0].affectedRows;
     } catch (error: any) {
+        if (error.errno === 1451 || error.errno === 1216) {
+            throw new Error('La classe ha sessioni associate, non può essere eliminata...');
+        }
         throw new Error(error);
     }
 }
