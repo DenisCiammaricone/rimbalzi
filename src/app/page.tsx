@@ -9,7 +9,7 @@ export default async function Home() {
     <div id="home">
       <NavBarTop></NavBarTop>
       <NavBar></NavBar>
-      <div className="flex mx-auto w-3/4 mt-20">
+      <div className="flex mx-auto w-auto mt-20">
         <TextBlock data={
           <div>
             <h1 className="text-5xl mt-0">Rimbalzi di Luce</h1>

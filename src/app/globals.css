@@ -19,7 +19,7 @@
 
   /* 50% opacity*/
   --primary-50: #3C91E680;
-  --secondary-50: #9FD35680;
+  --secondary-50: #9fd356db;
   --tertiary-50: #d46f4080;
 
   /* 80% opacity */
@@ -58,12 +58,14 @@ body {
 }
 
 .textBlock {
-  background: var(--secondary-50);
+  background: var(--secondary-80);
   color: var(--foreground);
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  opacity: 1;
 }
+
 
 .loginButton:hover {
   color: var(--secondary);

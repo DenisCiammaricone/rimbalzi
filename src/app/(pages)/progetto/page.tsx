@@ -15,7 +15,7 @@ export default function Progetto() {
                 }}
             />
             <NavBar></NavBar>
-            <div className="flex mx-auto w-3/4 mt-20">
+            <div className="flex mx-auto w-full mt-20">
                 <TextBlock data={
                     <div>
                         <h1 className="text-3xl mt-0">Il Progetto</h1>

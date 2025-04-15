@@ -12,6 +12,7 @@ export default async function NavBar(){
             <li><a href="/storia">La storia</a></li>
             <li><a href="/gioco">Il gioco</a></li>
             <li><a href="/documenti">Documenti</a></li>
+            <li><a href="/privacy">Privacy</a></li>
             <li><a href="/contatti">Contatti</a></li>
           </ul>
         </div>

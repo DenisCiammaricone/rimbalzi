@@ -23,15 +23,15 @@ export default function RegisterPage() {
         }
         fetchSchools();
     }, []);
-    
+
     const schoolOptions = schools.map((school) => (
         <option key={school.id} value={school.id}>{school.name}</option>
     ));
-    
-    if(status === "unauthenticated") {
+
+    if (status === "unauthenticated") {
         return (
             <div id="login-register-formBox" className='flex flex-col gap-5 2xl:w-1/6 xl:w-1/4 lg:w-1/4 md:w-1/3 sm:w-full mx-auto p-5 mt-20 '>
-                <h1 className="mx-auto">Register</h1>
+                <h1 className="mx-auto">Registrazione</h1>
 
                 <form className="flex flex-col gap-2 mx-auto" action={async (formData) => {
                     const response = await fetch('/api/register', {
@@ -56,32 +56,38 @@ export default function RegisterPage() {
                 }}>
 
                     <div>
-                        <input id="name" name="name" type="text" placeholder="Nome" required/>
+                        <input id="name" name="name" type="text" placeholder="Nome" required />
                     </div>
                     <div>
-                        <input id="surname" name="surname" type="text" placeholder="Cognome" required/>
+                        <input id="surname" name="surname" type="text" placeholder="Cognome" required />
                     </div>
                     <div>
-                        <input id="email" name="email" type="email" placeholder="Email" required/>
+                        <input id="email" name="email" type="email" placeholder="Email" required />
                     </div>
                     <div>
-                        <input id="password" name="password" type="password" placeholder="Password" required/>
+                        <input id="password" name="password" type="password" placeholder="Password" required />
+                    </div>
+                    <div>
+                        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Conferma Password [TBD]" required />
                     </div>
                     <div>
                         <select className="mx-auto w-full" id="schoolId" name="schoolId" required>
                             {schoolOptions}
                         </select>
                     </div>
+                    <div>
+                        <i>I dati forniti saranno trattati esclusivamente per finalità di ricerca educativa e non saranno mai ceduti ad enti terzi. Per maggiori dettagli consulta la <b><a href="/privacy" target="_blank">Privacy Policy</a></b></i>
+                    </div>
                     <button className="mx-auto" type="submit">Registrati</button>
-                </form>
+                </form >
                 <div className="mx-auto">
                     <ErrorText error={registerError.toString()}></ErrorText>
                 </div>
                 <hr></hr>
                 <div className='mx-auto'>Hai già un account? <a className="link" href='/login'><i>Accedi!</i></a></div>
-            </div>
+            </div >
         )
-    } else if( status === 'loading' ) {
+    } else if (status === 'loading') {
         // TODO: Rotellina di caricamentos
         return (
             <div>Loading...</div>
