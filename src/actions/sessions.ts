@@ -82,6 +82,9 @@ export async function deleteSession(session_code: string) {
         const res = await db.delete(sessions).where(eq(sessions.code, session_code));
         return res[0].affectedRows;
     } catch (error: any) {
+        if (error.errno === 1451 || error.errno === 1216) {
+            throw new Error('La sessione ha partite associate, non può essere eliminata...');
+        }
         throw error;
     }
 }

@@ -52,7 +52,7 @@ export function EditSession({ teacherId, sessionData }: { teacherId:string, sess
                 <ErrorText error={errorData}></ErrorText>
                 <div className="flex space-x-4">
                     
-                    <ConfirmCancelModal openButtonText={"Elimina"} openButtonStyle="negative" title={"Annulla Modifica"} message={"Sei sicuro di voler annullare le modifiche? L'operazione è irreversibile"} onOk={async () =>  {
+                    <ConfirmCancelModal openButtonText={"Elimina"} openButtonStyle="negative" title={"Elimina Sessione"} message={"Sei sicuro di voler eliminare la sessione? L'operazione è irreversibile"} onOk={async () =>  {
                         const res = await fetch('/api/session', {
                             method: 'DELETE',
                             headers: {
@@ -63,15 +63,14 @@ export function EditSession({ teacherId, sessionData }: { teacherId:string, sess
                                 teacher_id: teacherId,
                             })
                         })
-                        if (res.status === 200) {
-                            console.log("KAPPA!")
-                            //redirect('/dashboard?success=a')
-                        }
                         if(res.status === 400) {
                             const data = await res.json();
                             if (data.data) {
                                 setErrorData(data.data);
                             }
+                        }
+                        if (res.status === 200) {
+                            redirect('/dashboard?success=a')
                         }
                     }}></ConfirmCancelModal>
                     <button type="submit" className="positive">Salva</button>

@@ -80,13 +80,15 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
     try {
         const body = await req.json();
-        const res = await deleteSession(body.session_code);
         checkForUnauthorizedTeacher(body.teacher_id);
+        const res = await deleteSession(body.session_code);
         if(res) {
             return NextResponse.json({ data: 'Ok' }, { status: 200 });
         } 
         return NextResponse.json({ data: 'Internal server error' }, { status: 500 });
     } catch (error: Error | unknown) {
-        return NextResponse.json({ data: error }, { status: 400 });
+        if(error instanceof Error) {
+            return NextResponse.json({ data: error.message }, { status: 400 });
+        }
     }
 }

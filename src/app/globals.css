@@ -10,6 +10,7 @@
   --secondary: #9FD356;
   --tertiary: #d46f40;
   --error: red;
+  --text-block: #3d3d3d;
 
   --primary-darker: #2B6BBE;
   --secondary-darker: #5b9627;
@@ -59,7 +60,8 @@ body {
 
 .textBlock {
   background: var(--secondary-80);
-  color: var(--foreground);
+  backdrop-filter: blur(8px);
+  color: var(--text-block);
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);

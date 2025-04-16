@@ -7,6 +7,7 @@ import { SessionsPage } from './sessions/SessionsPage';
 import FadingMessage from '@/app/components/FadingMessage';
 import { ClassesPage } from './classes/ClassesPage';
 import SpinningCircle from '@/app/components/SpinningCircle';
+import { InfoPage } from './profilo/InfoPage';
 
 function SideBarButton({text, onClick}:{text:string, onClick?:()=>void}) {
     return (<div><a onClick={onClick}> {text} </a></div>)
@@ -17,15 +18,18 @@ export default function dashboard() {
     //const searchParams = useSearchParams();
     const { data: session, status } = useSession();
     const [content, setContent] = useState(<></>);
+    const [firstLoad, setFirstLoad] = useState(true);
 
     // Per messaggi di errore e successo
     //const type = searchParams.get("type");
     //const message = searchParams.get("message");
- 
     
     if(status === "loading") {
         return <SpinningCircle/>
     } else if (status === "authenticated") {
+        const handleProfiloClick = async () => {
+            setContent(await InfoPage(session.user.id, setContent, session));
+        };
         const handleClassiClick = async () => {
             setContent(await ClassesPage(session.user.id, setContent));
         };
@@ -38,12 +42,21 @@ export default function dashboard() {
             redirect("/logout");
         };
 
+        const setFirstContent = async () => {
+            setContent(await InfoPage(session.user.id, setContent, session))
+            setFirstLoad(false);
+        };
+        if (firstLoad) {
+            setFirstContent()
+        }
+
         return (
             <>
             <FadingMessage/>
             <div className='flex flex-col mx-auto w-3/4 dashboard'>
                 <div className='flex'>
                     <div className='flex flex-col w-1/4' id="sideBar">
+                        <SideBarButton text="Profilo" onClick={handleProfiloClick}></SideBarButton>
                         <SideBarButton text="Classi" onClick={handleClassiClick}></SideBarButton>
                         <SideBarButton text="Sessioni" onClick={handleSessioniClick}></SideBarButton>
                         <SideBarButton text="Logout" onClick={handleLogoutClick}></SideBarButton>
