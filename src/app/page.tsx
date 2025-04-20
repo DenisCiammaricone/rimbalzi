@@ -21,7 +21,7 @@ export default async function Home() {
           </div>}>
         </TextBlock>
         <div className="flex w-1/4 mx-auto m-auto">
-          <Image src="/mascotte.webp" className="rounded-full my-auto mx-auto" alt="Game image" width={200} height={600}></Image>
+          <Image src="/mascotte.png" className="rounded-full my-auto mx-auto" alt="Game image" width={200} height={600}></Image>
         </div>
 
       </div>
