@@ -26,13 +26,13 @@ export async function getTeacherSchoolId(teacher_id: number) {
  * @returns user data from the database 
  */
 export async function getUserFromDb(email: string, password: string) {
-  const res = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  const res = await db.select({id: users.id, email: users.email, password: users.password, name: users.name, group: groups.name}).from(users).leftJoin(groups, eq(groups.id, users.groupId)).where(eq(users.email, email)).limit(1);
   
   if(res.length === 0 || !password_verify(password, res[0].password)) {
     return null;
   }
 
-  return { id: res[0].id.toString(), email: res[0].email, name: res[0].name }
+  return { id: res[0].id.toString(), email: res[0].email, name: res[0].name, group: res[0].group }
 }
 
 /**

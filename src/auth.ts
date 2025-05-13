@@ -1,9 +1,18 @@
-import NextAuth, { AuthError, CredentialsSignin } from "next-auth"
+import NextAuth, { AuthError, CredentialsSignin, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { signInSchema } from "./app/lib/zod"
 import { ZodError } from "zod"
 import { getUserFromDb } from "./actions/users"
-import React from "react"
+
+
+// Extend the User type to include the 'group' property
+declare module "next-auth" {
+  interface User {
+    group?: string;
+  }
+  
+}
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -32,7 +41,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return {
               id: user.id,
               name: user.name,
-              email: user.email
+              email: user.email,
+              group: user.group ?? undefined,
             };
           
         }
@@ -52,6 +62,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.id = user.id
           token.name = user.name
           token.email = user.email
+          token.group = user.group
       }
       return token
     },
@@ -63,6 +74,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 id: token.id as string,
                 name: token.name as string,
                 email: token.email as string,
+                group: token.group as string,
             }
         }
     }

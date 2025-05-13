@@ -2,6 +2,7 @@ import { Board, deleteGuessLevel, GameLevels, loadGuessLevel, resetLevel, ResetL
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from './styles.module.css'
 import Cookies from 'js-cookie';
+import { redirect } from "next/dist/server/api-utils";
 
 export function Game({ sequence, isMeasure, maxObstaclesCount, sessionCode }: { sequence: Sequence, isMeasure: boolean, maxObstaclesCount?: number, sessionCode: string }) {
     const [level, setLevel] = useState(0);
@@ -35,9 +36,10 @@ export function Game({ sequence, isMeasure, maxObstaclesCount, sessionCode }: { 
 
                 if(res.status === 200) {
                     const savedGameData = await res.json();
-
+                    let completedLevels = 0;
                     savedGameData.data.forEach((move: any) => {
                         if(move.action === 'ver_lvl') {
+                            completedLevels++
                             loadGuessLevel(JSON.parse(move.board))
                             //console.log(JSON.parse(move.board).level, Object.values(JSON.parse(move.board).obstacles).length)
                             setLevelObstaclesCounter((prev) => {
@@ -57,6 +59,11 @@ export function Game({ sequence, isMeasure, maxObstaclesCount, sessionCode }: { 
                                 newLevels[move.level] = 0;
                                 return newLevels;
                             })
+                        }
+                        console.log("Completed levels: ", completedLevels)
+                        if(completedLevels === 10 && isMeasure) {
+                            console.log("Redirecting to game over")
+                            document.location.href = '/' + sessionCode + '/gameOver'
                         }
                     })
 
@@ -83,7 +90,7 @@ export function Game({ sequence, isMeasure, maxObstaclesCount, sessionCode }: { 
                 <h2>Livello {currLevel.level}</h2>
             </div>
             { /* ShowPreview deve essere true solo se si vuole mostrare il vero posizionamento degli ostacoli */ }
-            <Board level={currLevel} showPreview={false} session_code={sessionCode} levelObstaclesCounter={levelObstaclesCounter} setLevelObstaclesCounter={setLevelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}/>
+            <Board level={currLevel} is_measure={isMeasure} is_verified={levelVerified[currLevel.level - 1] === 0 ? false : true} showPreview={false} session_code={sessionCode} levelObstaclesCounter={levelObstaclesCounter} setLevelObstaclesCounter={setLevelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}/>
             <div className="flex flex-row gap-4">
                 <ResetLevelButton currentLevel={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified} setLevelObstaclesCounter={setLevelObstaclesCounter}></ResetLevelButton>
                 <VerifyLevelButton lvlNumber={Number(currLevel.level)} sessionCode={sessionCode} isMeasure={isMeasure} levelVerified={levelVerified} setLevelVerified={setLevelVerified} levelObstaclesCounter={levelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}/>
