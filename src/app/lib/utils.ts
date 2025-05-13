@@ -8,3 +8,12 @@ export async function checkForUnauthorizedTeacher(teacher_id: string | null) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     }
 }
+
+export async function isResearcher() {
+    const session = await auth()
+    if(session && session.user && session.user.group?.toLowerCase() === "researcher") {
+        return true
+    } else {
+        return false
+    }
+}
