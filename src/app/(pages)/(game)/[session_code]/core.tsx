@@ -187,10 +187,15 @@ async function verifySequence(sessionCode: string) {
     return verified
 }
 
-async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number, session_code: string, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number) {
+async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: number, col: number, lvlNumber: number, session_code: string, is_verified: boolean, is_measure: boolean, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number) {
     const maxObstacleCount = maxObstaclesCount || 10000
     let oldObstacle = ''
     let newObstacle = ''
+
+    if(is_verified && is_measure) {
+        alert("Non puoi effettuare più modifiche. Il livello è stato già verificato.")
+        return
+    }
     switch (currentTarget.innerHTML) {
         case '/':
             currentTarget.innerHTML = '\\'
@@ -231,7 +236,12 @@ async function cellClick(currentTarget: EventTarget & HTMLDivElement, row: numbe
 }
 
 // Passo arrowClickObj per poter avere la variabile come reference
-async function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, arrowClickObj: {value: number}, sessionCode: string) {
+async function arrowClick(currentTarget: EventTarget & HTMLDivElement, level: Level, is_measure: boolean, is_verified: boolean, arrowClickObj: {value: number}, sessionCode: string) {
+    if(is_verified && is_measure) {
+        alert("Non puoi effettuare più modifiche. Il livello è stato già verificato.")
+        return
+    }
+
     if(parseInt(currentTarget.innerHTML)) {
         return
     } else {
@@ -354,7 +364,7 @@ function checkOutputArrow(inputArrow: string, level: Level): [[number, number], 
     return [ballPosition, direction];
 }
 
-export function Board({ level, showPreview, session_code, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount }: { level: Level, showPreview: boolean, session_code: string, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number}) {
+export function Board({ level, showPreview, session_code, is_verified, is_measure, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount }: { level: Level, showPreview: boolean, session_code: string, is_verified: boolean, is_measure: boolean, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number}) {
     const size: number = Number(level.size) // WARNING: This is a number, not a string
     let arrowClickObj = {value: 0}; // Uso un oggetto così da passare la variabile per reference
 
@@ -377,28 +387,28 @@ export function Board({ level, showPreview, session_code, levelObstaclesCounter,
                             if (ltrElement) {
                                 ltrElement.innerHTML = '&rarr;'
                             }
-                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj, session_code)}>&rarr;</div>
+                            return <div key={index} id={"ltr_" + ltr} className={`${styles.arrow} ${styles.r_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, is_measure, is_verified, arrowClickObj, session_code)}>&rarr;</div>
                         } else if (index % (size + 2) === size + 1) {
                             rtl++
                             const rtlElement = document.getElementById("rtl_" + rtl);
                             if (rtlElement) {
                                 rtlElement.innerHTML = '&larr;';
                             }
-                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj, session_code)}>&larr;</div>
+                            return <div key={index} id={"rtl_" + rtl} className={`${styles.arrow} ${styles.l_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, is_measure, is_verified, arrowClickObj, session_code)}>&larr;</div>
                         } else if (index < size + 2) {
                             utd++
                             const utdElement = document.getElementById("utd_" + utd);
                             if (utdElement) {
                                 utdElement.innerHTML = '&darr;';
                             }
-                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj, session_code)}>&darr;</div>
+                            return <div key={index} id={"utd_" + utd} className={`${styles.arrow} ${styles.d_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, is_measure, is_verified, arrowClickObj, session_code)}>&darr;</div>
                         } else if (index >= (size + 1) * (size + 2)) {
                             dtu++
                             const dtuElement = document.getElementById("dtu_" + dtu);
                             if (dtuElement) {
                                 dtuElement.innerHTML = '&uarr;';
                             }
-                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, arrowClickObj, session_code)}>&uarr;</div>
+                            return <div key={index} id={"dtu_" + dtu} className={`${styles.arrow} ${styles.u_arrow}`} onClick={(e) => arrowClick(e.currentTarget, level, is_measure, is_verified, arrowClickObj, session_code)}>&uarr;</div>
                         }
                         else {
                             if (column < size) {
@@ -415,8 +425,9 @@ export function Board({ level, showPreview, session_code, levelObstaclesCounter,
                             } else {
                                 obstacle = JSON.parse(Cookies.get('guess') || '').levels[level.level - 1].obstacles[row + "_" + column]
                             }
+                            console.log("TEST: ", is_measure, is_verified)
                             return (
-                                <BoardCell key={index} row={row} col={column} lvlNumber={level.level} obstacle={obstacle} preview={showPreview} session_code={session_code} levelObstaclesCounter={levelObstaclesCounter} setLevelObstaclesCounter={setLevelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}></BoardCell>
+                                <BoardCell key={index} row={row} col={column} lvlNumber={level.level} is_verified={is_verified} is_measure={is_measure} obstacle={obstacle} preview={showPreview} session_code={session_code} levelObstaclesCounter={levelObstaclesCounter} setLevelObstaclesCounter={setLevelObstaclesCounter} maxObstaclesCount={maxObstaclesCount}></BoardCell>
                             )
                         }
                     }
@@ -434,7 +445,7 @@ export function Board({ level, showPreview, session_code, levelObstaclesCounter,
  * @param preview true if the cell should draw the obstacle false otherwise
  * @returns drawing of a cell
  */
-function BoardCell({ row, col, lvlNumber, obstacle, preview ,session_code, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount }: { row: number, col: number, lvlNumber: number, obstacle?: string, preview?: boolean, session_code: string, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number }) {
+function BoardCell({ row, col, lvlNumber, obstacle, preview ,session_code, is_verified, is_measure, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount }: { row: number, col: number, lvlNumber: number, obstacle?: string, preview?: boolean, session_code: string, is_verified: boolean, is_measure: boolean, levelObstaclesCounter: number[], setLevelObstaclesCounter: Dispatch<SetStateAction<any[]>>, maxObstaclesCount?: number }) {
     const cell = document.getElementById(row + "_" + col + "_cell")
     if(preview && obstacle){
         if (cell) {
@@ -451,7 +462,7 @@ function BoardCell({ row, col, lvlNumber, obstacle, preview ,session_code, level
         <div
             id={row + "_" + col + "_cell"}
             className={styles.cell}
-            onClick={(e) => cellClick(e.currentTarget, row, col, lvlNumber, session_code, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount)}
+            onClick={(e) => cellClick(e.currentTarget, row, col, lvlNumber, session_code, is_verified, is_measure, levelObstaclesCounter, setLevelObstaclesCounter, maxObstaclesCount)}
         >
             
         {obstacle}
