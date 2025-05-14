@@ -14,7 +14,7 @@ export async function SessionsPage(uid: string = "0", setContent: React.Dispatch
     return (
         <div className="flex flex-col gap-5">
             <button className="positive" onClick={() => setContent(<><NewSession teacherId={uid}></NewSession></>)}>Prenota Sessione</button>
-            <table className="min-w-full divide-y divide-gray-200 ">
+            <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-900">

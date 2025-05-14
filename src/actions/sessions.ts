@@ -6,6 +6,7 @@ import { session_phases, session_states } from "@/app/lib/enums";
 import { eq, and } from "drizzle-orm";
 import { classes } from "@/db/schema/classes";
 import { sessionKeys } from "@/db/schema/sessionKeys";
+import { session_sequences } from "@/db/schema/session_sequences";
 
 /**
  * Create a new session
@@ -125,6 +126,58 @@ export async function getSessionsByTeacherId(teacher_id: string) {
     const res = await db.select({ id: sessions.id, state: sessions.state, code: sessions.code, phase: sessions.phase, details: sessions.details, class_grade: classes.grade, class_section: classes.section, class_id: classes.id }).from(sessions).leftJoin(classes, eq(classes.id, sessions.classId)).where(eq(sessions.userId, tid));
 
     return res;
+}
+
+/**
+ * Get all sessions
+ * @returns all sessions
+ */
+export async function getAllSessions() {
+    const res = await db.select({ 
+        id: sessions.id, 
+        state: sessions.state, 
+        code: sessions.code, 
+        phase: sessions.phase, 
+        details: sessions.details, 
+        class_grade: classes.grade, 
+        class_section: classes.section, 
+        class_id: classes.id,
+        sequence_id: sessions.sequenceId
+    }).from(sessions)
+    .leftJoin(classes, eq(classes.id, sessions.classId));
+
+    return res;
+}
+
+/**
+ * Update a session's sequence ID
+ * @param session_id id of the session to update
+ * @param sequence_id new sequence ID
+ * @returns 1 if the session is updated
+ */
+export async function updateSessionSequenceId(session_id: string, sequence_id: string) {
+    try {
+        const result = await db.update(sessions)
+            .set({ sequenceId: Number(sequence_id) })
+            .where(eq(sessions.id, Number(session_id)))
+            .execute();
+        return result[0].affectedRows;
+    } catch (error: any) {
+        throw new Error(error);
+    }
+}
+
+/**
+ * Get all session sequences
+ * @returns all session sequences
+ */
+export async function getAllSessionSequences() {
+    try {
+        const res = await db.select().from(session_sequences);
+        return res;
+    } catch (error: any) {
+        throw new Error(error);
+    }
 }
 
 export async function getSessionIdByCode(code: string) {

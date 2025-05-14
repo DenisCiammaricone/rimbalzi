@@ -120,12 +120,26 @@ body {
   background-color: var(--background-80);
 }
 
+
 #contentView a{
   font-weight: bold;
   color: var(--primary);
 }
 #contentView a:hover{
   color: var(--secondary);
+}
+
+#fronting {
+  width: 100%;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  padding: 2rem;
+  background-color: var(--background-80);
 }
 
 #logoutDiv {

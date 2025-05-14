@@ -19,6 +19,14 @@ export default function dashboard() {
     const { data: session, status } = useSession();
     const [content, setContent] = useState(<></>);
     const [firstLoad, setFirstLoad] = useState(true);
+    const [isResearcher, setIsResearcher] = useState(false);
+
+    // Check if user is a researcher
+    React.useEffect(() => {
+        if (session?.user?.group?.toLowerCase() === "researcher") {
+            setIsResearcher(true);
+        }
+    }, [session]);
 
     // Per messaggi di errore e successo
     //const type = searchParams.get("type");
@@ -59,6 +67,9 @@ export default function dashboard() {
                         <SideBarButton text="Profilo" onClick={handleProfiloClick}></SideBarButton>
                         <SideBarButton text="Classi" onClick={handleClassiClick}></SideBarButton>
                         <SideBarButton text="Sessioni" onClick={handleSessioniClick}></SideBarButton>
+                        {isResearcher && (
+                            <SideBarButton text="Gestione Sessioni" onClick={() => { window.location.href = '/sessions'; }}></SideBarButton>
+                        )}
                         <SideBarButton text="Logout" onClick={handleLogoutClick}></SideBarButton>
                     </div>
                     <div className='w-3/4' id="contentView">{content}</div>

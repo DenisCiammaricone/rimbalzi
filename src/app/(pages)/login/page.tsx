@@ -27,7 +27,7 @@ export default function LoginPage() {
                     event.preventDefault();
                     const formData = new FormData(event.currentTarget);
                     const data = {
-                        redirect: false,
+                        redirect: false as const,
                         email: formData.get('email'),
                         password: formData.get('password')
                     };
