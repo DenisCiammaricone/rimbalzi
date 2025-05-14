@@ -8,7 +8,7 @@ export default async function NavBar(){
         <div id="navBarLeft">
           <ul className="flex gap-5">
             <li><a href="/">Home</a></li>
-            <li><a href="/progetto">Il progetto</a></li>
+              {/* <li><a href="/progetto">Il progetto</a></li> */}
             <li><a href="/storia">La storia</a></li>
             <li><a href="/gioco">Il gioco</a></li>
             <li><a href="/documenti">Documenti</a></li>

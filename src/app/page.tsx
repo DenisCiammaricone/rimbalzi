@@ -16,8 +16,9 @@ export default async function Home() {
             <br></br>
             <p className="text-lg">
               <b>Le attività di programmazione migliorano le capacità di ragionamento logico degli studenti della scuola primaria? In quale misura?</b><br></br><br></br>
-              Questa è una attività sperimentale promossa dal laboratotio nazionale "Informatica e Scuola" del CINI, che ha sviluppato un rompicapo ambientato in un mondo magico  e tarato sugli alunni della scuola primaria per valutarne le capacità di ragionamento logico.<br></br><br></br>
-              L'attività, proposta a tutte le scuole che desiderassero aderire, è stata specificamente progettata per garantire che tutti gli studenti possano partire dalla stessa base in termini di difficoltà e comprensione. </p>
+              Questa è una attività sperimentale promossa dai gruppi di ricerca delle università di <b>Roma Tor Vergata</b> e dell'<b>Aquila</b>, afferenti al <i><b>Laboratorio Nazionale "Informatica e Scuola"</b> del CINI</i>. 
+              Questa attività, avviata nell'ambito del progetto <b>PINI - “Apprendimento dell'informatica"</b>, ha sviluppato un rompicapo ambientato in un mondo magico  e tarato sugli alunni della scuola primaria per valutarne le capacità di ragionamento logico.<br></br><br></br>
+              La proposta, aperta a tutte le scuole che desiderassero aderire, è stata specificamente progettata per garantire che tutti gli studenti possano partire dalla stessa base in termini di difficoltà e comprensione. </p>
           </div>}>
         </TextBlock>
         <div className="flex w-1/4 mx-auto m-auto">
