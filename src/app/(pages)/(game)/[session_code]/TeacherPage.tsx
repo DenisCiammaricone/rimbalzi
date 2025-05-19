@@ -1,5 +1,5 @@
 import SpinningCircle from "@/app/components/SpinningCircle"
-import { useParams } from "next/navigation"
+import { redirect, useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export function TeacherPage({session_code}:{session_code: string}) {
@@ -136,12 +136,20 @@ export function TeacherPage({session_code}:{session_code: string}) {
         return <SpinningCircle />
     }
 
+    const redirectHome = async () => {
+                redirect("/");
+            };
+
     return (
         <>
         <div>Codice Sessione: {session_code}</div>
         <div className="flex flex-col items-center justify-center h-screen ">
-            <h1 className="font-bold text-4xl mb-10">Dashboard Insegnante</h1>
+            <div className="flex flex-row items-center justify-center gap-10 mb-5">
+                <span className="material-symbols-outlined" onClick={redirectHome}>home</span>
+                <h1 className="font-bold text-4xl">Dashboard Insegnante</h1>
+            </div>
             <table className="table-auto w-128 mb-5 border-spacing-5 bg-gray-900/75 rounded-lg shadow-lg p-4 text-white p-6">
+            
                 <thead>
                     <tr>
                         <th className="w-32">Codice</th>

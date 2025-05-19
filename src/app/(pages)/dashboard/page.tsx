@@ -35,6 +35,9 @@ export default function dashboard() {
     if(status === "loading") {
         return <SpinningCircle/>
     } else if (status === "authenticated") {
+        const handleHomeClick = async () => {
+            redirect("/");
+        };
         const handleProfiloClick = async () => {
             setContent(await InfoPage(session.user.id, setContent, session));
         };
@@ -64,6 +67,7 @@ export default function dashboard() {
             <div className='flex flex-col mx-auto w-3/4 dashboard'>
                 <div className='flex'>
                     <div className='flex flex-col w-1/4' id="sideBar">
+                        <SideBarButton text="Home" onClick={handleHomeClick}></SideBarButton>
                         <SideBarButton text="Profilo" onClick={handleProfiloClick}></SideBarButton>
                         <SideBarButton text="Classi" onClick={handleClassiClick}></SideBarButton>
                         <SideBarButton text="Sessioni" onClick={handleSessioniClick}></SideBarButton>
