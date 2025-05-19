@@ -24,7 +24,7 @@ function negateDirection(direction: 'ltr' | 'rtl' | 'utd' | 'dtu'): string {
     }
 }
 
-export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified, levelObstaclesCounter, maxObstaclesCount}:{lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: Number[], levelObstaclesCounter: number[], maxObstaclesCount?: number} ) {
+export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVerified, levelVerified, levelObstaclesCounter, maxObstaclesCount, setLevel}:{lvlNumber: number, sessionCode: string, isMeasure: boolean, setLevelVerified: Dispatch<SetStateAction<any[]>>, levelVerified: Number[], levelObstaclesCounter: number[], maxObstaclesCount?: number, setLevel: Dispatch<SetStateAction<number>>}) {
     const maxObstacleCount = maxObstaclesCount || 10000
     
     if (isMeasure && (levelVerified[lvlNumber-1] === 1 || levelVerified[lvlNumber-1] === -1)) {
@@ -54,11 +54,7 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
     return <button id="gameVerifyButton" className={styles.gameButton + ' ' + styles.positive} onClick={async () => {
         const res = await check();
         if(isMeasure) {
-            if(res) {
-                alert('Livello Verificato :D')
-            } else {
-                alert('Livello Verificato :D')
-            }
+            alert('Livello Verificato :D')
         } else {
             if(res) {
                 alert('Livello corretto :D')
@@ -66,6 +62,8 @@ export function VerifyLevelButton({lvlNumber, sessionCode, isMeasure, setLevelVe
                 alert('Hai commesso qualche errore :(')
             }
         }
+        
+        setLevel(lvlNumber % 10) // lvlNumber is 1-indexed
     }}>{isMeasure ? 'Conferma' : 'Verifica Livello'}</button> 
 
 }
