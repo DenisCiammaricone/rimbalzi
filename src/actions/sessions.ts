@@ -7,6 +7,7 @@ import { eq, and } from "drizzle-orm";
 import { classes } from "@/db/schema/classes";
 import { sessionKeys } from "@/db/schema/sessionKeys";
 import { session_sequences } from "@/db/schema/session_sequences";
+import { default_sequences } from "@/db/schema/default_sequences";
 
 /**
  * Create a new session
@@ -36,9 +37,11 @@ export async function createNewSession(class_grade: string, class_section: strin
         throw "Class already has a session in this phase"
     }
 
+    const default_sequence = await getSessionDefaultSequenceCode(Number(class_grade), session_phase);
+    console.log("Default sequence: ", default_sequence);
     try {
         //TODO: Sequence Id should be assigned based on the phase and class
-        const res = await db.insert(sessions).values({ phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId), sequenceId: 1 }).$returningId().execute();
+        const res = await db.insert(sessions).values({ phase: session_phase, code: code, details: details, userId: Number(teacher_id), classId: Number(classId), sequenceId: default_sequence }).$returningId().execute();
         return res[0].id;
     } catch (error: any) {
         throw new Error(error);
@@ -258,4 +261,12 @@ export async function isSessionFinished(session_code: string) {
 export async function getSessionStatus(session_code: string) {
     const res = await db.select({ state: sessions.state }).from(sessions).where(eq(sessions.code, session_code));
     return res[0].state;
+}
+
+export async function getSessionDefaultSequenceCode(grade: number, phase: string) {
+    const res = await db.select({ id: default_sequences.sequenceId }).from(default_sequences).where(and(eq(default_sequences.grade, grade), eq(default_sequences.phase, phase))).limit(1);
+    if(res.length === 0) {
+        throw new Error("Default sequence not found");
+    }
+    return res[0].id;
 }
