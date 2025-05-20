@@ -1,0 +1,1 @@
+ALTER TABLE `default_sequences` ADD CONSTRAINT `grade_phase_unique` UNIQUE(`grade`,`phase`);

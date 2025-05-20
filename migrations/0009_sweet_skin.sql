@@ -1,0 +1,1 @@
+ALTER TABLE `sessions` ADD `isTest` tinyint DEFAULT 0 NOT NULL;

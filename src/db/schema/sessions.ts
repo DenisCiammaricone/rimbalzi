@@ -1,4 +1,4 @@
-import { boolean, int, mysqlEnum, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, int, mysqlEnum, mysqlTable, timestamp, tinyint, varchar } from "drizzle-orm/mysql-core";
 import { users } from "./users";
 import { classes } from "./classes";
 import { session_sequences } from "./session_sequences";
@@ -12,6 +12,7 @@ export const sessions = mysqlTable('sessions', {
     createdAt: timestamp('created_at').notNull().defaultNow(),
     startedAt: timestamp('started_at'),
     endedAt: timestamp('ended_at'),
+    isTest: tinyint('isTest').notNull().default(0),
     userId: int('user_id').notNull().references(() => users.id),
     classId: int('class_id').notNull().references(() => classes.id),
     sequenceId: int('sequence_id').notNull().default(1).references(() => session_sequences.id),
