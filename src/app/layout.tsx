@@ -9,6 +9,7 @@ export default function RootLayout({
   return (
     <html lang="it">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,600,0,0&icon_names=home" />
       </head>
       <body>        

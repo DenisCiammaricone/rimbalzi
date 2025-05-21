@@ -1,0 +1,19 @@
+#navBar {
+  background: var(--background);
+  color: var(--foreground);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media only screen and (max-width: 768px) {
+  
+}
+
+@media only screen and (min-width: 992px) {
+
+}
+
+@media only screen and (min-width: 1200px) {
+
+}

@@ -62,24 +62,24 @@ export default function dashboard() {
         }
 
         return (
-            <>
-            <FadingMessage/>
-            <div className='flex flex-col mx-auto w-3/4 dashboard'>
-                <div className='flex'>
-                    <div className='flex flex-col w-1/4' id="sideBar">
-                        <SideBarButton text="Home" onClick={handleHomeClick}></SideBarButton>
-                        <SideBarButton text="Profilo" onClick={handleProfiloClick}></SideBarButton>
-                        <SideBarButton text="Classi" onClick={handleClassiClick}></SideBarButton>
-                        <SideBarButton text="Sessioni" onClick={handleSessioniClick}></SideBarButton>
-                        {isResearcher && (
-                            <SideBarButton text="Gestione Sessioni" onClick={() => { window.location.href = '/sessions'; }}></SideBarButton>
-                        )}
-                        <SideBarButton text="Logout" onClick={handleLogoutClick}></SideBarButton>
+            <div>
+                <FadingMessage/>
+                <div id="dashboard">
+                    <div className='flex'>
+                        <div className='flex flex-col w-1/4' id="sideBar">
+                            <SideBarButton text="Home" onClick={handleHomeClick}></SideBarButton>
+                            <SideBarButton text="Profilo" onClick={handleProfiloClick}></SideBarButton>
+                            <SideBarButton text="Classi" onClick={handleClassiClick}></SideBarButton>
+                            <SideBarButton text="Sessioni" onClick={handleSessioniClick}></SideBarButton>
+                            {isResearcher && (
+                                <SideBarButton text="Gestione Sessioni" onClick={() => { window.location.href = '/sessions'; }}></SideBarButton>
+                            )}
+                            <SideBarButton text="Logout" onClick={handleLogoutClick}></SideBarButton>
+                        </div>
+                        <div className='' id="contentView">{content}</div>
                     </div>
-                    <div className='w-3/4' id="contentView">{content}</div>
                 </div>
             </div>
-            </>
         )
     } else if (status === "unauthenticated") {
         redirect("/login");

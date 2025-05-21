@@ -1,0 +1,35 @@
+#dashboard {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+#contentView {
+        width: 100%; 
+    }
+
+@media only screen and (max-width: 768px) {
+    #dashboard {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    } 
+}
+
+@media only screen and (min-width: 992px) {
+    #dashboard {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    } 
+}
+
+@media only screen and (min-width: 1200px) {
+    #dashboard {
+        max-width: 75%;
+        margin-left: 0;
+        margin-right: 0;
+        margin-left: auto;
+        margin-right: auto;    
+    } 
+}
