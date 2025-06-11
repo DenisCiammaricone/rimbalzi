@@ -5,6 +5,7 @@ import { getSessionsByTeacherId } from '@/actions/sessions';
 import { getClassesByGradeSectionAndSchool } from '@/actions/classes';
 import { getTeacherSchoolId } from '@/actions/users';
 import { checkForUnauthorizedTeacher } from '@/app/lib/utils';
+import { auth } from '@/auth';
 
 //TODO: Fix all the nested try catch blocks
 export async function POST(req: Request) {
@@ -76,7 +77,7 @@ export async function PUT(req: Request) {
         return NextResponse.json({ 'error': 'Invalid request', 'data': e}, { status: 400 });
     }
 }
-
+/*
 export async function DELETE(req: Request) {
     try {
         const body = await req.json();
@@ -92,3 +93,22 @@ export async function DELETE(req: Request) {
         }
     }
 }
+*/
+
+export const DELETE = auth(async function DELETE(req) {
+    if (!req.auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    try {
+        const { searchParams } = new URL(req.url);
+        checkForUnauthorizedTeacher(req.auth.user.id);
+
+        const res = await deleteSession(searchParams.get('session_id') || '');
+        if (res) {
+            return NextResponse.json({ data: 'Ok' }, { status: 200 });
+        }
+        return NextResponse.json({ data: 'Internal server error' }, { status: 500 });
+    } catch (error: any) {
+        if (error instanceof Error) {
+            return NextResponse.json({ data: error.message }, { status: 400 });
+        }
+    }
+})

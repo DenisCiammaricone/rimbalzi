@@ -53,15 +53,11 @@ export function EditSession({ teacherId, sessionData }: { teacherId:string, sess
                 <div className="flex space-x-4">
                     
                     <ConfirmCancelModal openButtonText={"Elimina"} openButtonStyle="negative" title={"Elimina Sessione"} message={"Sei sicuro di voler eliminare la sessione? L'operazione è irreversibile"} onOk={async () =>  {
-                        const res = await fetch('/api/session', {
+                        const res = await fetch('/api/session?session_id=' + sessionData.code, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                session_code: sessionData.code,
-                                teacher_id: teacherId,
-                            })
+                            }
                         })
                         if(res.status === 400) {
                             const data = await res.json();

@@ -3,6 +3,7 @@ import { checkForUnauthorizedTeacher } from '@/app/lib/utils';
 import { newClassSchema, updateClassSchema } from '@/app/lib/zod';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
+import { auth } from '@/auth';
 
 export async function POST(req: Request) {
     try {
@@ -54,10 +55,14 @@ export async function PUT(req: Request) {
     }
 }
 
+/*
 export async function DELETE(req: Request) {
     try {
         const body = await req.json();
+        const cookieStore = await cookies()
+        const teacher_id = cookieStore.get('id');
         checkForUnauthorizedTeacher(body.teacher_id);
+        
         const res = await deleteClass(body.class_id);
         if(res) {
             return NextResponse.json({ data: 'Ok' }, { status: 200 });
@@ -69,3 +74,22 @@ export async function DELETE(req: Request) {
         }
     }
 }
+*/
+
+export const DELETE = auth(async function DELETE(req) {
+    if (!req.auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    try {
+        const { searchParams } = new URL(req.url);
+        checkForUnauthorizedTeacher(req.auth.user.id);
+
+        const res = await deleteClass(searchParams.get('class_id') || '');
+        if (res) {
+            return NextResponse.json({ data: 'Ok' }, { status: 200 });
+        }
+        return NextResponse.json({ data: 'Internal server error' }, { status: 500 });
+    } catch (error: any) {
+        if (error instanceof Error) {
+            return NextResponse.json({ data: error.message }, { status: 400 });
+        }
+    }
+})

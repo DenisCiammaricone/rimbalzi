@@ -1,5 +1,5 @@
 import { getSequence } from "@/actions/game";
-import { getSessionStatus, isSessionStarted } from "@/actions/sessions";
+import { getSessionStatus } from "@/actions/sessions";
 import { session_states } from "@/app/lib/enums";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";

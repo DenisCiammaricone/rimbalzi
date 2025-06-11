@@ -1,0 +1,544 @@
+openapi: 3.0.0
+info:
+  title: Rimbalzi API
+  description: API documentation for Rimbalzi application
+  version: 0.1.0
+servers:
+  - url: https://labinformaticaescuola.it/
+    description: Production server
+  - url: http://localhost:3000/
+    description: Local development server
+paths:
+  /api/auth/[...nextauth]:
+    get:
+      summary: NextAuth handler (login, session, etc.)
+      security: []
+      responses:
+        '200':
+          description: Auth handler response
+    post:
+      summary: NextAuth handler (login, session, etc.)
+      security: []
+      responses:
+        '200':
+          description: Auth handler response
+  /api/register:
+    post:
+      summary: User registration
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                surname: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+                schoolId: { type: string }
+              required: [name, surname, email, password, schoolId]
+      responses:
+        '200': { description: Ok }
+        '400': { description: Invalid input }
+  /api/schools:
+    get:
+      summary: Get all schools
+      security: []
+      responses:
+        '200': { description: List of schools }
+        '400': { description: Invalid request }
+  /api/class:
+    get:
+      summary: Get all classes for a teacher
+      parameters:
+        - name: uid
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: List of classes }
+        '400': { description: Missing teacher_id }
+    post:
+      summary: Create a new class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_grade: { type: string }
+                class_section: { type: string }
+                female_number: { type: integer }
+                male_number: { type: integer }
+                details: { type: string }
+                teacher_id: { type: string }
+              required: [class_grade, class_section, female_number, male_number, teacher_id]
+      responses:
+        '200': { description: Ok }
+        '400': { description: Invalid input }
+    put:
+      summary: Update a class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_id: { type: string }
+                female_number: { type: integer }
+                male_number: { type: integer }
+                details: { type: string }
+                teacher_id: { type: string }
+              required: [class_id, teacher_id]
+      responses:
+        '200': { description: Ok }
+        '400': { description: Invalid input }
+    delete:
+      summary: Delete a class
+      parameters:
+        - name: class_id
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '400': { description: Missing or invalid parameters }
+  /api/session:
+    get:
+      summary: Get all sessions for a teacher
+      parameters:
+        - name: uid
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: List of sessions }
+        '400': { description: Missing teacher_id }
+    post:
+      summary: Create a new session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_grade: { type: string }
+                class_section: { type: string }
+                session_phase: { type: string }
+                teacher_id: { type: string }
+                details: { type: string }
+              required: [class_grade, class_section, session_phase, teacher_id]
+      responses:
+        '200': { description: Ok }
+        '400': { description: Invalid input }
+    put:
+      summary: Update a session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                teacher_id: { type: string }
+                class_id: { type: string }
+                session_code: { type: string }
+                session_phase: { type: string }
+                details: { type: string }
+                old_session_phase: { type: string }
+              required: [teacher_id, class_id, session_code, session_phase, old_session_phase]
+      responses:
+        '200': { description: Ok }
+        '400': { description: Invalid input }
+    delete:
+      summary: Delete a session
+      parameters:
+        - name: session_id
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '400': { description: Missing or invalid parameters }
+  /api/sessions:
+    get:
+      summary: Get all sessions and sequences of a teacher (Researcher)
+      parameters:
+        - name: uid
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: List of sessions and sequences }
+        '400': { description: Missing user ID }
+    # Andrebbe spostato in un altro endpoint
+    patch:
+      summary: Update session sequence of a teacher (Researcher)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id: { type: string }
+                session_id: { type: string }
+                sequence_id: { type: string }
+              required: [user_id, session_id, sequence_id]
+      responses:
+        '200': { description: Ok }
+        '400': { description: Invalid input }
+  /api/researchers/test:
+    get:
+      summary: Test endpoint for researchers
+      responses:
+        '200': { description: Ok }
+        '401': { description: Unauthorized }
+  /api/game/verifyPupil:
+    post:
+      summary: Verify pupil code exists for certain session
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pupil_code: { type: string }
+                session_code: { type: string }
+              required: [pupil_code, session_code]
+      responses:
+        '200': { description: Pupil code found }
+        '501': { description: Not implemented }
+  /api/game/verifyLevelMask:
+    get:
+      summary: Checks if level mask is valid
+      security: []
+      parameters:
+        - name: session
+          in: query
+          required: true
+          schema: { type: string }
+        - name: lvl
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '500': { description: Pupil code is missing }
+  /api/game/verifySequenceMask:
+    get:
+      summary: Checks if all levels of a sequence have valid masks
+      security: []
+      parameters:
+        - name: session
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '400': { description: Missing cookies }
+  /api/game/sessionLevelsOutcome:
+    get:
+      summary: Returns a list of all level verificattions outcomes (relative to a user) for a session 
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '401': { description: Unauthorized }
+        '404': { description: Session not found }
+  /api/game/sequence:
+    get:
+      summary: Returns the game sequence for a session (You must be pupil ATM)
+      security: []
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '400': { description: Codice pupil mancante o sessione non valida }
+        '500': { description: Errore sconosciuto }
+  /api/game/savedGame:
+    get:
+      summary: Get saved game data for pupil
+      security: [] # Deve essere presente il pupil code
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '400': { description: Pupil code o session_code mancanti }
+  /api/game/logResetLevel:
+    post:
+      summary: Log level reset
+      security: [] # Deve essere presente il pupil code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lvlNum: { type: integer }
+                session_code: { type: string }
+              required: [lvlNum, session_code]
+      responses:
+        '200': { description: Ok }
+        '500': { description: Error }
+  /api/game/logReleaseShot:
+    post:
+      summary: Log release shot
+      security: [] # Deve essere presente il pupil code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                level: { type: integer }
+                from: { type: string }
+                to: { type: string }
+                session_code: { type: string }
+              required: [level, from, to, session_code]
+      responses:
+        '200': { description: Ok }
+        '500': { description: Error }
+  /api/game/logObstacleChange:
+    post:
+      summary: Log board interaction
+      security: [] # Deve essere presente il pupil code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                level: { type: integer }
+                x: { type: integer }
+                y: { type: integer }
+                starting_obstacle: { type: string }
+                new_obstacle: { type: string }
+                session_code: { type: string }
+              required: [level, x, y, starting_obstacle, new_obstacle, session_code]
+      responses:
+        '200': { description: Ok }
+        '500': { description: Error }
+  /api/game/logLoadGame:
+    post:
+      summary: Log game page load
+      security: [] # Deve essere presente il pupil code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_code: { type: string }
+              required: [session_code]
+      responses:
+        '200': { description: Ok }
+        '500': { description: Error }
+  /api/game/logChangeLevel:
+    post:
+      summary: Log level switch
+      security: [] # Deve essere presente il pupil code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from: { type: integer }
+                to: { type: integer }
+                session_code: { type: string }
+              required: [from, to, session_code]
+      responses:
+        '200': { description: Ok }
+        '500': { description: Error }
+  /api/game/isMeasure:
+    get:
+      summary: Checks if session is a measure session
+      security: []
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '404': { description: Session not found }
+  /api/game/verifySequence:
+    get:
+      summary: Veriify sequence for a session
+      security: []
+      parameters:
+        - name: session
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '400': { description: Missing cookies }
+  /api/game/verifyLevel:
+    get:
+      summary: Verify level for a session
+      security: []
+      parameters:
+        - name: session
+          in: query
+          required: true
+          schema: { type: string }
+        - name: lvl
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+  /api/game/pupilFinishTime:
+    get:
+      summary: Get certain pupil finish time (relative to session)
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+        - name: pupil_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '401': { description: Unauthorized }
+        '404': { description: Session not found }
+  /api/game:
+    get:
+      summary: Checks if teacher is authorized to access certain game dashboard
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '302': { description: Ok }
+        '401': { description: Unauthorized }
+        '404': { description: Session not found }
+  /api/session/status:
+    get:
+      summary: Get session status
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '401': { description: Session not started }
+        '400': { description: Session code missing }
+  /api/session/started:
+    get:
+      summary: Checks if session has started
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '401': { description: Not started }
+        '400': { description: Session code missing }
+  /api/session/ended:
+    get:
+      summary: Checks if session has ended
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '401': { description: Not ended }
+        '400': { description: Session code missing }
+  /api/session/start:
+    post:
+      summary: Starts a session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_code: { type: string }
+              required: [session_code]
+      responses:
+        '200': { description: Ok }
+        '401': { description: Unauthorized }
+        '500': { description: Error }
+  /api/session/end:
+    post:
+      summary: Ends a session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_code: { type: string }
+              required: [session_code]
+      responses:
+        '200': { description: Ok }
+        '401': { description: Unauthorized }
+        '500': { description: Error }
+  /api/session/default:
+    get:
+      summary: Get default sequence for a certaing grade and phase
+      parameters:
+        - name: grade
+          in: query
+          required: true
+          schema: { type: string }
+        - name: phase
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '400': { description: Missing parameters }
+        '404': { description: Not found }
+  /api/session/keys:
+    get:
+      summary: Get all keys (pupil_code) for a session
+      parameters:
+        - name: session_code
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Ok }
+        '500': { description: Error }
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - BearerAuth: []

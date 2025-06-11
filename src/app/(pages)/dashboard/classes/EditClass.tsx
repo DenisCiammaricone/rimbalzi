@@ -46,15 +46,11 @@ export function EditClass({ classId, classData }: { classId: string, classData: 
                     
                     
                     <ConfirmCancelModal openButtonText={"Elimina"} openButtonStyle="negative" title={"Eliminazione Aula"} message={"Sei sicuro di voler cancellare questa aula? L'operazione è irreversibile"} onOk={async () =>  {
-                        const res = await fetch('/api/class', {
+                        const res = await fetch('/api/class?class_id=' + classId, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                class_id: classId,
-                                teacher_id: classData.teacherId
-                            })
+                            }
                         })
                         if(await res.status === 400) {
                             const data = await res.json();
