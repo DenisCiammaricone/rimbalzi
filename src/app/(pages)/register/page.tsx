@@ -1,5 +1,5 @@
 'use client'
-import ErrorText from "@/app/components/ErrorText";
+import ErrorText from "@/components/ErrorText";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";

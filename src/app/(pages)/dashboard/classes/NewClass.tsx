@@ -1,4 +1,4 @@
-import ErrorText from "@/app/components/ErrorText";
+import ErrorText from "@/components/ErrorText";
 import { useState } from "react";
 import { redirect } from "next/navigation";
 

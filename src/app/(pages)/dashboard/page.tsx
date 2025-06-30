@@ -4,9 +4,9 @@ import { redirect, useSearchParams } from 'next/navigation'
 import React from 'react';
 import { useState } from 'react';
 import { SessionsPage } from './sessions/SessionsPage';
-import FadingMessage from '@/app/components/FadingMessage';
+import FadingMessage from '@/components/FadingMessage';
 import { ClassesPage } from './classes/ClassesPage';
-import SpinningCircle from '@/app/components/SpinningCircle';
+import SpinningCircle from '@/components/SpinningCircle';
 import { InfoPage } from './profilo/InfoPage';
 
 function SideBarButton({text, onClick}:{text:string, onClick?:()=>void}) {

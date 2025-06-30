@@ -1,4 +1,4 @@
-import ErrorText from "@/app/components/ErrorText";
+import ErrorText from "@/components/ErrorText";
 import { session_phases, session_phases_labels } from "@/lib/enums";
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";

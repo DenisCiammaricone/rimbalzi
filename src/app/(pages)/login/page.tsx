@@ -1,5 +1,5 @@
 'use client'
-import ErrorText from '@/app/components/ErrorText';
+import ErrorText from '@/components/ErrorText';
 import { signIn, useSession } from "next-auth/react";
 import React, { Suspense, useState } from 'react';
 import { redirect } from 'next/navigation';
