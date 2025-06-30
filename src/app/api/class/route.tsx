@@ -1,6 +1,6 @@
 import { createNewClass, deleteClass, getClassesByTeacherId, updateClass } from '@/actions/classes';
-import { checkForUnauthorizedTeacher } from '@/app/lib/utils';
-import { newClassSchema, updateClassSchema } from '@/app/lib/zod';
+import { checkForUnauthorizedTeacher } from '@/lib/utils';
+import { newClassSchema, updateClassSchema } from '@/lib/zod';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { auth } from '@/auth';

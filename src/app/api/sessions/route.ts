@@ -1,6 +1,6 @@
 import { getAllSessions, getAllSessionSequences, updateSessionSequenceId } from '@/actions/sessions';
 import { NextResponse } from 'next/server';
-import { checkForResearcherAccess } from '@/app/lib/utils';
+import { checkForResearcherAccess } from '@/lib/utils';
 
 export async function GET(req: Request) {
     try {

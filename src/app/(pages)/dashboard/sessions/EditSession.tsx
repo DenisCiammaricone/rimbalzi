@@ -1,6 +1,6 @@
 import ConfirmCancelModal from "@/app/components/ConfirmCancelModal";
 import ErrorText from "@/app/components/ErrorText";
-import { session_phases, session_phases_labels } from "@/app/lib/enums";
+import { session_phases, session_phases_labels } from "@/lib/enums";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 

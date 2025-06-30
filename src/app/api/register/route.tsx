@@ -1,5 +1,5 @@
 import { registerUser } from '@/actions/users';
-import { registerSchema } from '@/app/lib/zod';
+import { registerSchema } from '@/lib/zod';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {

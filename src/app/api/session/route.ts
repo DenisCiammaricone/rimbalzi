@@ -1,10 +1,10 @@
 import { createNewSession, createSessionKeys, deleteSession, updateSession } from '@/actions/sessions';
-import { newSessionSchema, updateSessionSchema } from '@/app/lib/zod';
+import { newSessionSchema, updateSessionSchema } from '@/lib/zod';
 import { NextResponse } from 'next/server';
 import { getSessionsByTeacherId } from '@/actions/sessions';
 import { getClassesByGradeSectionAndSchool } from '@/actions/classes';
 import { getTeacherSchoolId } from '@/actions/users';
-import { checkForUnauthorizedTeacher } from '@/app/lib/utils';
+import { checkForUnauthorizedTeacher } from '@/lib/utils';
 import { auth } from '@/auth';
 
 //TODO: Fix all the nested try catch blocks

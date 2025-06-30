@@ -1,6 +1,6 @@
 import NextAuth, { AuthError, CredentialsSignin, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { signInSchema } from "./app/lib/zod"
+import { signInSchema } from "./lib/zod"
 import { ZodError } from "zod"
 import { getUserFromDb } from "./actions/users"
 

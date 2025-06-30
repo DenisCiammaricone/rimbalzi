@@ -1,5 +1,5 @@
 import { getSessionIdByCode, getSessionsByTeacherId, isTeacherOwnerOfSession, startSession } from "@/actions/sessions";
-import { checkForUnauthorizedTeacher } from "@/app/lib/utils";
+import { checkForUnauthorizedTeacher } from "@/lib/utils";
 import { auth } from "@/auth";
 
 export async function POST(req: Request){

@@ -1,6 +1,6 @@
 import { getSequence } from "@/actions/game";
 import { getSessionStatus } from "@/actions/sessions";
-import { session_states } from "@/app/lib/enums";
+import { session_states } from "@/lib/enums";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 

@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { isResearcher } from "@/app/lib/utils";
+import { isResearcher } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: Request) {

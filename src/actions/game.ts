@@ -1,4 +1,4 @@
-import { db } from "@/app/lib/db/db";
+import { db } from "@/lib/db/db";
 import { games } from "@/db/schema/games";
 import { session_sequences } from "@/db/schema/session_sequences";
 import { sessionKeys } from "@/db/schema/sessionKeys";

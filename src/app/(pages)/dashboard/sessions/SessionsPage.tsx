@@ -1,4 +1,4 @@
-import { session_phases, session_phases_labels } from "@/app/lib/enums";
+import { session_phases, session_phases_labels } from "@/lib/enums";
 import { EditSession } from "./EditSession";
 import { NewSession } from "./NewSession";
 

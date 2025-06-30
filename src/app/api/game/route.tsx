@@ -1,5 +1,5 @@
 import { getSessionTeacher, isSessionCodeValid } from "@/actions/game";
-import { checkForUnauthorizedTeacher } from "@/app/lib/utils";
+import { checkForUnauthorizedTeacher } from "@/lib/utils";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 

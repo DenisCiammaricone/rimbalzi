@@ -1,4 +1,4 @@
-import { db } from "@/app/lib/db/db";
+import { db } from "@/lib/db/db";
 import { group_permissions } from "@/db/schema/group_permissions";
 import { permissions } from "@/db/schema/permissions";
 import { eq } from "drizzle-orm";

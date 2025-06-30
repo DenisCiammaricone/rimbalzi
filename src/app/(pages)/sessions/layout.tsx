@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { isResearcher } from "@/app/lib/utils";
+import { isResearcher } from "@/lib/utils";
 import { redirect } from "next/navigation";
 
 export default async function SessionsLayout({

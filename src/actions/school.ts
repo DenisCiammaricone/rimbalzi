@@ -1,4 +1,4 @@
-import { db } from "@/app/lib/db/db";
+import { db } from "@/lib/db/db";
 import { schools } from "@/db/schema/schools";
 
 /**

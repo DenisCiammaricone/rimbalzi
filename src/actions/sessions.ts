@@ -1,8 +1,8 @@
-import { db } from "@/app/lib/db/db";
+import { db } from "@/lib/db/db";
 import { sessions } from "@/db/schema/sessions";
 import { getClassById, getClassesByGradeSectionAndSchool } from "./classes";
 import { getTeacherSchoolId } from "./users";
-import { session_phases, session_states } from "@/app/lib/enums";
+import { session_phases, session_states } from "@/lib/enums";
 import { eq, and } from "drizzle-orm";
 import { classes } from "@/db/schema/classes";
 import { sessionKeys } from "@/db/schema/sessionKeys";
