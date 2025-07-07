@@ -9,7 +9,7 @@ export default async function Home() {
     <div id="home">
       <NavBarTop></NavBarTop>
       <NavBar></NavBar>
-      <div className="flex mx-auto w-auto mt-20">
+      <div className="flex mx-auto mt-20 w-3/4">
         <TextBlock data={
           <div>
             <h1 className="text-5xl mt-0">Rimbalzi di Luce</h1>
@@ -22,7 +22,7 @@ export default async function Home() {
           </div>}>
         </TextBlock>
         <div className="flex w-1/4 mx-auto m-auto">
-          <Image src="/mascotte.png" className="rounded-full my-auto mx-auto" alt="Game image" width={200} height={600}></Image>
+          <Image src="/mascotte.png" className="rounded-full my-auto mx-auto" alt="Game image" width={300} height={300}></Image>
         </div>
 
       </div>

@@ -68,6 +68,17 @@ body {
   opacity: 1;
 }
 
+.topNavBarElement {
+  font-size: 1rem;
+  color: var(--foreground);
+  background: var(--background-80);
+  padding: .25rem;
+  backdrop-filter: blur(8px);
+  border-radius: 0.6rem;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+}
+
 
 .loginButton:hover {
   color: var(--secondary);
