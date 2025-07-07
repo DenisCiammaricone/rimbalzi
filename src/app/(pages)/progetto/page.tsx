@@ -1,6 +1,6 @@
 import Image from "next/image";
-import NavBar from "@/app/components/NavBar";
-import TextBlock from "@/app/components/TextBlock";
+import NavBar from "@/components/NavBar";
+import TextBlock from "@/components/TextBlock";
 
 export default function Progetto() {
     return (

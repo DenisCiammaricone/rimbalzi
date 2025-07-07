@@ -4,7 +4,7 @@ import { PupilPage } from "./PupilPage";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import SpinningCircle from "@/app/components/SpinningCircle";
+import SpinningCircle from "@/components/SpinningCircle";
 
 export default function Page() {
     const params = useParams()

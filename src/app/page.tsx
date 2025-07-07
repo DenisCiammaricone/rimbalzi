@@ -1,7 +1,7 @@
 import Image from "next/image";
-import NavBar from "./components/NavBar";
-import NavBarTop from "./components/NavBarTop";
-import TextBlock from "./components/TextBlock";
+import NavBar from "../components/NavBar";
+import NavBarTop from "../components/NavBarTop";
+import TextBlock from "../components/TextBlock";
 
 export default async function Home() {
 

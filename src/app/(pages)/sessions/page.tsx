@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import SpinningCircle from '@/app/components/SpinningCircle';
+import SpinningCircle from '@/components/SpinningCircle';
 
 interface Session {
     id: number;

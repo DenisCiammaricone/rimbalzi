@@ -1,4 +1,4 @@
-import SpinningCircle from "@/app/components/SpinningCircle"
+import SpinningCircle from "@/components/SpinningCircle"
 import { redirect, useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 

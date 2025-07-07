@@ -1,6 +1,6 @@
 import Image from "next/image";
-import TextBlock from "@/app/components/TextBlock";
-import NavBar from "@/app/components/NavBar";
+import TextBlock from "@/components/TextBlock";
+import NavBar from "@/components/NavBar";
 
 export default function Privacy() {
     return (
