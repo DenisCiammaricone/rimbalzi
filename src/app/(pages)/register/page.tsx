@@ -1,4 +1,5 @@
 'use client'
+import AutocompleteScuole from "@/components/AutoCompleteSchools";
 import ErrorText from "@/components/ErrorText";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -11,21 +12,39 @@ export default function RegisterPage() {
 
     // Fetch Schools to populate the select
     useEffect(() => {
-        async function fetchSchools() {
-            const response = await fetch('/api/schools', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            const data = await response.json();
-            setSchools(JSON.parse(data));
-        }
-        fetchSchools();
+        // async function fetchSchools() {
+        //     const response = await fetch('/api/schools', {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //     });
+        //     const data = await response.json();
+        //     setSchools(JSON.parse(data));
+        // }
+
+        // async function fetchSchools() {
+        //     try {
+        //         const response = await fetch('/scuole_italiane.json');
+        //         //console.log(await response.text());
+        //         const scuole = await response.json();
+        //         //console.log(scuole);
+        //         return scuole;
+        //     } catch (error) {
+        //         console.error('Errore nel caricamento del file:', error);
+        //     }
+        // }
+
+        
+        // fetchSchools().then((data) => {
+        //     console.log(data);
+        //     setSchools(data['@graph']);
+        // });
+        //const schoolsData = fetch('api/schools')
     }, []);
 
     const schoolOptions = schools.map((school) => (
-        <option key={school.id} value={school.id}>{school.name}</option>
+        <option key={school['@id']} value={school['@id']}>{school['miur:DENOMINAZIONESCUOLA']}</option>
     ));
 
     if (status === "unauthenticated") {
@@ -44,7 +63,7 @@ export default function RegisterPage() {
                             surname: formData.get('surname'),
                             email: formData.get('email'),
                             password: formData.get('password'),
-                            schoolId: formData.get('schoolId')
+                            schoolCode: formData.get('schoolCode')
                         })
                     });
                     const errorData = await response.json();
@@ -71,9 +90,7 @@ export default function RegisterPage() {
                         <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Conferma Password [TBD]" required />
                     </div>
                     <div>
-                        <select className="mx-auto w-full" id="schoolId" name="schoolId" required>
-                            {schoolOptions}
-                        </select>
+                        <AutocompleteScuole />
                     </div>
                     <div>
                         <i>I dati forniti saranno trattati esclusivamente per finalità di ricerca educativa e non saranno mai ceduti ad enti terzi. Per maggiori dettagli consulta la <b><a href="/privacy" target="_blank">Privacy Policy</a></b></i>

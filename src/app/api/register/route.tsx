@@ -6,9 +6,9 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
 
-        const { name, surname, email, password, schoolId } = await registerSchema.parseAsync(body);
+        const { name, surname, email, password, schoolCode } = await registerSchema.parseAsync(body);
         
-        const result = await registerUser(email, password, name, surname, schoolId);
+        const result = await registerUser(email, password, name, surname, schoolCode);
 
         if(result) {
             return NextResponse.json({ message: 'Ok'}, { status: 200 });

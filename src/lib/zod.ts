@@ -23,7 +23,7 @@ export const registerSchema = object({
     .min(1, "Password is required")
     .min(6, "Password must be more than 6 characters")
     .max(32, "Password must be less than 32 characters"),
-  schoolId: string({ required_error: "School is required" })
+  schoolCode: string({ required_error: "School is required" })
 })
 
 export const newClassSchema = object({

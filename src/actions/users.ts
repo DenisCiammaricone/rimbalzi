@@ -39,17 +39,21 @@ export async function getUserFromDb(email: string, password: string) {
  * Register a new user
  * @returns 1 if the user is registered successfully
  */
-export async function registerUser(email: string | null, password: string | null, name: string | null, surname: string | null, schoolId: string | null) {
-  if(!email || !password || !name || !surname || !schoolId) {
+export async function registerUser(email: string | null, password: string | null, name: string | null, surname: string | null, schoolCode: string | null) {
+  if(!email || !password || !name || !surname || !schoolCode) {
     throw new Error("Missing parameters");
   }
   const hashedPassword = bcrypt.hashSync(password, 0);
   try {
-    const res = await db.insert(users).values({email: email, password: hashedPassword, name: name, surname: surname, schoolId: Number(schoolId)});
+    console.log("CIAO1");
+    const res = await db.insert(users).values({email: email, password: hashedPassword, name: name, surname: surname, schoolId: schoolCode});
+    console.log("CIAO2");
     return res[0].affectedRows;
   } catch (error: any) {
     if(error.code === 'ER_DUP_ENTRY'){
       throw new Error("Account già esistente");
+    } else {
+      throw new Error("Errore interno del server: " + error.message);
     }
   }
 }

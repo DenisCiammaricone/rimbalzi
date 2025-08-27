@@ -11,5 +11,5 @@ export const users = mysqlTable('users', {
     createdAt: timestamp('created_at').notNull().defaultNow(),
     activeted: boolean('activeted').notNull().default(false),
     groupId: int('group_id').notNull().default(1).references(() => groups.id),
-    schoolId: int('school_id').references(() => schools.id),
+    schoolId: varchar('school_id', {length: 16}),
 });
