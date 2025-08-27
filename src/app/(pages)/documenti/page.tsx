@@ -21,6 +21,7 @@ export default function Documenti() {
                         <h1 className="text-3xl mt-0">Documenti</h1>
                         <br></br>
                         <p className="text-lg">Elenco della documentazione utile per conoscere il progetto</p>
+                        <b>Documento 1</b>
                     </div>
                 }>
                 </TextBlock>
