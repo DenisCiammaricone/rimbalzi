@@ -73,7 +73,7 @@ export async function updateClass(class_id: string, maleNumber: number, femaleNu
  * @returns Id of the class you were looking for
  */
 export async function getClassesByGradeSectionAndSchool(class_grade: string, class_section: string, school_id: string) {
-    const res = await db.select().from(classes).where(and(eq(classes.grade, Number(class_grade)), eq(classes.section, class_section), eq(classes.schoolId, Number(school_id))));
+    const res = await db.select().from(classes).where(and(eq(classes.grade, Number(class_grade)), eq(classes.section, class_section), eq(classes.schoolId, school_id)));
     return res[0].id.toString();
 }
 
