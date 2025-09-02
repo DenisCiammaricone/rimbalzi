@@ -45,9 +45,7 @@ export async function registerUser(email: string | null, password: string | null
   }
   const hashedPassword = bcrypt.hashSync(password, 0);
   try {
-    console.log("CIAO1");
     const res = await db.insert(users).values({email: email, password: hashedPassword, name: name, surname: surname, schoolId: schoolCode});
-    console.log("CIAO2");
     return res[0].affectedRows;
   } catch (error: any) {
     if(error.code === 'ER_DUP_ENTRY'){
