@@ -96,7 +96,7 @@ export async function DELETE(req: Request) {
 */
 
 // TODO: Aggiustare il seguente pezzo di codice. Da errori durante la fase di build
-/*
+
 export const DELETE = auth(async function DELETE(req) {
     if (!req.auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     try {
@@ -113,4 +113,4 @@ export const DELETE = auth(async function DELETE(req) {
             return NextResponse.json({ data: error.message }, { status: 400 });
         }
     }
-})*/
+})

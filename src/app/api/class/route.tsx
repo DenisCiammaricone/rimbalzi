@@ -77,11 +77,11 @@ export async function DELETE(req: Request) {
 */
 
 // TODO: Aggiustare il seguente pezzo di codice. Da errori durante la fase di build
-/*export const DELETE = auth(async function DELETE(req, context) {
+export const DELETE = auth(async function DELETE(req, context) {
     if (!req.auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     try {
         const { searchParams } = new URL(req.url);
-        //checkForUnauthorizedTeacher(req.auth.user.id);
+        checkForUnauthorizedTeacher(req.auth.user.id);
 
         const res = await deleteClass(searchParams.get('class_id') || '');
         if (res) {
@@ -95,4 +95,3 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ data: 'An unexpected error occurred' }, { status: 500 });
     }
 })
-*/
