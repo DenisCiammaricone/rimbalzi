@@ -5,6 +5,7 @@ export default function AutocompleteScuole() {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<{ "@id": string; "miur:DENOMINAZIONESCUOLA": string; "miur:CODICESCUOLA": string }[]>([]);
     const [selected, setSelected] = useState<string>("");
+    const [code, setCode] = useState<string>("");
 
     useEffect(() => {
         const handleClick = (e: MouseEvent) => {
@@ -68,7 +69,6 @@ export default function AutocompleteScuole() {
         <div className="relative w-80" id="schoolInput">
         <input
             className="border rounded w-full p-2"
-            name="schoolCode"
             type="text"
             value={selected || query}
             placeholder="Cerca la tua scuola..."
@@ -80,9 +80,13 @@ export default function AutocompleteScuole() {
             }}
             onChange={(e) => {
             setSelected("");
+            setCode("");
             setQuery(e.target.value);
             }}
         />
+        <select name="schoolCode" hidden>
+            <option value={code} hidden></option>
+        </select>
         
             <ul className="absolute z-10 bg-white border rounded w-full mt-1 overflow-y-auto shadow-lg text-black" id="schoolList">
             {
@@ -94,6 +98,7 @@ export default function AutocompleteScuole() {
                     className="p-2 hover:bg-blue-100 cursor-pointer "
                     onClick={() => {
                         setSelected(s["miur:DENOMINAZIONESCUOLA"] + " - " + s["miur:CODICESCUOLA"]);
+                        setCode(s["miur:CODICESCUOLA"]);
                         setResults([]);
                     }}
                     >
