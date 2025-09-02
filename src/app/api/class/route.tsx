@@ -4,6 +4,7 @@ import { newClassSchema, updateClassSchema } from '@/lib/zod';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { auth } from '@/auth';
+import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
     try {
@@ -55,7 +56,7 @@ export async function PUT(req: Request) {
     }
 }
 
-/*
+
 export async function DELETE(req: Request) {
     try {
         const body = await req.json();
@@ -74,10 +75,10 @@ export async function DELETE(req: Request) {
         }
     }
 }
-*/
+
 
 // TODO: Aggiustare il seguente pezzo di codice. Da errori durante la fase di build
-export const DELETE = auth(async function DELETE(req, context) {
+/*export const DELETE = auth(async function DELETE(req) {
     if (!req.auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     try {
         const { searchParams } = new URL(req.url);
@@ -94,4 +95,4 @@ export const DELETE = auth(async function DELETE(req, context) {
         }
         return NextResponse.json({ data: 'An unexpected error occurred' }, { status: 500 });
     }
-})
+})*/
